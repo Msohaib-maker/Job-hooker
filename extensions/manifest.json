@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Job Scraper Test",
+  "version": "1.0",
+  "description": "Minimal example to test popup, background, and content messaging.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "cookies",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": ["https://*.upwork.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.upwork.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

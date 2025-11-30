@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model Job {
+  id          String   @id @default(uuid())       
+  title       String                               
+  description String?                               
+  location    String?             
+  company     String?                 
+  creation    DateTime @default(now())             
+
+  @@index([title])
+  @@index([location])
+}
+
+
+model Cookie {
+  id        Int      @id @default(autoincrement())
+  name      String
+  value     String
+  domain    String
+  path      String?
+  expires   DateTime?
+  httpOnly  Boolean? @default(false)
+  secure    Boolean? @default(false)
+  sameSite  String?  @default("Lax")
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+
+model JobFeed {
+  id       Int     @id @default(autoincrement())
+  title    String
+  exp      String
+  type     JobType
+  location String
+  salary   Int
+
+  // relation: many job feeds belong to one user
+  userId   Int?
+  user     User?   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id              Int        @id @default(autoincrement())
+  email           String     @unique
+  password        String
+  telegram_handle String?
+  email_handler   String?
+
+  // relation: a user can have 0, 1, or many feeds
+  jobFeeds        JobFeed[]
+}
+
+enum JobType {
+  remote
+  on_site
+}
+
+
+
+
+
