@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^11.0.1",
     "@nestjs/passport": "^11.0.5",
@@ -45,6 +46,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

@@ -1,4 +1,12 @@
 import { defineConfig } from "@prisma/config";
+import * as dotenv from "dotenv";
+
+dotenv.config({
+  path:
+    process.env.NODE_ENV === "production"
+      ? ".env.production"
+      : ".env.development",
+});
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -6,8 +14,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url:
-      process.env.DATABASE_URL ||
-      "postgresql://postgres:123qwe@localhost:5432/demon?schema=public",
+    url: process.env.DATABASE_URL,
   },
 });
