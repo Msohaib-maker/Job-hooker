@@ -36,11 +36,11 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npx prisma generate
 
-      - name: Push Prisma schema to database
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: npx prisma db push
+      # - name: Push Prisma schema to database
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      #     DIRECT_URL: ${{ secrets.DIRECT_URL }}
+      #   run: npx prisma db push
 
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
