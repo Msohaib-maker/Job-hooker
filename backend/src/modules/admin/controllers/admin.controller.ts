@@ -12,4 +12,9 @@ export class AdminController {
   async createJobs(@Body() body: JobBody) {
     return await this.adminService.postJobs(body);
   }
+
+  @Get()
+  pingFunction() {
+    return true;
+  }
 }

@@ -1,26 +1,23 @@
 # syntax = docker/dockerfile:1
 
-# Adjust NODE_VERSION as desired
 ARG NODE_VERSION=20.19.4
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="NestJS/Prisma"
 
-# NestJS/Prisma app lives here
 WORKDIR /app
-
-# Set production environment
 ENV NODE_ENV="production"
 
-
-# Throw-away build stage to reduce size of final image
+# -----------------
+# Build stage
+# -----------------
 FROM base AS build
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
 
-# Install node modules
+# Install node modules (including dev for Prisma/Nest build)
 COPY package-lock.json package.json ./
 RUN npm ci --include=dev
 
@@ -34,19 +31,24 @@ COPY . .
 # Build application
 RUN npm run build
 
-
-# Final stage for app image
+# -----------------
+# Final stage
+# -----------------
 FROM base
 
-# Install packages needed for deployment
+# Install runtime packages only
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y chromium chromium-sandbox openssl && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    apt-get install --no-install-recommends -y openssl && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Copy built application
-COPY --from=build /app /app
+# Copy built app and production node_modules
+COPY --from=build /app/dist /app/dist
+COPY --from=build /app/node_modules /app/node_modules
+COPY --from=build /app/package.json /app/package.json
+COPY --from=build /app/prisma /app/prisma
 
-# Start the server by default, this can be overwritten at runtime
+# Expose port
 EXPOSE 3000
-ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium"
-CMD [ "npm", "run", "start" ]
+
+# Start server
+CMD ["npm", "run", "start:prod"]
