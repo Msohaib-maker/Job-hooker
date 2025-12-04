@@ -23,7 +23,6 @@ RUN npm ci --include=dev
 
 # Generate Prisma Client
 COPY prisma .
-COPY prisma.config.ts .
 RUN npx prisma generate
 
 # Copy application code
