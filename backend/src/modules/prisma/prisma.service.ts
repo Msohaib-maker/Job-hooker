@@ -10,7 +10,9 @@ export class PrismaService
 {
   constructor() {
     const adapter = new PrismaPg({
-      connectionString: process.env.DATABASE_URL,
+      connectionString:
+        process.env.DATABASE_URL! ||
+        "postgresql://postgres.moppbxflxjwwfrplqaff:321%21Lo3k%23%21123%3F@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?sslmode=require&pgbouncer=true",
     });
 
     super({ adapter });
