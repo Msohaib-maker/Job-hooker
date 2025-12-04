@@ -8,8 +8,6 @@ LABEL fly_launch_runtime="NestJS/Prisma"
 WORKDIR /app
 ENV NODE_ENV="production"
 
-COPY package.json package-lock.json* bun.lockb* prisma.config.ts ./
-
 # -----------------
 # Build stage
 # -----------------
@@ -25,6 +23,7 @@ RUN npm ci --include=dev
 
 # Generate Prisma Client
 COPY prisma .
+COPY prisma.config.ts .
 RUN npx prisma generate
 
 # Copy application code
