@@ -8,6 +8,8 @@ LABEL fly_launch_runtime="NestJS/Prisma"
 WORKDIR /app
 ENV NODE_ENV="production"
 
+COPY package.json package-lock.json* bun.lockb* prisma.config.ts ./
+
 # -----------------
 # Build stage
 # -----------------
