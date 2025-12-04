@@ -19,11 +19,10 @@ RUN apt-get update -qq && \
 
 # Install node modules (including dev for Prisma/Nest build)
 COPY package-lock.json package.json ./
-COPY prisma.config.ts ./
 RUN npm ci --include=dev
 
 # Generate Prisma Client
-COPY prisma ./prisma/
+COPY prisma .
 RUN npx prisma generate
 
 # Copy application code
