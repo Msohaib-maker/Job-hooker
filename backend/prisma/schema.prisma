@@ -19,7 +19,10 @@ model Job {
   title       String                               
   description String?                               
   location    String?             
-  company     String?                 
+  company     String?     
+  salary      Int?
+  experience  String?
+  type        JobType  @default(remote)
   creation    DateTime @default(now())             
 
   @@index([title])
@@ -60,6 +63,7 @@ model User {
   email           String     @unique
   password        String
   telegram_handle String?
+  telegram_one_time_code  String?
   email_handler   String?
 
   // relation: a user can have 0, 1, or many feeds

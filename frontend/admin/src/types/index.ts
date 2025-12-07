@@ -4,12 +4,10 @@ export type Job = {
   description?: string;
   company?: string;
   location?: string;
-  creation: Date;
-  salary?: number;
-  experience?: string;
-  type: "remote" | "on_site";
+  creation: Date | string;
 };
 
 export type JobBody = {
   data: Job[];
 };
+

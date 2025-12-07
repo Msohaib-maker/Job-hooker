@@ -21,13 +21,16 @@ export class FeedsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   createFeed(@Body() dto: CreateFeedDto, @Request() req: any) {
+    console.log("feed created ... ");
     return this.feedsService.createFeed(dto, req.user.email);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get("me")
   getMyFeeds(@Request() req: any) {
-    return this.feedsService.getMyFeeds(req.user.userId);
+    console.log("Get all feeds ...");
+    const userId = Number(req.user.id);
+    return this.feedsService.getMyFeeds(userId);
   }
 
   @UseGuards(JwtAuthGuard)

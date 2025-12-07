@@ -12,14 +12,14 @@ export class FeedsService {
     return this.prisma.jobFeed.create({
       data: {
         ...dto,
-        user: { connect: { email: email } },
+        user: { connect: { email } },
       },
     });
   }
 
   async getMyFeeds(id: number) {
     return this.prisma.jobFeed.findMany({
-      where: { id },
+      where: { userId: id },
     });
   }
 
