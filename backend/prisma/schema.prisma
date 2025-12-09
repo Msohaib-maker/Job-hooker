@@ -63,7 +63,7 @@ model User {
   email           String     @unique
   password        String
   telegram_handle String?
-  telegram_one_time_code  String?
+  telegram_one_time_code  String? @unique
   email_handler   String?
 
   // relation: a user can have 0, 1, or many feeds

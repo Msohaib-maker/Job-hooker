@@ -9,6 +9,7 @@ import { FeedsModule } from "./src/modules/feeds/feeds.module";
 import { JwtStrategy } from "./src/strategies/jwt.strategy";
 import { ConfigModule } from "@nestjs/config";
 import { JobModule } from "./src/modules/job/job.module";
+import { TelegramModule } from "./src/modules/telegram/telegram.module";
 
 @Module({
   providers: [JwtStrategy],
@@ -28,6 +29,7 @@ import { JobModule } from "./src/modules/job/job.module";
     AuthModule,
     FeedsModule,
     JobModule,
+    TelegramModule,
   ],
 })
 export class AppModule {}

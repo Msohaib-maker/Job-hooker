@@ -12,9 +12,11 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react";
-import { feedService } from "../services/feeds";
 import FeedDialog from "./FeedDialog";
-import type { Feed, CreateFeedDto } from "../types";
+import type { Feed } from "../types";
+import { useFeedManager } from "../hooks/useFeedHook";
+import { generateOTP } from "../utils/code-generator";
+import { api } from "../services/api";
 
 interface FeedListProps {
   selectedFeedId: string | null;
@@ -29,104 +31,42 @@ const FeedList = ({
   feeds,
   setFeeds,
 }: FeedListProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingFeed, setEditingFeed] = useState<Feed | null>(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isTelegramDialogOpen, setIsTelegramDialogOpen] = useState(false);
-  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
-  const [telegramLink, setTelegramLink] = useState("");
-  const [emailLink, setEmailLink] = useState("");
-  const [telegramStatus, setTelegramStatus] = useState<
-    "connected" | "disconnected"
-  >("disconnected");
-  const [emailStatus, setEmailStatus] = useState<"connected" | "disconnected">(
-    "disconnected"
-  );
+  const {
+    isLoading,
+    isDialogOpen,
+    setIsDialogOpen,
+    setEditingFeed,
+    editingFeed,
+    handleEditFeed,
+    handleSave,
+    handleDeleteFeed,
 
-  useEffect(() => {
-    loadFeeds();
-    // Load saved settings from localStorage
-    const savedTelegram = localStorage.getItem("telegram_link");
-    const savedEmail = localStorage.getItem("email_link");
-    if (savedTelegram) {
-      setTelegramLink(savedTelegram);
-      setTelegramStatus("connected");
-    }
-    if (savedEmail) {
-      setEmailLink(savedEmail);
-      setEmailStatus("connected");
-    }
-  }, []);
+    isSettingsOpen,
+    setIsSettingsOpen,
 
-  const loadFeeds = async () => {
-    try {
-      setIsLoading(true);
-      const data = await feedService.getFeeds();
-      setFeeds(data);
-    } catch (error) {
-      console.error("Failed to load feeds:", error);
-      setFeeds([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    telegramStatus,
+    isTelegramDialogOpen,
+    setIsTelegramDialogOpen,
+    handleTelegramSetup,
+    code,
+    setCode,
 
-  const handleCreateFeed = async (feedData: CreateFeedDto) => {
-    await feedService.createFeed(feedData);
-    await loadFeeds();
-  };
+    emailLink,
+    setEmailLink,
+    emailStatus,
+    isEmailDialogOpen,
+    setIsEmailDialogOpen,
+    handleEmailSetup,
+  } = useFeedManager(onFeedSelect, setFeeds);
 
-  const handleUpdateFeed = async (feedData: CreateFeedDto) => {
-    if (editingFeed) {
-      await feedService.updateFeed(editingFeed.id, feedData);
-      await loadFeeds();
-    }
-  };
-
-  const handleDeleteFeed = async (feedId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (window.confirm("Are you sure you want to delete this feed?")) {
-      try {
-        await feedService.deleteFeed(feedId);
-        await loadFeeds();
-        if (selectedFeedId === feedId) {
-          onFeedSelect(null);
-        }
-      } catch (error) {
-        console.error("Failed to delete feed:", error);
-      }
-    }
-  };
-
-  const handleEditFeed = (feed: Feed, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditingFeed(feed);
-    setIsDialogOpen(true);
-  };
-
-  const handleSave = async (feedData: CreateFeedDto) => {
-    if (editingFeed) {
-      await handleUpdateFeed(feedData);
-    } else {
-      await handleCreateFeed(feedData);
-    }
-  };
-
-  const handleTelegramSetup = () => {
-    if (telegramLink.trim()) {
-      localStorage.setItem("telegram_link", telegramLink);
-      setTelegramStatus("connected");
-    }
+  const telegramConnection = async () => {
+    // Code generation
+    const code = generateOTP();
+    setCode(code);
     setIsTelegramDialogOpen(false);
-  };
+    await api.post("telegram/code", { code });
 
-  const handleEmailSetup = () => {
-    if (emailLink.trim()) {
-      localStorage.setItem("email_link", emailLink);
-      setEmailStatus("connected");
-    }
-    setIsEmailDialogOpen(false);
+    window.open(`https://t.me/job_fisher_bot?start=${code}`, "_blank");
   };
 
   return (
@@ -363,15 +303,16 @@ const FeedList = ({
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-dark-text mb-2">
-                  Telegram Bot Link
+                  Telegram Code
                 </label>
-                <input
+                {/* <input
                   type="text"
                   value={telegramLink}
                   onChange={(e) => setTelegramLink(e.target.value)}
                   className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
                   placeholder="https://t.me/your_bot"
-                />
+                /> */}
+                <span>{code}</span>
               </div>
               <div className="flex gap-3 pt-4">
                 <button
@@ -381,7 +322,7 @@ const FeedList = ({
                   Cancel
                 </button>
                 <button
-                  onClick={handleTelegramSetup}
+                  onClick={() => telegramConnection()}
                   className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition"
                 >
                   Save
