@@ -31,16 +31,10 @@ export const useFeedManager = (
   useEffect(() => {
     loadFeeds();
 
-    const savedTelegram = localStorage.getItem("telegram_link");
-    if (savedTelegram) {
-      setTelegramLink(savedTelegram);
+    const savedStatus = localStorage.getItem("telegram_status");
+    if (savedStatus === "connected") {
+      // setTelegramLink(savedTelegram);
       setTelegramStatus("connected");
-    }
-
-    const savedEmail = localStorage.getItem("email_link");
-    if (savedEmail) {
-      setEmailLink(savedEmail);
-      setEmailStatus("connected");
     }
   }, []);
 
@@ -54,6 +48,16 @@ export const useFeedManager = (
       setFeeds([]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const setTelegramConnectionStatus = (status: boolean) => {
+    if (status) {
+      setTelegramStatus("connected");
+      localStorage.setItem("telegram_status", "connected");
+    } else {
+      setTelegramStatus("disconnected");
+      localStorage.setItem("telegram_status", "disconnected");
     }
   };
 
@@ -92,14 +96,6 @@ export const useFeedManager = (
     else await handleCreateFeed(feedData);
   };
 
-  const handleTelegramSetup = () => {
-    if (telegramLink.trim()) {
-      localStorage.setItem("telegram_link", telegramLink);
-      setTelegramStatus("connected");
-    }
-    setIsTelegramDialogOpen(false);
-  };
-
   const handleEmailSetup = () => {
     if (emailLink.trim()) {
       localStorage.setItem("email_link", emailLink);
@@ -126,7 +122,7 @@ export const useFeedManager = (
     telegramStatus,
     isTelegramDialogOpen,
     setIsTelegramDialogOpen,
-    handleTelegramSetup,
+    setTelegramConnectionStatus,
     code,
     setCode,
 

@@ -19,6 +19,16 @@ export class TelegramService {
     });
   }
 
+  async getConnection(email: string) {
+    const dbUser = await this.prisma.user.findUnique({
+      where: { email: email },
+    });
+    if (!dbUser || !dbUser.telegram_handle) {
+      return { connect: false };
+    }
+    return { connect: true };
+  }
+
   async updateChatId(chatId: string, uniqueCode: string) {
     try {
       return await this.prisma.user.update({

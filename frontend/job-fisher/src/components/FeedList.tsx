@@ -45,9 +45,8 @@ const FeedList = ({
     setIsSettingsOpen,
 
     telegramStatus,
-    isTelegramDialogOpen,
+    setTelegramConnectionStatus,
     setIsTelegramDialogOpen,
-    handleTelegramSetup,
     code,
     setCode,
 
@@ -59,14 +58,22 @@ const FeedList = ({
     handleEmailSetup,
   } = useFeedManager(onFeedSelect, setFeeds);
 
-  const telegramConnection = async () => {
-    // Code generation
-    const code = generateOTP();
-    setCode(code);
-    setIsTelegramDialogOpen(false);
-    await api.post("telegram/code", { code });
+  const checkTelegramConnection = async () => {
+    return await api.get("telegram/connection");
+  };
 
-    window.open(`https://t.me/job_fisher_bot?start=${code}`, "_blank");
+  const telegramConnection = async () => {
+    const res = await checkTelegramConnection();
+    if (!res.data.connect) {
+      const code = generateOTP();
+      setCode(code);
+      setIsTelegramDialogOpen(false);
+      await api.post("telegram/code", { code });
+      window.open(`https://t.me/job_fisher_bot?start=${code}`, "_blank");
+    } else {
+      setTelegramConnectionStatus(true);
+      window.open(`https://t.me/job_fisher_bot`, "_blank");
+    }
   };
 
   return (
@@ -219,7 +226,7 @@ const FeedList = ({
                   </div>
                   <button
                     onClick={() => {
-                      setIsTelegramDialogOpen(true);
+                      telegramConnection();
                       setIsSettingsOpen(false);
                     }}
                     className="w-full px-3 py-2 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 transition font-medium"
@@ -286,52 +293,6 @@ const FeedList = ({
       />
 
       {/* Telegram Dialog */}
-      {isTelegramDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-card rounded-xl shadow-2xl max-w-md w-full border border-dark-border">
-            <div className="flex items-center justify-between p-6 border-b border-dark-border">
-              <h2 className="text-2xl font-bold text-dark-text">
-                Telegram Setup
-              </h2>
-              <button
-                onClick={() => setIsTelegramDialogOpen(false)}
-                className="text-dark-text-muted hover:text-dark-text transition"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-dark-text mb-2">
-                  Telegram Code
-                </label>
-                {/* <input
-                  type="text"
-                  value={telegramLink}
-                  onChange={(e) => setTelegramLink(e.target.value)}
-                  className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  placeholder="https://t.me/your_bot"
-                /> */}
-                <span>{code}</span>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setIsTelegramDialogOpen(false)}
-                  className="flex-1 px-4 py-2 border border-dark-border rounded-lg text-dark-text font-medium hover:bg-dark-bg transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => telegramConnection()}
-                  className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Email Dialog */}
       {isEmailDialogOpen && (

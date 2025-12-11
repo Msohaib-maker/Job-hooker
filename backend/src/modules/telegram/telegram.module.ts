@@ -7,7 +7,7 @@ import { TelegramController } from "./telegram.controller";
 @Module({
   imports: [
     TelegrafModule.forRoot({
-      token: "8381001924:AAEcCAehvhdRUAmsReEtAL20gc2AYWomOgM",
+      token: process.env.BOT_TOKEN,
     }),
   ],
   providers: [TelegramService, TelegramUpdate],

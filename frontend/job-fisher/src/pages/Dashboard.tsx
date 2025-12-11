@@ -1,9 +1,9 @@
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { LogOut, Briefcase } from "lucide-react";
 import FeedList from "../components/FeedList";
 import JobList from "../components/JobList";
-import { Feed, Job } from "../types";
+import { Feed } from "../types";
 import { feedService } from "../services/feeds";
 import { useJobFetcher } from "../hooks/useJobFetcher";
 
@@ -11,7 +11,10 @@ const Dashboard = () => {
   const { user, signOut } = useAuth();
   const [selectedFeedId, setSelectedFeedId] = useState<string | null>(null);
   const [feeds, setFeeds] = useState<Feed[]>([]);
-  const { feedJobs } = useJobFetcher({ feedId: selectedFeedId, feeds });
+  const { feedJobs, loading } = useJobFetcher({
+    feedId: selectedFeedId,
+    feeds,
+  });
 
   useEffect(() => {
     const loadFeeds = async () => {
@@ -77,8 +80,15 @@ const Dashboard = () => {
             {selectedFeedId ? (
               <div>
                 <h2 className="text-2xl font-bold text-green-500 mb-4">Jobs</h2>
+
                 <div className="bg-dark-card rounded-lg border border-dark-border p-8">
-                  <JobList jobs={feedJobs} />
+                  {loading ? (
+                    <div className="flex justify-center py-10">
+                      <div className="animate-spin w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full"></div>
+                    </div>
+                  ) : (
+                    <JobList jobs={feedJobs} />
+                  )}
                 </div>
               </div>
             ) : (

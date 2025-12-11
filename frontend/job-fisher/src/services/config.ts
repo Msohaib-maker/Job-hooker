@@ -1,41 +1,30 @@
 /**
- * API Configuration
- * Handles base URL configuration for different environments
+ * API Configuration - clean version for Vercel deployment
  */
 
 const getApiBaseUrl = (): string => {
-  // Check if we're in production
-  const isProduction = import.meta.env.PROD;
+  // Always rely on ONE variable
+  const url = import.meta.env.VITE_API_URL;
 
-  // If VITE_API_URL is explicitly set, use it (highest priority)
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
+  if (!url) {
+    console.warn("⚠️ VITE_API_URL not set. Falling back to localhost.");
+    return "http://localhost:3000";
   }
 
-  // Otherwise, use environment-specific defaults
-  if (isProduction) {
-    // Production base URL - update this to your production API URL
-    return import.meta.env.VITE_API_URL_PROD || "https://api.yourdomain.com";
-  } else {
-    // Development base URL
-    return import.meta.env.VITE_API_URL_DEV || "http://localhost:3000";
-  }
+  return url;
 };
 
 export const API_CONFIG = {
   baseURL: getApiBaseUrl(),
-  timeout: 30000, // 30 seconds
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
   },
 };
 
-// Export for debugging purposes
-export const getCurrentEnvironment = () => {
-  return {
-    mode: import.meta.env.MODE,
-    isProduction: import.meta.env.PROD,
-    isDevelopment: import.meta.env.DEV,
-    baseURL: API_CONFIG.baseURL,
-  };
-};
+export const getCurrentEnvironment = () => ({
+  mode: import.meta.env.MODE,
+  isProduction: import.meta.env.PROD,
+  isDevelopment: import.meta.env.DEV,
+  baseURL: API_CONFIG.baseURL,
+});
