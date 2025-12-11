@@ -1,12 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import {
-  MapPin,
-  DollarSign,
-  Briefcase,
-  Clock,
-  ArrowLeft,
-  ExternalLink,
-} from "lucide-react";
+import { MapPin, DollarSign, Briefcase, Clock, ArrowLeft } from "lucide-react";
 import { mockJobs } from "../data/mockJobs";
 
 const JobDetail = () => {

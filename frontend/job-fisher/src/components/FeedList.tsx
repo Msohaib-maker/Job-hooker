@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Plus,
   Rss,
@@ -47,7 +46,6 @@ const FeedList = ({
     telegramStatus,
     setTelegramConnectionStatus,
     setIsTelegramDialogOpen,
-    code,
     setCode,
 
     emailLink,
