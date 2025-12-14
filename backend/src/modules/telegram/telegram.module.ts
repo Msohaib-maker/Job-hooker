@@ -8,6 +8,9 @@ import { TelegramController } from "./telegram.controller";
   imports: [
     TelegrafModule.forRoot({
       token: process.env.BOT_TOKEN,
+      launchOptions: {
+        dropPendingUpdates: true,
+      },
     }),
   ],
   providers: [TelegramService, TelegramUpdate],

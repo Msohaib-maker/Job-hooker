@@ -1,4 +1,4 @@
-import { Update, Start, Ctx } from "nestjs-telegraf";
+import { Update, Start, Ctx, On } from "nestjs-telegraf";
 import { Context } from "telegraf";
 import { TelegramService } from "./telegram.service";
 
@@ -16,26 +16,21 @@ export class TelegramUpdate {
     const message = ctx.message;
     const chatId = message.chat.id;
     if ("text" in message) {
-      console.log(this.extractCode(message.text));
       const code = this.extractCode(message.text);
+      console.log(code);
+      if (this.extractCode(message.text) === null) return;
       const users = await this.telegramService.updateChatId(
         chatId.toString(),
         code
       );
       console.log(users);
     }
+  }
 
-    // Check if user clicked /start <code>
-    // const text = message.;
-    // const parts = text.split(" ");
-
-    // if (parts.length > 1) {
-    //   const code = parts[1];  // your OTP
-    //   await this.telegramService.sendCode(chatId, code);
-
-    //   await ctx.reply("Telegram is successfully connected!");
-    // } else {
-    //   await ctx.reply("Welcome! Please open app to connect.");
-    // }
+  @On("message")
+  onAnyMessage(@Ctx() ctx: Context) {
+    const message = ctx.message;
+    console.log(message);
+    ctx.reply("I don't understand");
   }
 }
