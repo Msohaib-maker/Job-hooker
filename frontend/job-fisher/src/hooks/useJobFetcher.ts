@@ -3,7 +3,7 @@ import { Feed, Job } from "../types";
 import { api } from "../services/api";
 
 type JobFetcherProps = {
-  feedId: string | null;
+  feedId: number | null;
   feeds: Feed[];
 };
 

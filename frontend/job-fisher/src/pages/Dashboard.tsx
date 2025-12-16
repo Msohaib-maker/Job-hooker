@@ -9,7 +9,7 @@ import { useJobFetcher } from "../hooks/useJobFetcher";
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
-  const [selectedFeedId, setSelectedFeedId] = useState<string | null>(null);
+  const [selectedFeedId, setSelectedFeedId] = useState<number | null>(null);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const { feedJobs, loading } = useJobFetcher({
     feedId: selectedFeedId,
@@ -68,7 +68,7 @@ const Dashboard = () => {
         <div className="w-80 flex-shrink-0">
           <FeedList
             selectedFeedId={selectedFeedId}
-            onFeedSelect={setSelectedFeedId}
+            onFeedSelect={(id) => setSelectedFeedId(id)}
             feeds={feeds}
             setFeeds={setFeeds}
           />
