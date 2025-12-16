@@ -19,7 +19,7 @@ export interface FilterState {
 }
 
 export interface Feed {
-  id: string;
+  id: number;
   title: string;
   exp: string;
   type: "remote" | "on_site";

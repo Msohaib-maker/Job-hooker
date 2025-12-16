@@ -7,8 +7,8 @@ const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "x-role": "MisterRobot",
-    "x-pass": "Lo3kedHe2ven#!#",
+    "x-role": import.meta.env.VITE_USERNAME,
+    "x-pass": import.meta.env.VITE_PASSWORD,
   },
 });
 

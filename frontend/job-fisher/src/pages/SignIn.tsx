@@ -19,10 +19,8 @@ const SignIn = () => {
     try {
       await signIn(email, password);
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message || "Failed to sign in. Please try again."
-      );
+    } catch (err: unknown) {
+      setError("Failed to sign in. Please try again.");
     } finally {
       setIsLoading(false);
     }

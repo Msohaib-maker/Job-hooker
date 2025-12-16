@@ -18,8 +18,8 @@ import { generateOTP } from "../utils/code-generator";
 import { api } from "../services/api";
 
 interface FeedListProps {
-  selectedFeedId: string | null;
-  onFeedSelect: (feedId: string | null) => void;
+  selectedFeedId: number | null;
+  onFeedSelect: (feedId: number | null) => void;
   feeds: Feed[];
   setFeeds: (feeds: Feed[]) => void;
 }
@@ -62,15 +62,17 @@ const FeedList = ({
 
   const telegramConnection = async () => {
     const res = await checkTelegramConnection();
+    const botBaseUrl = import.meta.env.VITE_BOT_URL;
     if (!res.data.connect) {
       const code = generateOTP();
       setCode(code);
       setIsTelegramDialogOpen(false);
       await api.post("telegram/code", { code });
-      window.open(`https://t.me/job_fisher_bot?start=${code}`, "_blank");
+      // https://t.me/real_job_fisher_bot production
+      window.open(`${botBaseUrl}?start=${code}`, "_blank");
     } else {
       setTelegramConnectionStatus(true);
-      window.open(`https://t.me/job_fisher_bot`, "_blank");
+      window.open(`${botBaseUrl}`, "_blank");
     }
   };
 

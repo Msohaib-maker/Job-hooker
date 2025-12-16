@@ -2,13 +2,13 @@
 
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { CreateFeedDto } from "./models/feeds-dto";
+import { FeedDto } from "./models/feeds-dto";
 
 @Injectable()
 export class FeedsService {
   constructor(private prisma: PrismaService) {}
 
-  async createFeed(dto: CreateFeedDto, email: string) {
+  async createFeed(dto: FeedDto, email: string) {
     return this.prisma.jobFeed.create({
       data: {
         ...dto,
@@ -27,6 +27,13 @@ export class FeedsService {
     // user can delete only his own feeds
     return this.prisma.jobFeed.deleteMany({
       where: { id: feedId, userId },
+    });
+  }
+
+  async updateFeed(id: number, body: FeedDto, userId: number) {
+    return this.prisma.jobFeed.update({
+      data: { ...body },
+      where: { id: id, userId },
     });
   }
 }

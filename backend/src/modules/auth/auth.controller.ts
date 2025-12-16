@@ -6,6 +6,8 @@ import {
   UseGuards,
   Request,
   Get,
+  Query,
+  BadRequestException,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignUpDto, LoginDto } from "./models/register-dto";
@@ -31,5 +33,12 @@ export class AuthController {
     console.log(process.env.DATABASE_URL);
     console.log(process.env.DIRECT_URL);
     return { db: process.env.DATABASE_URL, direct: process.env.DIRECT_URL };
+  }
+
+  @Post("verify-email")
+  async verifyEmail(@Query("token") token: string) {
+    if (!token) throw new BadRequestException("Token is required");
+
+    return this.authService.verifyEmail(token);
   }
 }

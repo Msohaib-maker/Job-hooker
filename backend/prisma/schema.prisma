@@ -15,19 +15,24 @@ datasource db {
 }
 
 model Job {
-  id          String   @id @default(uuid())       
-  title       String                               
-  description String?                               
-  location    String?             
-  company     String?     
-  salary      Int?
-  experience  String?
-  type        JobType  @default(remote)
-  creation    DateTime @default(now())             
+  id             String    @id @default(uuid())
+  title          String
+  description    String?
+  location       String?
+  company        String?
+  salary         Int?
+  salaryCurrency String    @default("USD")
+  experience     String?
+  type           JobType   @default(remote)
+  url            String?
+  contactEmail   String?
+  tags           String    @default("")
+  creation       DateTime  @default(now())
 
   @@index([title])
   @@index([location])
 }
+
 
 
 model Cookie {
@@ -46,22 +51,33 @@ model Cookie {
 
 
 model JobFeed {
-  id       Int     @id @default(autoincrement())
-  title    String
-  exp      String
-  type     JobType
-  location String
-  salary   Int
+  id             Int      @id @default(autoincrement())
+  title          String
+  exp            String
+  type           JobType
+  location       String
+  salary         Int
+  salaryCurrency String   @default("USD")
+  tags           String   @default("")
 
   // relation: many job feeds belong to one user
-  userId   Int?
-  user     User?   @relation(fields: [userId], references: [id])
+  userId         Int?
+  user           User?    @relation(fields: [userId], references: [id])
 }
+
 
 model User {
   id              Int        @id @default(autoincrement())
   email           String     @unique
   password        String
+  emailVerified   Boolean    @default(false)
+
+
+  emailVerificationToken        String?
+  emailVerificationExpiresAt    DateTime?
+  emailVerificationSentAt       DateTime?
+  emailVerifiedAt               DateTime?
+
   telegram_handle String?
   telegram_one_time_code  String? @unique
   email_handler   String?

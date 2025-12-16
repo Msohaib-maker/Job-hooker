@@ -8,6 +8,10 @@ export type Job = {
   salary?: number;
   experience?: string;
   type: "remote" | "on_site";
+  url?: string;
+  tags: string;
+  contactEmail?: string;
+  salaryCurrency: string;
 };
 
 export type JobBody = {

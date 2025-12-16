@@ -31,10 +31,8 @@ const SignUp = () => {
     try {
       await signUp(email, password);
       navigate("/dashboard");
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message || "Failed to sign up. Please try again."
-      );
+    } catch (err: unknown) {
+      setError("Failed to sign up. Please try again.");
     } finally {
       setIsLoading(false);
     }

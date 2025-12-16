@@ -3,10 +3,16 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "@/src/models/user-model";
+import { InjectBot } from "nestjs-telegraf";
+import { Telegraf } from "telegraf";
+import { Job } from "@/src/models/job-model";
 
 @Injectable()
 export class TelegramService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectBot() private bot: Telegraf
+  ) {}
 
   async sendCode(code: string, user: User) {
     console.log(code);
@@ -41,6 +47,16 @@ export class TelegramService {
         return null;
       }
       throw e;
+    }
+  }
+
+  async sendMessage(userId: string, job: string) {
+    try {
+      await this.bot.telegram.sendMessage(userId, job, {
+        parse_mode: "HTML",
+      });
+    } catch (err) {
+      console.error("Telegram sendMessage error:", err);
     }
   }
 }

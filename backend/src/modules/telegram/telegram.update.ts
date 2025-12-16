@@ -31,6 +31,6 @@ export class TelegramUpdate {
   onAnyMessage(@Ctx() ctx: Context) {
     const message = ctx.message;
     console.log(message);
-    ctx.reply("I don't understand");
+    ctx.reply("You can reach our team at cool69731@gmail.com");
   }
 }

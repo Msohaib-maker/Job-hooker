@@ -1,5 +1,5 @@
-import { AdminGuard } from "@/src/guards/admin-guard";
-import { JobBody } from "@/src/models/job-model";
+import { AdminGuard } from "@/src/guards/admin-guard.guard";
+import { Job, JobBody } from "@/src/models/job-model";
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { AdminService } from "../services/admin.service";
 
@@ -10,6 +10,7 @@ export class AdminController {
 
   @Post("jobs")
   async createJobs(@Body() body: JobBody) {
+    console.log(body);
     return await this.adminService.postJobs(body);
   }
 }

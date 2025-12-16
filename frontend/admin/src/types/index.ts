@@ -5,9 +5,15 @@ export type Job = {
   company?: string;
   location?: string;
   creation: Date | string;
+  salary?: number;
+  experience?: string;
+  salaryCurrency: string;
+  tags: string;
+  type: "remote" | "on_site";
+  url?: string;
+  contactEmail: string;
 };
 
 export type JobBody = {
   data: Job[];
 };
-

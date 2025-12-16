@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
-import { JobBody } from "@/src/models/job-model";
+import { Job, JobBody } from "@/src/models/job-model";
 
 @Injectable()
 export class AdminJobService {
@@ -11,12 +11,21 @@ export class AdminJobService {
 
     try {
       await Promise.all(
-        data.map((job) => this.prismaService.job.create({ data: job }))
+        data.map((job) =>
+          this.prismaService.job.create({ data: this.validated(job) })
+        )
       );
       return true;
     } catch (e) {
       console.error(e);
       return false;
     }
+  }
+
+  validated(job: Job): Job {
+    return {
+      ...job,
+      salary: job.salary ? Number(job.salary) : null,
+    };
   }
 }

@@ -6,7 +6,7 @@ interface FeedDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (feed: CreateFeedDto) => Promise<void>;
-  feed?: CreateFeedDto & { id?: string } | null;
+  feed?: (CreateFeedDto & { id?: number }) | null;
 }
 
 const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
@@ -72,8 +72,8 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
         salary: salaryNum,
       });
       onClose();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to save feed");
+    } catch (err: unknown) {
+      setError("Failed to save feed");
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +102,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
           )}
 
           <div>
-            <label htmlFor="feed-title" className="block text-sm font-medium text-dark-text mb-2">
+            <label
+              htmlFor="feed-title"
+              className="block text-sm font-medium text-dark-text mb-2"
+            >
               Title *
             </label>
             <input
@@ -117,7 +120,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
           </div>
 
           <div>
-            <label htmlFor="feed-exp" className="block text-sm font-medium text-dark-text mb-2">
+            <label
+              htmlFor="feed-exp"
+              className="block text-sm font-medium text-dark-text mb-2"
+            >
               Experience *
             </label>
             <input
@@ -132,7 +138,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
           </div>
 
           <div>
-            <label htmlFor="feed-type" className="block text-sm font-medium text-dark-text mb-2">
+            <label
+              htmlFor="feed-type"
+              className="block text-sm font-medium text-dark-text mb-2"
+            >
               Type *
             </label>
             <select
@@ -148,7 +157,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
           </div>
 
           <div>
-            <label htmlFor="feed-location" className="block text-sm font-medium text-dark-text mb-2">
+            <label
+              htmlFor="feed-location"
+              className="block text-sm font-medium text-dark-text mb-2"
+            >
               Location *
             </label>
             <input
@@ -163,7 +175,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
           </div>
 
           <div>
-            <label htmlFor="feed-salary" className="block text-sm font-medium text-dark-text mb-2">
+            <label
+              htmlFor="feed-salary"
+              className="block text-sm font-medium text-dark-text mb-2"
+            >
               Salary *
             </label>
             <input

@@ -4,7 +4,6 @@ import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 export class AdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
-
     const role = req.headers["x-role"];
     const pass = req.headers["x-pass"];
     const validRole = "MisterRobot";

@@ -3,7 +3,7 @@ import { Feed, CreateFeedDto } from "../types";
 import { feedService } from "../services/feeds";
 
 export const useFeedManager = (
-  onFeedSelect: (id: string | null) => void,
+  onFeedSelect: (id: number | null) => void,
   setFeeds: (feeds: Feed[]) => void
 ) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +72,7 @@ export const useFeedManager = (
     await loadFeeds();
   };
 
-  const handleDeleteFeed = async (feedId: string, e: React.MouseEvent) => {
+  const handleDeleteFeed = async (feedId: number, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this feed?")) return;
 

@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { jobService } from "../services/api";
 import { CheckCircle2, XCircle, Loader2, Briefcase } from "lucide-react";
 import type { Job } from "../types";
 
-export default function JobForm() {
+type JobFormProps = {
+  job: Job;
+  id: string;
+  onJobCreate: (key: string, job: Job) => void;
+};
+export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
+  const { creation, ...rest } = job;
+
   const [formData, setFormData] = useState<
     Omit<Job, "creation"> & { creation: string }
   >({
-    title: "",
-    description: "",
-    company: "",
-    location: "",
-    creation: new Date().toISOString().split("T")[0],
+    ...rest,
+    creation: creation ? new Date(creation).toISOString().split("T")[0] : "",
   });
 
   const [status, setStatus] = useState<{
@@ -22,7 +25,9 @@ export default function JobForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -31,17 +36,16 @@ export default function JobForm() {
     }));
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateValue = e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      creation: dateValue,
-    }));
-  };
+  // const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const dateValue = e.target.value;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     creation: dateValue,
+  //   }));
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setStatus({ type: "idle", message: "" });
 
     try {
@@ -50,7 +54,7 @@ export default function JobForm() {
         creation: new Date(formData.creation),
       };
 
-      await jobService.createJobs({ data: [jobData] });
+      onJobCreate(id, jobData);
 
       setStatus({
         type: "success",
@@ -64,6 +68,13 @@ export default function JobForm() {
         company: "",
         location: "",
         creation: new Date().toISOString().split("T")[0],
+        salary: 0,
+        salaryCurrency: "usd",
+        experience: "0",
+        tags: "",
+        type: "remote",
+        url: "",
+        contactEmail: "",
       });
 
       setTimeout(() => {
@@ -81,9 +92,35 @@ export default function JobForm() {
     }
   };
 
+  const autoFillData = () => {
+    setFormData((prev) => ({
+      ...prev,
+      title: "Software Developer",
+      description:
+        "Responsible person who can work under pressure and deliver high-quality software.",
+      company: "Tech Solutions Ltd.",
+      location: "New York, USA",
+      creation: new Date().toISOString().split("T")[0], // today
+      salary: 90000,
+      salaryCurrency: "USD",
+      experience: "3+ years",
+      tags: "C#, React, Python, Node.js",
+      type: "remote", // options: remote, hybrid, onsite
+      url: "https://example.com/jobs/123",
+      contactEmail: "hr@example.com",
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 py-8 px-4">
       <div className="max-w-2xl mx-auto">
+        <button
+          onClick={autoFillData}
+          className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
+        >
+          Auto Fill
+        </button>
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
@@ -122,7 +159,6 @@ export default function JobForm() {
 
             {/* Company and Location Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Company Field */}
               <div>
                 <label
                   htmlFor="company"
@@ -141,7 +177,6 @@ export default function JobForm() {
                 />
               </div>
 
-              {/* Location Field */}
               <div>
                 <label
                   htmlFor="location"
@@ -161,6 +196,152 @@ export default function JobForm() {
               </div>
             </div>
 
+            {/* Salary and Currency Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <label
+                  htmlFor="salary"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Salary
+                </label>
+                <input
+                  type="number"
+                  id="salary"
+                  name="salary"
+                  value={formData.salary}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  placeholder="e.g., 100000"
+                  min="0"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="salaryCurrency"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Currency
+                </label>
+                <select
+                  id="salaryCurrency"
+                  name="salaryCurrency"
+                  value={formData.salaryCurrency}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                >
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="INR">INR</option>
+                  <option value="CAD">CAD</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Experience and Job Type Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  htmlFor="experience"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Experience
+                </label>
+                <input
+                  type="text"
+                  id="experience"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  placeholder="e.g., 3-5 years"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="type"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Job Type
+                </label>
+                <select
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                >
+                  <option value="remote">Remote</option>
+
+                  <option value="on_site">Onsite</option>
+                </select>
+              </div>
+            </div>
+
+            {/* URL and Contact Email Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  htmlFor="url"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Job URL
+                </label>
+                <input
+                  type="url"
+                  id="url"
+                  name="url"
+                  value={formData.url}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  placeholder="https://company.com/job/123"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="contactEmail"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Contact Email
+                </label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  name="contactEmail"
+                  value={formData.contactEmail}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  placeholder="hr@company.com"
+                />
+              </div>
+            </div>
+
+            {/* Tags Field */}
+            <div>
+              <label
+                htmlFor="tags"
+                className="block text-sm font-semibold text-gray-200 mb-2"
+              >
+                Tags
+              </label>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                placeholder="e.g., React, TypeScript, Node.js (comma-separated)"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Separate multiple tags with commas
+              </p>
+            </div>
+
             {/* Description Field */}
             <div>
               <label
@@ -176,7 +357,7 @@ export default function JobForm() {
                 onChange={handleChange}
                 rows={6}
                 className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
-                placeholder="Enter job description, requirements, and details..."
+                placeholder="Enter job description, requirements, responsibilities, and benefits..."
               />
             </div>
 
@@ -193,7 +374,7 @@ export default function JobForm() {
                 id="creation"
                 name="creation"
                 value={formData.creation}
-                onChange={handleDateChange}
+                onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all [color-scheme:dark]"
               />
             </div>

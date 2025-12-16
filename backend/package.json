@@ -23,6 +23,7 @@
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^10.0.0",
@@ -38,6 +39,7 @@
     "class-validator": "^0.14.0",
     "install": "^0.13.0",
     "nestjs-telegraf": "^2.9.1",
+    "nodemailer": "^7.0.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",

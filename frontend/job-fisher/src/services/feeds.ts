@@ -11,13 +11,13 @@ export const feedService = {
     return response.data;
   },
   updateFeed: async (
-    id: string,
+    id: number,
     feed: Partial<CreateFeedDto>
   ): Promise<Feed> => {
-    const response = await api.put(`/feeds/${id}`, feed);
+    const response = await api.post(`/feeds/update/${id}`, feed);
     return response.data;
   },
-  deleteFeed: async (id: string): Promise<void> => {
+  deleteFeed: async (id: number): Promise<void> => {
     await api.delete(`/feeds/${id}`);
   },
 };
