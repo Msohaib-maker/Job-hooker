@@ -1,6 +1,6 @@
 import { Briefcase, Plus, List } from "lucide-react";
 
-type View = "form" | "list";
+export type View = "dashboard" | "form" | "list";
 
 interface SidebarProps {
   currentView: View;
@@ -31,6 +31,26 @@ export default function Sidebar({ currentView, setCurrentView }: SidebarProps) {
         >
           <Plus className="w-5 h-5" />
           <span className="font-medium">Create Job</span>
+        </button>
+        <button
+          onClick={() => setCurrentView("dashboard")}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+            currentView === "dashboard"
+              ? "bg-primary-600 text-white"
+              : "text-gray-300 hover:bg-gray-700"
+          }`}
+        >
+          <span className="font-medium">Dashboard</span>
+        </button>
+        <button
+          onClick={() => setCurrentView("list")}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+            currentView === "list"
+              ? "bg-primary-600 text-white"
+              : "text-gray-300 hover:bg-gray-700"
+          }`}
+        >
+          <span className="font-medium">Excel Upload</span>
         </button>
       </nav>
     </aside>

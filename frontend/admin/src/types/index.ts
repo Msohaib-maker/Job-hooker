@@ -17,3 +17,5 @@ export type Job = {
 export type JobBody = {
   data: Job[];
 };
+
+export type JobWithUI = { job: Job } & { key: string };
