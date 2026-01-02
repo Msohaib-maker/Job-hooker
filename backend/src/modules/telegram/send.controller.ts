@@ -7,6 +7,7 @@ export class SendController {
 
   @Post("dispatch")
   async dispatchJobs(@Query("token") token: string) {
+    console.log(process.env.CRON_SECRET);
     if (token !== process.env.CRON_SECRET) {
       throw new UnauthorizedException();
     }
