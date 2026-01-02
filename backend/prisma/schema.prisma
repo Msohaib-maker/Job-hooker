@@ -14,25 +14,32 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum JobStatus {
+  pending
+  approved
+  rejected
+}
+
 model Job {
-  id             String    @id @default(uuid())
+  id             String     @id @default(uuid())
   title          String
   description    String?
   location       String?
   company        String?
   salary         Int?
-  salaryCurrency String    @default("USD")
+  salaryCurrency String     @default("USD")
   experience     String?
-  type           JobType   @default(remote)
+  type           JobType    @default(remote)
   url            String?
   contactEmail   String?
-  tags           String    @default("")
-  creation       DateTime  @default(now())
+  tags           String     @default("")
+  status         JobStatus  @default(pending)
+  creation       DateTime   @default(now())
 
   @@index([title])
   @@index([location])
+  @@index([status])
 }
-
 
 
 model Cookie {

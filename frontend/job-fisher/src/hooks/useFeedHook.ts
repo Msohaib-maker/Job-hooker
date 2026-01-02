@@ -28,6 +28,9 @@ export const useFeedManager = (
   );
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
 
+  // Billing
+  const [isBillingDialog, setBillingDialog] = useState(false);
+
   useEffect(() => {
     loadFeeds();
 
@@ -133,5 +136,9 @@ export const useFeedManager = (
     isEmailDialogOpen,
     setIsEmailDialogOpen,
     handleEmailSetup,
+
+    //Billing
+    isBillingDialog,
+    setBillingDialog,
   };
 };

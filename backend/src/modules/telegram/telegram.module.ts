@@ -3,8 +3,9 @@ import { TelegrafModule } from "nestjs-telegraf";
 import { TelegramService } from "./telegram.service";
 import { TelegramUpdate } from "./telegram.update";
 import { TelegramController } from "./telegram.controller";
-import { TelegramScheduler } from "./telegram.scheduler";
 import { TelegramJobMatcher } from "./telegram.job.matcher";
+import { SendController } from "./send.controller";
+import { SendService } from "./send.service";
 
 @Module({
   imports: [
@@ -15,12 +16,7 @@ import { TelegramJobMatcher } from "./telegram.job.matcher";
       },
     }),
   ],
-  providers: [
-    TelegramService,
-    TelegramUpdate,
-    TelegramScheduler,
-    TelegramJobMatcher,
-  ],
-  controllers: [TelegramController],
+  providers: [TelegramService, TelegramUpdate, TelegramJobMatcher, SendService],
+  controllers: [TelegramController, SendController],
 })
 export class TelegramModule {}

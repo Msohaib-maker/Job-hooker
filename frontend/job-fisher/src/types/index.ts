@@ -6,6 +6,7 @@ export interface Job {
   location?: string;
   creation: Date;
   salary?: number;
+  url?: string;
   experience?: string;
   type: "remote" | "on_site";
 }
@@ -25,6 +26,8 @@ export interface Feed {
   type: "remote" | "on_site";
   location: string;
   salary: number;
+  salaryCurrency: string;
+  tags: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -35,6 +38,8 @@ export interface CreateFeedDto {
   type: "remote" | "on_site";
   location: string;
   salary: number;
+  tags: string;
+  salaryCurrency: string;
 }
 
 export interface User {

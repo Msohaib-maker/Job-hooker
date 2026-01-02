@@ -19,11 +19,12 @@ export class JobService {
       const typeCheck = job.type === type;
       const salaryCheck = job.salary >= salary;
       const locationCheck = job.location.includes(location);
-      if (titleCheck || typeCheck || salaryCheck || locationCheck) {
+      if (titleCheck) {
         filteredJobs.push(job);
       }
     }
-
+    console.log("filterd jobs");
+    console.log(filteredJobs);
     return { filteredJobs };
   }
 }

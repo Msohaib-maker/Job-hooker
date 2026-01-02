@@ -4,18 +4,16 @@ import {
   Trash2,
   Edit2,
   Loader2,
-  Mail,
-  Send,
-  X,
-  Settings,
-  CheckCircle2,
-  XCircle,
+  CreditCard,
+  Bell,
 } from "lucide-react";
 import FeedDialog from "./FeedDialog";
 import type { Feed } from "../types";
 import { useFeedManager } from "../hooks/useFeedHook";
 import { generateOTP } from "../utils/code-generator";
 import { api } from "../services/api";
+import { NotificationDialog } from "./NotificationDialog";
+import { BillingDialog } from "./BillingDialog";
 
 interface FeedListProps {
   selectedFeedId: number | null;
@@ -48,12 +46,8 @@ const FeedList = ({
     setIsTelegramDialogOpen,
     setCode,
 
-    emailLink,
-    setEmailLink,
-    emailStatus,
-    isEmailDialogOpen,
-    setIsEmailDialogOpen,
-    handleEmailSetup,
+    isBillingDialog,
+    setBillingDialog,
   } = useFeedManager(onFeedSelect, setFeeds);
 
   const checkTelegramConnection = async () => {
@@ -167,118 +161,43 @@ const FeedList = ({
         </div>
 
         {/* Settings Button at Bottom */}
-        <div className="relative border-t border-dark-border p-4 flex justify-center">
+        <div className="relative border-t border-dark-border p-4 flex flex-col items-center gap-2">
+          <button
+            onClick={() => setBillingDialog(true)}
+            className="
+              flex  gap-4 
+              px-4 
+              w-[90%] 
+              pt-4
+              pb-4
+              rounded-xl       /* radius ~12px */
+              hover:bg-gray-500
+              text-white 
+              transition
+            "
+          >
+            <CreditCard className="w-5 h-5" />
+            <span className="text-sm font-medium">Billings</span>
+          </button>
           <button
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             className="
-    flex items-center justify-center gap-2 
+    flex  gap-4 
     px-4 
     w-[90%] 
     pt-4
     pb-4
     rounded-xl       /* radius ~12px */
-    bg-gray-600      /* good contrast on dark bg */
-    border border-gray-500
     hover:bg-gray-500
     text-white 
     transition
   "
           >
-            <Settings className="w-5 h-5" />
-            <span className="text-sm font-medium">Settings</span>
+            <Bell className="w-5 h-5" />
+            <span className="text-sm font-medium">Notifications</span>
           </button>
 
           {/* Dropdown Menu */}
-          {isSettingsOpen && (
-            <>
-              {/* Backdrop to close dropdown */}
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setIsSettingsOpen(false)}
-              />
-              <div className="absolute bottom-full right-0 mb-2 bg-dark-card border border-dark-border rounded-lg shadow-xl z-50 p-4 space-y-3 min-w-[280px] transform translate-x-1/2">
-                {/* Telegram Setting */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Send className="w-5 h-5 text-dark-text" />
-                      <span className="text-sm font-semibold text-dark-text">
-                        Telegram
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {telegramStatus === "connected" ? (
-                        <>
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <span className="text-xs font-medium text-green-500">
-                            Connected
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <XCircle className="w-4 h-4 text-dark-text-muted" />
-                          <span className="text-xs font-medium text-dark-text-muted">
-                            Not Connected
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      telegramConnection();
-                      setIsSettingsOpen(false);
-                    }}
-                    className="w-full px-3 py-2 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 transition font-medium"
-                  >
-                    {telegramStatus === "connected"
-                      ? "Edit Telegram"
-                      : "Connect Telegram"}
-                  </button>
-                </div>
-
-                {/* Email Setting */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-5 h-5 text-dark-text" />
-                      <span className="text-sm font-semibold text-dark-text">
-                        Email
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {emailStatus === "connected" ? (
-                        <>
-                          <CheckCircle2 className="w-4 h-4 text-green-500" />
-                          <span className="text-xs font-medium text-green-500">
-                            Connected
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <XCircle className="w-4 h-4 text-dark-text-muted" />
-                          <span className="text-xs font-medium text-dark-text-muted">
-                            Not Connected
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setIsEmailDialogOpen(true);
-                      setIsSettingsOpen(false);
-                    }}
-                    className="w-full px-3 py-2 text-sm bg-orange-500 text-white rounded hover:bg-orange-600 transition font-medium"
-                  >
-                    {emailStatus === "connected"
-                      ? "Edit Email"
-                      : "Connect Email"}
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
         </div>
       </div>
 
@@ -293,50 +212,19 @@ const FeedList = ({
       />
 
       {/* Telegram Dialog */}
+      {isSettingsOpen && (
+        <NotificationDialog
+          setIsSettingsOpen={(value) => setIsSettingsOpen(value)}
+          telegramStatus={telegramStatus}
+          telegramConnection={() => telegramConnection()}
+        />
+      )}
 
-      {/* Email Dialog */}
-      {isEmailDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-card rounded-xl shadow-2xl max-w-md w-full border border-dark-border">
-            <div className="flex items-center justify-between p-6 border-b border-dark-border">
-              <h2 className="text-2xl font-bold text-dark-text">Email Setup</h2>
-              <button
-                onClick={() => setIsEmailDialogOpen(false)}
-                className="text-dark-text-muted hover:text-dark-text transition"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-dark-text mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={emailLink}
-                  onChange={(e) => setEmailLink(e.target.value)}
-                  className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-                  placeholder="your@email.com"
-                />
-              </div>
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setIsEmailDialogOpen(false)}
-                  className="flex-1 px-4 py-2 border border-dark-border rounded-lg text-dark-text font-medium hover:bg-dark-bg transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleEmailSetup}
-                  className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      {isBillingDialog && (
+        <BillingDialog
+          isOpen={isBillingDialog}
+          onClose={() => setBillingDialog(false)}
+        />
       )}
     </>
   );

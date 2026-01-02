@@ -5,19 +5,19 @@ export class TelegramFormatter {
   static formatJob(job: Job): string {
     const lines: string[] = [];
 
-    // Header with title
+    // Title
     lines.push(`💼 <b>${job.title}</b>`);
-    lines.push(""); // Empty line
+    lines.push("");
 
-    // Company info
+    // Company
     if (job.company) {
-      lines.push(`🏢 <b>Company:</b> ${job.company}`);
+      lines.push(`🏢 ${job.company}`);
     }
 
-    // Location and type
-    const locationTypeInfo: string[] = [];
+    // Location + type
+    const locationLine: string[] = [];
     if (job.location) {
-      locationTypeInfo.push(`📍 ${job.location}`);
+      locationLine.push(`📍 ${job.location}`);
     }
     if (job.type) {
       const typeEmoji =
@@ -26,23 +26,27 @@ export class TelegramFormatter {
           hybrid: "🔄",
           onsite: "🏢",
         }[job.type] || "💼";
-      locationTypeInfo.push(
+
+      locationLine.push(
         `${typeEmoji} ${job.type.charAt(0).toUpperCase() + job.type.slice(1)}`
       );
     }
-    if (locationTypeInfo.length > 0) {
-      lines.push(locationTypeInfo.join(" • "));
+    if (locationLine.length) {
+      lines.push(locationLine.join(" • "));
     }
 
-    // Salary
+    // Salary + experience (same line)
+    const metaLine: string[] = [];
     if (job.salary) {
-      const formattedSalary = new Intl.NumberFormat("en-US").format(job.salary);
-      lines.push(`💰 <b>Salary:</b> ${formattedSalary} ${job.salaryCurrency}`);
+      const salary = new Intl.NumberFormat("en-US").format(job.salary);
+      metaLine.push(`💰 ${salary} ${job.salaryCurrency}`);
     }
-
-    // Experience
     if (job.experience) {
-      lines.push(`📊 <b>Experience:</b> ${job.experience}`);
+      metaLine.push(`📊 ${job.experience}`);
+    }
+    if (metaLine.length) {
+      lines.push("");
+      lines.push(metaLine.join("   •   "));
     }
 
     // Divider
@@ -52,27 +56,27 @@ export class TelegramFormatter {
 
     // Description
     if (job.description) {
-      lines.push(`📝 <b>Description:</b>`);
-      lines.push(job.description);
+      lines.push(`📝 <b>What you’ll do</b>`);
+      lines.push(job.description.trim());
       lines.push("");
     }
 
     // Tags
-    if (job.tags && job.tags.trim()) {
-      const tagsList = job.tags
+    if (job.tags?.trim()) {
+      const tags = job.tags
         .split(",")
         .map((tag) => `#${tag.trim().replace(/\s+/g, "_")}`)
         .join(" ");
-      lines.push(`🏷 ${tagsList}`);
+      lines.push(`🏷 ${tags}`);
       lines.push("");
     }
 
-    // Contact info
-    if (job.contactEmail || job.url) {
+    // CTA
+    if (job.url || job.contactEmail) {
       lines.push("━━━━━━━━━━━━━━━━");
       lines.push("");
       if (job.url) {
-        lines.push(`🔗 <a href="${job.url}">Apply Here</a>`);
+        lines.push(`👉 <b><a href="${job.url}">Apply Now</a></b>`);
       }
       if (job.contactEmail) {
         lines.push(`📧 ${job.contactEmail}`);
@@ -85,6 +89,7 @@ export class TelegramFormatter {
       month: "short",
       day: "numeric",
     });
+
     lines.push("");
     lines.push(`📅 Posted: ${postedDate}`);
 

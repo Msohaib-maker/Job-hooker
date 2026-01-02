@@ -1,5 +1,12 @@
 import { useParams, Link } from "react-router-dom";
-import { MapPin, DollarSign, Briefcase, Clock, ArrowLeft } from "lucide-react";
+import {
+  MapPin,
+  DollarSign,
+  Briefcase,
+  Clock,
+  ArrowLeft,
+  ExternalLink,
+} from "lucide-react";
 import { mockJobs } from "../data/mockJobs";
 
 const JobDetail = () => {
@@ -51,10 +58,12 @@ const JobDetail = () => {
               <MapPin className="w-5 h-5" />
               <span>{job.location}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <DollarSign className="w-5 h-5" />
-              <span>{job.salary}</span>
-            </div>
+            {job.salary && (
+              <div className="flex items-center gap-2 text-gray-600">
+                <DollarSign className="w-5 h-5" />
+                <span>{job.salary}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2 text-gray-600">
               <Briefcase className="w-5 h-5" />
               <span>{job.type}</span>
@@ -66,6 +75,15 @@ const JobDetail = () => {
             </div>
           </div>
 
+          {job.company && (
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                Company
+              </h2>
+              <span>{job.company}</span>
+            </div>
+          )}
+
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-3">
               Description
@@ -73,11 +91,15 @@ const JobDetail = () => {
             <p className="text-gray-700 leading-relaxed">{job.description}</p>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-3">
-              Requirements
-            </h2>
-          </div>
+          <a
+            href={job.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 bg-primary-600 text-white text-center px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors font-medium inline-flex items-center justify-center gap-2"
+          >
+            Apply Now
+            <ExternalLink className="w-4 h-4" />
+          </a>
 
           {/* <div className="flex gap-4 pt-6 border-t">
             <a

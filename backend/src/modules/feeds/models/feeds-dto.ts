@@ -8,6 +8,8 @@ export class FeedDto {
   type: "remote" | "on_site"; // or JobType enum if you want
   location: string;
   salary: number;
+  salaryCurrency: string;
+  tags: string;
 
   // userId: number | null;
   // user: User | null;

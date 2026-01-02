@@ -10,11 +10,11 @@ export const MainScreen = ({ jobList }: MainScreenProps) => {
   const [isLoading, setLoading] = useState(false);
 
   const sendDataToAPI = async () => {
-    // const myJobs = jobList.map((value) => value.job);
-    // setLoading(true);
-    // try {
-    //   await jobService.createJobs({ data: myJobs });
-    // } catch (e) {}
+    const myJobs = jobList.map((value) => value.job);
+    setLoading(true);
+    try {
+      await jobService.createJobs({ data: myJobs });
+    } catch (e) {}
     setLoading(false);
   };
 

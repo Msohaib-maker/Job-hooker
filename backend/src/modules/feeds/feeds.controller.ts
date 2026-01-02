@@ -24,6 +24,7 @@ export class FeedsController {
   @Post()
   createFeed(@Body() dto: FeedDto, @Request() req: any) {
     console.log("feed created ... ");
+    console.log(dto);
     return this.feedsService.createFeed(dto, req.user.email);
   }
 
@@ -36,6 +37,7 @@ export class FeedsController {
 
   @Delete(":id")
   deleteFeed(@Param("id") id: string, @Request() req) {
+    console.log("delete the feed...");
     return this.feedsService.deleteFeed(Number(id), req.user.id);
   }
 

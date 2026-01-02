@@ -12,6 +12,7 @@ export type Job = {
   tags: string;
   contactEmail?: string;
   salaryCurrency: string;
+  status: "pending" | "approved" | "rejected";
 };
 
 export type JobBody = {
