@@ -35,7 +35,6 @@ const Dashboard = () => {
       <header className="bg-dark-surface border-b border-dark-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Briefcase className="w-8 h-8 text-orange-500" />
             <div>
               <h1 className="text-2xl font-bold text-dark-text">Job Fisher</h1>
               <p className="text-sm text-dark-text-muted">
