@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Feed, CreateFeedDto } from "../types";
 import { feedService } from "../services/feeds";
+import { api } from "../services/api";
 
 export const useFeedManager = (
   onFeedSelect: (id: number | null) => void,
@@ -33,13 +34,22 @@ export const useFeedManager = (
 
   useEffect(() => {
     loadFeeds();
+    checkTelegramStatus();
+  }, []);
 
+  const checkTelegramStatus = async () => {
     const savedStatus = localStorage.getItem("telegram_status");
     if (savedStatus === "connected") {
-      // setTelegramLink(savedTelegram);
       setTelegramStatus("connected");
+      return;
     }
-  }, []);
+    const res = await api.get("telegram/connection");
+    if (res.data.connect) {
+      localStorage.setItem("telegram_status", "connected");
+      setTelegramStatus("connected");
+      return;
+    }
+  };
 
   const loadFeeds = async () => {
     try {

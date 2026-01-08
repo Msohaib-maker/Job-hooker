@@ -72,11 +72,7 @@ export const NotificationDialog = ({
                     )}
                   </div>
 
-                  {telegramStatus === "connected" ? (
-                    <span className="text-sm text-dark-text-muted">
-                      mrSohaib22
-                    </span>
-                  ) : (
+                  {telegramStatus !== "connected" && (
                     <span className="text-sm text-dark-text-muted">
                       Not connected
                     </span>
