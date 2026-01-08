@@ -30,6 +30,8 @@ export interface Feed {
   salary: number;
   salaryCurrency: string;
   tags: string;
+  salaryType: SalaryType;
+  platforms: string;
   createdAt?: string;
   updatedAt?: string;
 }
