@@ -10,6 +10,8 @@ export class FeedDto {
   salary: number;
   salaryCurrency: string;
   tags: string;
+  salaryType: "Fixed" | "Hourly";
+  platforms: string;
 
   // userId: number | null;
   // user: User | null;

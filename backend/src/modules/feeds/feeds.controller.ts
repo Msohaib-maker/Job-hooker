@@ -31,7 +31,7 @@ export class FeedsController {
   @Get("me")
   getMyFeeds(@Request() req: any) {
     console.log("Get all feeds ...");
-    const userId = Number(req.user.id);
+    const userId = req.user.id;
     return this.feedsService.getMyFeeds(userId);
   }
 

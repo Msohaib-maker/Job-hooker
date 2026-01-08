@@ -2,41 +2,101 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../prisma/prisma.service";
-import { SignUpDto, LoginDto } from "./models/register-dto";
+import { SignUpDto, LoginDto, VerifyOtpDto } from "./models/register-dto";
 import { randomBytes, createHash } from "crypto";
+import { SupabaseService } from "../supabase/supabase.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private readonly supabaseService: SupabaseService
   ) {}
 
-  async signUp(dto: SignUpDto) {
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+  async emailVerify(dto: SignUpDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
 
-    const rawToken = randomBytes(32).toString("hex");
-    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    if (existingUser) {
+      // 2️⃣ User exists → generate JWT
+      const token = this.jwtService.sign({
+        sub: existingUser.id,
+        email: existingUser.email,
+      });
 
-    const user = await this.prisma.user.create({
+      return {
+        success: true,
+        alreadyRegistered: true,
+        token,
+      };
+    }
+
+    const { error } = await this.supabaseService
+      .getClient()
+      .auth.signInWithOtp({
+        email: dto.email,
+      });
+
+    if (error) {
+      throw new InternalServerErrorException(
+        error.message || "Failed to send verification email"
+      );
+    }
+
+    return {
+      success: true,
+      message: "Verification email sent successfully",
+    };
+  }
+
+  async verifyEmailOtp(dto: VerifyOtpDto) {
+    const { data, error } = await this.supabaseService
+      .getClient()
+      .auth.verifyOtp({
+        email: dto.email,
+        token: dto.otp,
+        type: "email",
+      });
+
+    if (error) {
+      throw new BadRequestException(error.message || "Invalid or expired OTP");
+    }
+
+    // Optional: user/session info from Supabase
+    const user = data.user;
+
+    const prismaUser = await this.prisma.user.create({
       data: {
-        ...dto,
-        password: hashedPassword,
-        emailVerified: false,
-        emailVerificationToken: hashedToken,
-        emailVerificationExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        id: user.id, // 🔑 Supabase UUID
+        email: user.email!,
+        password: "randomString",
+        emailVerified: true,
+        emailVerifiedAt: new Date(),
       },
     });
 
-    // await this.mailService.sendVerificationEmail(user.email, rawToken);
+    const token = this.jwtService.sign({
+      sub: prismaUser.id,
+      email: prismaUser.email,
+    });
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
-    return { token };
+    return {
+      success: true,
+      message: "Email verified successfully",
+      token,
+      user: {
+        id: user?.id,
+        email: user?.email,
+      },
+    };
   }
 
   async login(dto: LoginDto) {
@@ -53,7 +113,7 @@ export class AuthService {
     return { token };
   }
 
-  async validateUser(userId: number) {
+  async validateUser(userId: string) {
     return this.prisma.user.findUnique({ where: { id: userId } });
   }
 

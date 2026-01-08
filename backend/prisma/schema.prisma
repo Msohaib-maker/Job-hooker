@@ -66,15 +66,17 @@ model JobFeed {
   salary         Int
   salaryCurrency String   @default("USD")
   tags           String   @default("")
+  salaryType     SalaryType  @default(Fixed)
+  platforms      String   @default("")
 
   // relation: many job feeds belong to one user
-  userId         Int?
+  userId         String?
   user           User?    @relation(fields: [userId], references: [id])
 }
 
 
 model User {
-  id              Int        @id @default(autoincrement())
+  id              String        @id
   email           String     @unique
   password        String
   emailVerified   Boolean    @default(false)
@@ -98,7 +100,10 @@ enum JobType {
   on_site
 }
 
-
+enum SalaryType {
+  Fixed
+  Hourly
+}
 
 
 

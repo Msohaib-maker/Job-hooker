@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { LogIn } from "lucide-react";
 
@@ -88,18 +88,6 @@ const SignIn = () => {
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-dark-text-muted">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-orange-500 hover:text-orange-400 font-semibold"
-            >
-              Sign up
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );

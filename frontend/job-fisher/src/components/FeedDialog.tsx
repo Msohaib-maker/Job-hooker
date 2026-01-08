@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import type { CreateFeedDto } from "../types";
+import { SelectField } from "./SelectField";
+import { CustomSelect } from "./CustomSelect";
+import { InputElement } from "./InputElement";
+import { Platform, SalaryType } from "../types/job.type";
 
 interface FeedDialogProps {
   isOpen: boolean;
@@ -31,8 +35,21 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
   const [salary, setSalary] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [tags, setTags] = useState<string[]>([]);
+  const [salaryType, setSalaryType] = useState<SalaryType>("Fixed");
+  const salaryTypes: SalaryType[] = ["Fixed", "Hourly"];
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const COUNTRIES = [
+    "United States",
+    "United Kingdom",
+    "Germany",
+    "Canada",
+    "India",
+    "Uzbekistan",
+    "Remote / Any",
+  ];
 
   useEffect(() => {
     if (feed) {
@@ -43,6 +60,8 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
       setSalary(feed.salary?.toString() || "");
       setTags(feed.tags.split(","));
       setCurrency(feed.salaryCurrency);
+      setSalaryType(feed.salaryType);
+      setPlatforms(feed.platforms.split(",") as Platform[]);
     } else {
       setTitle("");
       setExp("");
@@ -51,6 +70,8 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
       setSalary("");
       setTags([]);
       setCurrency("USD");
+      setPlatforms([]);
+      setSalaryType("Fixed");
     }
     setError("");
   }, [feed, isOpen]);
@@ -84,7 +105,7 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 
     setIsLoading(true);
     try {
-      await onSave({
+      const feedRequestObject = {
         title: title.trim(),
         exp: exp.trim(),
         type,
@@ -92,7 +113,11 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
         salary: salaryNum,
         salaryCurrency: currency,
         tags: tags.join(","),
-      });
+        salaryType: salaryType,
+        platforms: platforms.join(","),
+      };
+      console.log(feedRequestObject);
+      await onSave(feedRequestObject);
       onClose();
     } catch (err: unknown) {
       setError("Failed to save feed");
@@ -109,8 +134,17 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
     }
   };
 
+  const setPlatformList = (value: Platform) => {
+    if (platforms.includes(value)) {
+      const newPlatforms = platforms.filter((p) => p !== value);
+      setPlatforms(newPlatforms);
+    } else {
+      setPlatforms([...platforms, value]);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4">
       <div className="bg-dark-card rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-dark-border">
         <div className="flex items-center justify-between p-6 border-b border-dark-border">
           <h2 className="text-2xl font-bold text-dark-text">
@@ -134,101 +168,102 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
             </div>
           )}
 
-          <div>
-            <label
-              htmlFor="feed-title"
-              className="block text-sm font-medium text-dark-text mb-2"
-            >
-              Title *
+          <InputElement
+            id="feed-title"
+            label="Title"
+            value={title}
+            setValue={(value) => setTitle(value)}
+            type="text"
+          />
+
+          <InputElement
+            id="feed-exp"
+            label="Experience"
+            value={exp}
+            setValue={(value) => setExp(value)}
+            type="number"
+            min={0}
+            step={1}
+          />
+
+          <CustomSelect
+            id="feed-platform"
+            label="Platform"
+            value={platforms}
+            onChange={setPlatformList}
+            required
+            options={[
+              {
+                value: "upwork",
+                label: "Upwork",
+                icon: <Icon src="/upwork.png" size={16} />,
+              },
+              {
+                value: "linkedin",
+                label: "LinkedIn",
+                icon: <Icon src="/linkedIn.png" size={16} />,
+              },
+            ]}
+          />
+
+          <SelectField
+            id="feed-type"
+            label="Type"
+            value={type}
+            onChange={(v) => setType(v as "remote" | "on_site")}
+            required
+            options={[
+              { label: "Remote", value: "remote" },
+              { label: "On Site", value: "on_site" },
+            ]}
+            renderOption={(opt) => {
+              return (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              );
+            }}
+          />
+          <SelectField
+            id="feed-country"
+            label="Country"
+            value={location}
+            onChange={setLocation}
+            required
+            placeholder="Select country"
+            options={COUNTRIES.map((c) => ({ label: c, value: c }))}
+            renderOption={(opt) => {
+              return (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              );
+            }}
+          />
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-dark-text mb-2">
+              Salary Type *
             </label>
-            <input
-              id="feed-title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-              placeholder="e.g., Senior Software Engineer"
-            />
-          </div>
 
-          <div>
-            <label
-              htmlFor="feed-exp"
-              className="block text-sm font-medium text-dark-text mb-2"
-            >
-              Experience *
-            </label>
-
-            <div className="flex items-center gap-3">
-              <input
-                id="feed-exp"
-                type="number"
-                min={0}
-                step={1}
-                value={exp}
-                onChange={(e) => setExp(e.target.value)}
-                required
-                className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-              />
-
-              <span className="text-sm text-dark-text-muted whitespace-nowrap">
-                years
-              </span>
+            <div className="flex gap-3">
+              {salaryTypes.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setSalaryType(t)}
+                  className={`px-4 py-2 rounded-lg border text-sm font-medium transition
+          ${
+            salaryType === t
+              ? "bg-orange-500 text-white border-orange-500"
+              : "border-dark-border text-dark-text-muted hover:bg-dark-card"
+          }
+        `}
+                >
+                  {t === "Fixed" ? "Fixed Price" : "Hourly Rate"}
+                </button>
+              ))}
             </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="feed-type"
-              className="block text-sm font-medium text-dark-text mb-2"
-            >
-              Type *
-            </label>
-            <div className="relative w-full">
-              <select
-                id="feed-type"
-                value={type}
-                onChange={(e) =>
-                  setType(e.target.value as "remote" | "on_site")
-                }
-                required
-                className="w-full appearance-none pr-10 px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-              >
-                <option value="remote">Remote</option>
-                <option value="on_site">On Site</option>
-              </select>
-
-              <svg
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dark-text-muted"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="feed-location"
-              className="block text-sm font-medium text-dark-text mb-2"
-            >
-              Location *
-            </label>
-            <input
-              id="feed-location"
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-              className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition"
-              placeholder="e.g., New York, NY"
-            />
           </div>
 
           <div>
@@ -343,3 +378,23 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 };
 
 export default FeedDialog;
+
+interface IconProps {
+  src: string;
+  alt?: string;
+  size?: number;
+  className?: string;
+}
+
+const Icon = ({ src, alt = "", size = 16, className = "" }: IconProps) => {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      width={size}
+      height={size}
+      className={`inline-block ${className}`}
+      draggable={false}
+    />
+  );
+};

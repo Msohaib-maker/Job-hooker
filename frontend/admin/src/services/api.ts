@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { JobBody } from "../types";
 
-// const API_BASE_URL = "https://backend-young-snow-881.fly.dev";
-const BASE_API_DEV = "http://localhost:3000";
+const BASE_API_DEV = "https://backend-young-snow-881.fly.dev";
+// const BASE_API_DEV = "http://localhost:3000";
 
 const api = axios.create({
   baseURL: BASE_API_DEV,

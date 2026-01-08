@@ -9,8 +9,16 @@ export const authService = {
     }
     return response.data;
   },
-  signUp: async (email: string, password: string) => {
-    const response = await api.post("/auth/signup", { email, password });
+  emailVerify: async (email: string) => {
+    const response = await api.post("/auth/signup/emailVerify", { email });
+    if (response.data.token) {
+      console.log(response.data.token);
+      localStorage.setItem("auth_token", response.data.token);
+    }
+    return response.data;
+  },
+  otpVerify: async (email: string, otp: string) => {
+    const response = await api.post("/auth/signup/otpVerify", { email, otp });
     if (response.data.token) {
       console.log(response.data.token);
       localStorage.setItem("auth_token", response.data.token);

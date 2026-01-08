@@ -20,11 +20,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/signup" replace />;
   }
 
   return <>{children}</>;
 };
 
 export default ProtectedRoute;
-

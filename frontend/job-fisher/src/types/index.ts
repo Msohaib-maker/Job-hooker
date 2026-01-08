@@ -1,3 +1,5 @@
+import { SalaryType } from "./job.type";
+
 export interface Job {
   id?: string;
   title: string;
@@ -40,6 +42,8 @@ export interface CreateFeedDto {
   salary: number;
   tags: string;
   salaryCurrency: string;
+  salaryType: SalaryType;
+  platforms: string;
 }
 
 export interface User {

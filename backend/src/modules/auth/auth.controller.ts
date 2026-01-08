@@ -10,16 +10,22 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { SignUpDto, LoginDto } from "./models/register-dto";
+import { SignUpDto, LoginDto, VerifyOtpDto } from "./models/register-dto";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post("signup")
-  signUp(@Body() dto: SignUpDto) {
-    console.log(dto);
-    return this.authService.signUp(dto);
+  @Post("signup/emailVerify")
+  emailVerify(@Body() dto: SignUpDto) {
+    console.log("email verify...");
+    return this.authService.emailVerify(dto);
+  }
+
+  @Post("signup/otpVerify")
+  otpVerify(@Body() dto: VerifyOtpDto) {
+    console.log("otp verify...");
+    return this.authService.verifyEmailOtp(dto);
   }
 
   @Post("login")

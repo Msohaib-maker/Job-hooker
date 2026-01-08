@@ -8,9 +8,26 @@ import {
 import { authService } from "../services/auth";
 import type { User, AuthState } from "../types";
 
+export interface EmailVerifyResponse {
+  success: boolean;
+  alreadyRegistered?: boolean;
+  token?: string;
+  message?: string;
+}
+
+export interface OtpVerifyResponse {
+  success: boolean;
+  token?: string;
+  user?: {
+    id: string;
+    email: string;
+  };
+}
+
 interface AuthContextType extends AuthState {
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  verifyEmail: (email: string) => Promise<EmailVerifyResponse>;
+  otpVerify: (email: string, otp: string) => Promise<OtpVerifyResponse>;
   signOut: () => void;
 }
 
@@ -38,14 +55,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     const response = await authService.login(email, password);
-    setUser(response.user);
+    console.log(response);
     setIsAuthenticated(true);
   };
 
-  const signUp = async (email: string, password: string) => {
-    const response = await authService.signUp(email, password);
-    setUser(response.user);
-    setIsAuthenticated(true);
+  const verifyEmail = async (email: string) => {
+    const response = await authService.emailVerify(email);
+    if (response.token) {
+      setIsAuthenticated(true);
+    }
+    console.log(response);
+    return response;
+  };
+
+  const otpVerify = async (email: string, otp: string) => {
+    const response = await authService.otpVerify(email, otp);
+    console.log(response);
+    if (response.token) {
+      setIsAuthenticated(true);
+    }
+    return response;
   };
 
   const signOut = () => {
@@ -61,7 +90,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isAuthenticated,
         isLoading,
         signIn,
-        signUp,
+        verifyEmail,
+        otpVerify,
         signOut,
       }}
     >

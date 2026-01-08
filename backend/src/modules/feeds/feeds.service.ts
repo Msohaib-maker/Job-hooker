@@ -17,20 +17,20 @@ export class FeedsService {
     });
   }
 
-  async getMyFeeds(id: number) {
+  async getMyFeeds(id: string) {
     return this.prisma.jobFeed.findMany({
       where: { userId: id },
     });
   }
 
-  async deleteFeed(feedId: number, userId: number) {
+  async deleteFeed(feedId: number, userId: string) {
     // user can delete only his own feeds
     return this.prisma.jobFeed.deleteMany({
       where: { id: feedId, userId },
     });
   }
 
-  async updateFeed(id: number, body: FeedDto, userId: number) {
+  async updateFeed(id: number, body: FeedDto, userId: string) {
     return this.prisma.jobFeed.update({
       data: { ...body },
       where: { id: id, userId },

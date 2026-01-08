@@ -10,6 +10,7 @@ import { JwtStrategy } from "./src/strategies/jwt.strategy";
 import { ConfigModule } from "@nestjs/config";
 import { JobModule } from "./src/modules/job/job.module";
 import { TelegramModule } from "./src/modules/telegram/telegram.module";
+import { SupabaseModule } from "./src/modules/supabase/supabase.module";
 
 @Module({
   providers: [JwtStrategy],
