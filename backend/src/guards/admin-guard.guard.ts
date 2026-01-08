@@ -6,8 +6,8 @@ export class AdminGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const role = req.headers["x-role"];
     const pass = req.headers["x-pass"];
-    const validRole = "MisterRobot";
-    const validPass = "Lo3kedHe2ven#!#";
+    const validRole = process.env.ADMINROLE;
+    const validPass = process.env.ADMINPASS;
 
     if (role === validRole && pass === validPass) {
       return true;
