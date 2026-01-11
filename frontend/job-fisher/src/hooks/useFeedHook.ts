@@ -81,6 +81,7 @@ export const useFeedManager = (
 
   const handleUpdateFeed = async (feedData: CreateFeedDto) => {
     if (!editingFeed) return;
+
     await feedService.updateFeed(editingFeed.id, feedData);
     await loadFeeds();
   };

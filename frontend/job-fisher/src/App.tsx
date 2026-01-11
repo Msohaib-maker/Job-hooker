@@ -9,12 +9,14 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route

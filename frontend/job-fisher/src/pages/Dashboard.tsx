@@ -30,30 +30,43 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col bg-dark-bg">
+    <div className="h-screen flex flex-col bg-[#050807] relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#00FF88]/10 blur-[160px]" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#00FF88]/5 blur-[140px]" />
+      </div>
+
       {/* Header */}
-      <header className="bg-dark-surface border-b border-dark-border px-6 py-4">
+      <header className="relative z-10 bg-[#0B0F0D]/80 backdrop-blur-xl border-b border-[#1F2A24] px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div>
-              <h1 className="text-2xl font-bold text-dark-text">Job Fisher</h1>
-              <p className="text-sm text-dark-text-muted">
-                Manage your job feeds
-              </p>
-            </div>
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-wide text-white">
+              Job <span className="text-[#00FF88]">Fisher</span>
+            </h1>
+            <p className="text-sm text-[#8FAE9B]">Manage your job feeds</p>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex items-center gap-5">
             <div className="text-right">
-              <p className="text-sm font-medium text-dark-text">
+              <p className="text-sm font-semibold text-white">
                 {user?.name || user?.email}
               </p>
-              <p className="text-xs text-dark-text-muted">{user?.email}</p>
+              <p className="text-xs text-[#8FAE9B]">{user?.email}</p>
             </div>
+
             <button
               onClick={signOut}
-              className="flex items-center gap-2 px-4 py-2 text-dark-text hover:bg-dark-card rounded-lg transition"
+              className="
+          flex items-center gap-2 px-4 py-2
+          text-white border border-[#1F2A24]
+          rounded-lg
+          hover:border-[#00FF88]
+          hover:shadow-[0_0_20px_rgba(0,255,136,0.4)]
+          transition
+        "
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-4 h-4 text-[#00FF88]" />
               <span>Sign Out</span>
             </button>
           </div>
@@ -64,7 +77,7 @@ const Dashboard = () => {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Feeds */}
-        <div className="w-80 flex-shrink-0">
+        <div className="w-[350px] min-w-[350px] flex-shrink-0">
           <FeedList
             selectedFeedId={selectedFeedId}
             onFeedSelect={(id) => setSelectedFeedId(id)}
@@ -80,7 +93,14 @@ const Dashboard = () => {
               <div>
                 <h2 className="text-2xl font-bold text-green-500 mb-4">Jobs</h2>
 
-                <div className="bg-dark-card rounded-lg border border-dark-border p-8">
+                <div
+                  className="
+  bg-[#0B0F0D]/80 backdrop-blur-xl
+  rounded-2xl p-8
+  border border-[#1F2A24]
+  shadow-[0_0_40px_rgba(0,255,136,0.05)]
+"
+                >
                   {loading ? (
                     <div className="flex justify-center py-10">
                       <div className="animate-spin w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full"></div>

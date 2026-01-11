@@ -1,12 +1,4 @@
-import {
-  Plus,
-  Rss,
-  Trash2,
-  Edit2,
-  Loader2,
-  CreditCard,
-  Bell,
-} from "lucide-react";
+import { Rss, Loader2 } from "lucide-react";
 import FeedDialog from "./FeedDialog";
 import type { Feed } from "../types";
 import { useFeedManager } from "../hooks/useFeedHook";
@@ -14,6 +6,9 @@ import { generateOTP } from "../utils/code-generator";
 import { api } from "../services/api";
 import { NotificationDialog } from "./NotificationDialog";
 import { BillingDialog } from "./BillingDialog";
+import AddFeedButton from "./AddFeedButton";
+import FeedItem from "./FeedItem";
+import BottomActions from "./BottomActions";
 
 interface FeedListProps {
   selectedFeedId: number | null;
@@ -72,133 +67,52 @@ const FeedList = ({
 
   return (
     <>
-      <div className="h-full flex flex-col bg-dark-surface border-r border-dark-border">
+      <div
+        className="
+  h-full flex flex-col
+  bg-[#0B0F0D]/80 backdrop-blur-xl
+  border-r border-[#1F2A24]
+"
+      >
         <div className="p-4 border-b border-dark-border">
-          <button
+          <AddFeedButton
             onClick={() => {
               setEditingFeed(null);
               setIsDialogOpen(true);
             }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition"
-          >
-            <Plus className="w-5 h-5" />
-            Add Feed
-          </button>
+          />
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-2">
           {isLoading ? (
             <div className="flex items-center justify-center p-8">
               <Loader2 className="w-6 h-6 text-dark-text-muted animate-spin" />
             </div>
           ) : feeds.length === 0 ? (
-            <div className="p-8 text-center text-dark-text-muted">
-              <Rss className="w-12 h-12 mx-auto mb-3 text-dark-text-muted" />
-              <p className="text-sm">No feeds yet</p>
-              <p className="text-xs mt-1">Click "Add Feed" to get started</p>
+            <div className="p-8 text-center text-[#8FAE9B]">
+              <Rss className="w-12 h-12 mx-auto mb-3 text-[#00FF88]/80" />
+              <p className="text-sm font-medium">No feeds yet 📡</p>
+              <p className="text-xs mt-1">Create one to start tracking jobs</p>
             </div>
           ) : (
-            <div className="p-2">
-              {feeds.map((feed) => (
-                <div
-                  key={feed.id}
-                  onClick={() => onFeedSelect(feed.id)}
-                  className={`group relative p-3 mb-2 rounded-lg cursor-pointer transition ${
-                    selectedFeedId === feed.id
-                      ? "bg-dark-card border-2 border-orange-500"
-                      : "bg-dark-card border-2 border-transparent hover:border-dark-border"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <Rss
-                      className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
-                        selectedFeedId === feed.id
-                          ? "text-orange-500"
-                          : "text-dark-text-muted"
-                      }`}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h3
-                        className={`font-medium text-sm truncate ${
-                          selectedFeedId === feed.id
-                            ? "text-dark-text"
-                            : "text-dark-text"
-                        }`}
-                      >
-                        {feed.title}
-                      </h3>
-                      <div className="text-xs text-dark-text-muted mt-1 space-y-0.5">
-                        <p className="line-clamp-1">
-                          {feed.location} •{" "}
-                          {feed.type === "remote" ? "Remote" : "On Site"}
-                        </p>
-                        <p className="line-clamp-1">
-                          Exp: {feed.exp} • ${feed.salary.toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                    <button
-                      onClick={(e) => handleEditFeed(feed, e)}
-                      className="p-1.5 text-dark-text-muted hover:text-orange-500 hover:bg-dark-bg rounded transition"
-                      title="Edit feed"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => handleDeleteFeed(feed.id, e)}
-                      className="p-1.5 text-dark-text-muted hover:text-red-500 hover:bg-dark-bg rounded transition"
-                      title="Delete feed"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            feeds.map((feed) => (
+              <FeedItem
+                key={feed.id}
+                feed={feed}
+                isSelected={selectedFeedId === feed.id}
+                onSelect={() => onFeedSelect(feed.id)}
+                onEdit={handleEditFeed}
+                onDelete={handleDeleteFeed}
+              />
+            ))
           )}
         </div>
 
-        {/* Settings Button at Bottom */}
-        <div className="relative border-t border-dark-border p-4 flex flex-col items-center gap-2">
-          <button
-            onClick={() => setBillingDialog(true)}
-            className="
-              flex  gap-4 
-              px-4 
-              w-[90%] 
-              pt-4
-              pb-4
-              rounded-xl       /* radius ~12px */
-              hover:bg-gray-500
-              text-white 
-              transition
-            "
-          >
-            <CreditCard className="w-5 h-5" />
-            <span className="text-sm font-medium">Billings</span>
-          </button>
-          <button
-            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="
-    flex  gap-4 
-    px-4 
-    w-[90%] 
-    pt-4
-    pb-4
-    rounded-xl       /* radius ~12px */
-    hover:bg-gray-500
-    text-white 
-    transition
-  "
-          >
-            <Bell className="w-5 h-5" />
-            <span className="text-sm font-medium">Notifications</span>
-          </button>
-
-          {/* Dropdown Menu */}
-        </div>
+        <BottomActions
+          setBillingDialog={setBillingDialog}
+          isSettingsOpen={isSettingsOpen}
+          setIsSettingsOpen={setIsSettingsOpen}
+        />
       </div>
 
       <FeedDialog
