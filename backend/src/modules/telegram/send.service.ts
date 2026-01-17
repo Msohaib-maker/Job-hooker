@@ -50,7 +50,7 @@ export class SendService {
   private async lockPendingJobs() {
     return this.prisma.job.findMany({
       where: { status: "pending" },
-      take: 20,
+      take: 5,
     });
   }
 
@@ -88,24 +88,32 @@ export class SendService {
     });
 
     for (const feed of userFeeds) {
-      const titleMatches =
-        feed.title &&
-        job.title.toLowerCase().includes(feed.title.toLowerCase());
+      const matchTitle = titleMatches(job.title, feed.title);
 
       const typeMatches = feed.type === job.type;
 
-      if (titleMatches || typeMatches) {
-        const updatedJob = await this.prisma.job.update({
-          where: { id: job.id },
-          data: {
-            status: "approved",
-          },
-        });
-
-        return updatedJob;
+      if (matchTitle || typeMatches) {
+        return job;
       }
     }
 
     return undefined;
   }
+}
+
+function normalize(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/);
+}
+
+function titleMatches(jobTitle: string, feedTitle: string, minOverlap = 0.5) {
+  if (!jobTitle || !feedTitle) return false;
+
+  const jobTokens = normalize(jobTitle);
+  const feedTokens = normalize(feedTitle);
+
+  const matches = feedTokens.filter((t) => jobTokens.includes(t));
+  return matches.length / feedTokens.length >= minOverlap;
 }
