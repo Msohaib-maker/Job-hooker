@@ -1,4 +1,4 @@
-import { Rss, Loader2 } from "lucide-react";
+import {  Loader2, Plus} from "lucide-react";
 import FeedDialog from "./FeedDialog";
 import type { Feed } from "../types";
 import { useFeedManager } from "../hooks/useFeedHook";
@@ -6,15 +6,16 @@ import { generateOTP } from "../utils/code-generator";
 import { api } from "../services/api";
 import { NotificationDialog } from "./NotificationDialog";
 import { BillingDialog } from "./BillingDialog";
-import AddFeedButton from "./AddFeedButton";
 import FeedItem from "./FeedItem";
 import BottomActions from "./BottomActions";
+import { PlatformTitle } from "./PlatformTitle";
 
 interface FeedListProps {
   selectedFeedId: number | null;
   onFeedSelect: (feedId: number | null) => void;
   feeds: Feed[];
   setFeeds: (feeds: Feed[]) => void;
+  signOut?: () => void;
 }
 
 const FeedList = ({
@@ -22,6 +23,7 @@ const FeedList = ({
   onFeedSelect,
   feeds,
   setFeeds,
+  signOut,
 }: FeedListProps) => {
   const {
     isLoading,
@@ -67,35 +69,38 @@ const FeedList = ({
 
   return (
     <>
-      <div
-        className="
-  h-full flex flex-col
-  bg-[#0B0F0D]/80 backdrop-blur-xl
-  border-r border-[#1F2A24]
-"
-      >
-        <div className="p-4 border-b border-dark-border">
-          <AddFeedButton
-            onClick={() => {
-              setEditingFeed(null);
-              setIsDialogOpen(true);
-            }}
-          />
+      <div className="h-full flex flex-col bg-[#0F0F0F]">
+        {/* Logo Area — sticky, never scrolls */}
+        <div className="flex-shrink-0 px-6 pt-6 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#C4F029] flex items-center justify-center">
+              <img src="./hook1.png" />
+            </div>
+            <span className="text-xl font-extrabold text-[#EDEDED] tracking-wide"><PlatformTitle /></span>
+          </div>
+        </div>
+        <hr className="border-[#262626] mx-0" />
+        <br></br>
+
+        {/* Create Feed — sticky below logo, never scrolls */}
+        <div className="flex-shrink-0 px-4 pb-2">
+          <button
+            onClick={() => { setEditingFeed(null); setIsDialogOpen(true); }}
+            className="w-full flex items-center gap-4 px-4 py-3 text-[#A1A1AA] hover:text-[#EDEDED] transition-colors group rounded-xl hover:bg-[#1A1A1A] border border-[#262626] hover:border-[#C4F029]/40"
+          >
+            <Plus className="w-5 h-5 text-[#737373] group-hover:text-[#C4F029] transition-colors" />
+            <span className="font-medium">Create Feed</span>
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2">
-          {isLoading ? (
-            <div className="flex items-center justify-center p-8">
-              <Loader2 className="w-6 h-6 text-dark-text-muted animate-spin" />
-            </div>
-          ) : feeds.length === 0 ? (
-            <div className="p-8 text-center text-[#8FAE9B]">
-              <Rss className="w-12 h-12 mx-auto mb-3 text-[#00FF88]/80" />
-              <p className="text-sm font-medium">No feeds yet 📡</p>
-              <p className="text-xs mt-1">Create one to start tracking jobs</p>
-            </div>
-          ) : (
-            feeds.map((feed) => (
+        {/* Scrollable feeds list */}
+        <div className="flex-1 overflow-y-auto px-4 py-2">
+          <div className="space-y-1 mb-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-4">
+                <Loader2 className="w-5 h-5 text-[#A1A1AA] animate-spin" />
+              </div>
+            ) : feeds.map((feed) => (
               <FeedItem
                 key={feed.id}
                 feed={feed}
@@ -104,15 +109,21 @@ const FeedList = ({
                 onEdit={handleEditFeed}
                 onDelete={handleDeleteFeed}
               />
-            ))
-          )}
+            ))}
+          </div>
+
+        
         </div>
 
-        <BottomActions
-          setBillingDialog={setBillingDialog}
-          isSettingsOpen={isSettingsOpen}
-          setIsSettingsOpen={setIsSettingsOpen}
-        />
+        {/* Bottom Actions — sticky at bottom, never scrolls */}
+        <div className="flex-shrink-0 px-4 pb-4">
+          <BottomActions
+            setBillingDialog={setBillingDialog}
+            isSettingsOpen={isSettingsOpen}
+            setIsSettingsOpen={setIsSettingsOpen}
+            signOut={signOut}
+          />
+        </div>
       </div>
 
       <FeedDialog

@@ -11,6 +11,7 @@ import { ConfigModule } from "@nestjs/config";
 import { JobModule } from "./src/modules/job/job.module";
 import { TelegramModule } from "./src/modules/telegram/telegram.module";
 import { SupabaseModule } from "./src/modules/supabase/supabase.module";
+import { ExportModule } from "./src/modules/export/export.module";
 
 @Module({
   providers: [JwtStrategy],
@@ -31,6 +32,7 @@ import { SupabaseModule } from "./src/modules/supabase/supabase.module";
     FeedsModule,
     JobModule,
     TelegramModule,
+    ExportModule,
   ],
 })
 export class AppModule {}

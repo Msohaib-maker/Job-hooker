@@ -1,3 +1,6 @@
+
+import { JobRole } from "../models/enums";
+import { JobType } from "../models/types";
 import { SalaryType } from "./job.type";
 
 export interface Job {
@@ -5,12 +8,13 @@ export interface Job {
   title: string;
   description?: string;
   company?: string;
+  platform?: "Upwork" | "Upwork Inc" | "YC" | "Y Combinator" | "Fiverr"
   location?: string;
   creation: Date;
   salary?: number;
   url?: string;
   experience?: string;
-  type: "remote" | "on_site";
+  type: JobType;
 }
 
 export interface FilterState {
@@ -23,7 +27,7 @@ export interface FilterState {
 
 export interface Feed {
   id: number;
-  title: string;
+  title: JobRole;
   exp: string;
   type: "remote" | "on_site";
   location: string;
@@ -37,9 +41,9 @@ export interface Feed {
 }
 
 export interface CreateFeedDto {
-  title: string;
+  title: JobRole;
   exp: string;
-  type: "remote" | "on_site";
+  type: JobType;
   location: string;
   salary: number;
   tags: string;

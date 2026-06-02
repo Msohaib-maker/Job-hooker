@@ -98,6 +98,8 @@ model User {
 enum JobType {
   remote
   on_site
+  hybrid
+  contract
 }
 
 enum SalaryType {

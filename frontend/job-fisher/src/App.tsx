@@ -6,19 +6,21 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Dashboard from "./pages/Dashboard";
+import SignIn from "./pages/Register/SignIn";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Landing from "./pages/Landing/Landing";
+import Register from "./pages/Register/Register";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/dashboard"
             element={
@@ -27,7 +29,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>

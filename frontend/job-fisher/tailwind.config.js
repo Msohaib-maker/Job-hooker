@@ -5,12 +5,12 @@ export default {
     extend: {
       colors: {
         dark: {
-          bg: "#0a0a0a",
-          surface: "#1a1a1a",
-          card: "#252525",
-          border: "#333333",
-          text: "#e5e5e5",
-          "text-muted": "#a3a3a3",
+          bg: "#0F0F0F",
+          surface: "#151515",
+          card: "#1A1A1A",
+          border: "#262626",
+          text: "#EDEDED",
+          "text-muted": "#A1A1AA",
         },
         orange: {
           50: "#fff7ed",

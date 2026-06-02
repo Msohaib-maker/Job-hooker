@@ -1,0 +1,7 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow indexing of authenticated pages if they exist
+Disallow: /dashboard
+Disallow: /settings

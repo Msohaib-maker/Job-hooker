@@ -1,30 +1,30 @@
+import { LogOut, Bell, CreditCard } from "lucide-react";
+
 interface BottomActionsProps {
   setBillingDialog: (value: boolean) => void;
   isSettingsOpen: boolean;
   setIsSettingsOpen: (value: boolean) => void;
+  signOut?: () => void;
 }
 
 const BottomActions = ({
   setBillingDialog,
   isSettingsOpen,
   setIsSettingsOpen,
+  signOut,
 }: BottomActionsProps) => {
   const buttonBase = `
-      flex items-center gap-3 w-[90%]
-      px-4 py-4 rounded-xl
-      text-white font-medium
-      bg-[#0B0F0D]/70 backdrop-blur-md
-      border border-[#1F2A24]
-      shadow-[0_0_15px_rgba(0,255,136,0.25)]
-      hover:shadow-[0_0_30px_rgba(0,255,136,0.5)]
-      hover:border-[#00FF88]
-      transition-all duration-300
+      w-full flex items-center gap-4
+      px-4 py-3 rounded-xl
+      text-[#A1A1AA] font-medium
+      hover:text-[#EDEDED] hover:bg-[#1A1A1A]
+      transition-all duration-200
     `;
 
   return (
-    <div className="relative border-t border-dark-border p-4 flex flex-col items-center gap-2">
+    <div className="border-t border-[#262626] pt-3 flex flex-col gap-1">
       <button onClick={() => setBillingDialog(true)} className={buttonBase}>
-        <span className="text-xl">💳</span>
+        <CreditCard className="w-5 h-5 text-[#737373]" />
         <span className="text-sm">Billing</span>
       </button>
 
@@ -32,11 +32,19 @@ const BottomActions = ({
         onClick={() => setIsSettingsOpen(!isSettingsOpen)}
         className={buttonBase}
       >
-        <span className="text-xl">🔔</span>
-        <span className="text-sm">Notifications</span>
+        <Bell className="w-5 h-5 text-[#737373]" />
+        <span className="text-sm">Notification Settings</span>
       </button>
+
+      {signOut && (
+        <button onClick={signOut} className={`${buttonBase} hover:text-red-400`}>
+          <LogOut className="w-5 h-5 text-[#737373]" />
+          <span className="text-sm">Sign out</span>
+        </button>
+      )}
     </div>
   );
 };
 
 export default BottomActions;
+
