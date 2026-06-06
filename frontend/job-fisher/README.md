@@ -19,7 +19,7 @@ A modern, responsive job board application built with React, TypeScript, and Tai
 - **Vite**: Build tool
 - **Lucide React**: Icons
 
-## Getting Started
+## Getting Started ---
 
 ### Prerequisites
 
