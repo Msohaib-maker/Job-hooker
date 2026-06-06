@@ -40,11 +40,11 @@ export class ExportService {
     const { profile, job } = payload;
 
     // 1. Optimize the summary with Gemini using our clean string tokenizer context
-    // const optimizedDescription = await this.optimizeSummaryWithAi(
-    //   profile,
-    //   job.description
-    // );
-    const optimizedDescription = { summary: profile.description };
+    const optimizedDescription = await this.optimizeSummaryWithAi(
+      profile,
+      job.description
+    );
+    //const optimizedDescription = { summary: profile.description };
 
     // 2. Build the PDF Document using isolated pipeline blocks
     return new Promise((resolve, reject) => {

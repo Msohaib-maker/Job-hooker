@@ -1,4 +1,3 @@
-
 import { JobRole } from "../models/enums";
 import { JobType } from "../models/types";
 import { SalaryType } from "./job.type";
@@ -8,7 +7,7 @@ export interface Job {
   title: string;
   description?: string;
   company?: string;
-  platform?: "Upwork" | "Upwork Inc" | "YC" | "Y Combinator" | "Fiverr"
+  platform?: "Upwork" | "Upwork_Inc" | "YC" | "Y_Combinator" | "Fiverr";
   location?: string;
   creation: Date;
   salary?: number;

@@ -104,8 +104,8 @@ function PlatformCheckboxes({
   opts: GenerateOptions;
   toggle: (key: keyof GenerateOptions) => void;
 }) {
-  const isUpwork = platform === "Upwork" || platform === "Upwork Inc";
-  const isYC = platform === "YC" || platform === "Y Combinator";
+  const isUpwork = platform === "Upwork" || platform === "Upwork_Inc";
+  const isYC = platform === "YC" || platform === "Y_Combinator";
   const isFiverr = platform === "Fiverr";
 
   if (isFiverr) {
@@ -301,9 +301,9 @@ const JobCard = ({
             >
               <img
                 src={`/${
-                  job.platform === "YC" || job.platform === "Y Combinator"
+                  job.platform === "YC" || job.platform === "Y_Combinator"
                     ? "YC"
-                    : job.platform === "Upwork" || job.platform === "Upwork Inc"
+                    : job.platform === "Upwork" || job.platform === "Upwork_Inc"
                       ? "upwork"
                       : "fiverr"
                 }.png`}

@@ -23,6 +23,7 @@ import {
 import { Job } from "../types";
 
 export const SKILL_OPTIONS = [
+  // Technical Skills
   "JavaScript",
   "TypeScript",
   "React",
@@ -45,12 +46,33 @@ export const SKILL_OPTIONS = [
   "CI/CD",
   "Figma",
   "UI/UX Design",
-  "Product Management",
-  "Data Analysis",
-  "Machine Learning",
-  "SQL",
   "TailwindCSS",
   "Vue.js",
+  "SQL",
+  "Machine Learning",
+  "Data Analysis",
+
+  // Non-Technical Skills
+  "Communication",
+  "Teamwork",
+  "Leadership",
+  "Problem Solving",
+  "Critical Thinking",
+  "Time Management",
+  "Adaptability",
+  "Creativity",
+  "Collaboration",
+  "Conflict Resolution",
+  "Decision Making",
+  "Emotional Intelligence",
+  "Interpersonal Skills",
+  "Project Management",
+  "Public Speaking",
+  "Negotiation",
+  "Strategic Thinking",
+  "Work Ethic",
+  "Attention to Detail",
+  "Customer Service",
 ];
 
 export interface Duration {

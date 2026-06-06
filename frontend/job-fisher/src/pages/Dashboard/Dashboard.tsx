@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Briefcase, Star, TrendingUp, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Briefcase,
+  Star,
+  TrendingUp,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import FeedList from "../../components/FeedList";
 import JobList from "../../components/JobList";
 import { Feed, Job } from "../../types";
@@ -12,19 +19,22 @@ const Dashboard = () => {
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-
-  const { feedJobs, loading, jobStats, selectedJob, checkSelected, upworkJobProposal, setUpworkJob } = useJobFetcher({ feedId: selectedFeedId, feeds });
-
-
+  const {
+    feedJobs,
+    loading,
+    jobStats,
+    selectedJob,
+    checkSelected,
+    upworkJobProposal,
+    setUpworkJob,
+  } = useJobFetcher({ feedId: selectedFeedId, feeds });
 
   useEffect(() => {
     if (selectedFeedId) setIsPanelOpen(true);
   }, [selectedFeedId]);
 
-
   return (
     <div className="h-screen flex flex-row bg-[#0A0A0A] overflow-hidden font-sans">
-
       {/* ── Left sidebar ── */}
       <div className="w-[380px] flex-shrink-0 border-r border-[#1F1F1F] bg-[#0F0F0F] z-20 flex flex-col">
         <FeedList
@@ -51,9 +61,13 @@ const Dashboard = () => {
             <div>
               <h2 className="text-xl font-bold text-[#EDEDED] flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-[#C4F029]" />
-                {feeds.find((f) => f.id === selectedFeedId)?.title || "Feed"} Jobs
+                {feeds.find((f) => f.id === selectedFeedId)?.title ||
+                  "Feed"}{" "}
+                Jobs
               </h2>
-              <p className="text-xs text-[#A1A1AA] mt-1">Showing scraped results</p>
+              <p className="text-xs text-[#A1A1AA] mt-1">
+                Showing scraped results
+              </p>
             </div>
             <button
               onClick={() => setIsPanelOpen(false)}
@@ -69,7 +83,12 @@ const Dashboard = () => {
                 <div className="animate-spin w-10 h-10 border-4 border-[#C4F029] border-t-transparent rounded-full" />
               </div>
             ) : (
-              <JobList jobs={feedJobs} selectedJob={selectedJob} checkSelected={checkSelected} showUpworkProposal={setUpworkJob} />
+              <JobList
+                jobs={feedJobs}
+                selectedJob={selectedJob}
+                checkSelected={checkSelected}
+                showUpworkProposal={setUpworkJob}
+              />
             )}
           </div>
         </div>
@@ -102,8 +121,12 @@ const Dashboard = () => {
 
         <div className="max-w-6xl w-full mx-auto relative z-10 flex flex-col h-full gap-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEDED] mb-1">Dashboard</h1>
-            <p className="text-sm text-[#A1A1AA]">Overview of your job hunting activity</p>
+            <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEDED] mb-1">
+              Dashboard
+            </h1>
+            <p className="text-sm text-[#A1A1AA]">
+              Overview of your job hunting activity
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -112,46 +135,95 @@ const Dashboard = () => {
                 <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
                   <Star className="w-4 h-4 text-[#C4F029]" />
                 </div>
-                <span className="text-[#A1A1AA] text-sm font-medium">High-Score Matches</span>
+                <span className="text-[#A1A1AA] text-sm font-medium">
+                  High-Score Matches
+                </span>
               </div>
-              <span className="text-3xl font-bold text-[#EDEDED]">{jobStats?.highScore.length ?? 0}</span>
+              <span className="text-3xl font-bold text-[#EDEDED]">
+                {jobStats?.highScore.length ?? 0}
+              </span>
             </div>
             <div className="bg-[#151515] border border-[#262626] rounded-xl p-5 flex flex-col shadow-lg">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
                   <TrendingUp className="w-4 h-4 text-[#C4F029]" />
                 </div>
-                <span className="text-[#A1A1AA] text-sm font-medium">New Today</span>
+                <span className="text-[#A1A1AA] text-sm font-medium">
+                  New Today
+                </span>
               </div>
-              <span className="text-3xl font-bold text-[#EDEDED]">{jobStats?.today.length ?? 0}</span>
+              <span className="text-3xl font-bold text-[#EDEDED]">
+                {jobStats?.today.length ?? 0}
+              </span>
             </div>
             <div className="bg-[#151515] border border-[#262626] rounded-xl p-5 flex flex-col shadow-lg">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
                   <CalendarDays className="w-4 h-4 text-[#C4F029]" />
                 </div>
-                <span className="text-[#A1A1AA] text-sm font-medium">New This Week</span>
+                <span className="text-[#A1A1AA] text-sm font-medium">
+                  New This Week
+                </span>
               </div>
-              <span className="text-3xl font-bold text-[#EDEDED]">{jobStats?.weekly.length ?? 0}</span>
+              <span className="text-3xl font-bold text-[#EDEDED]">
+                {jobStats?.weekly.length ?? 0}
+              </span>
             </div>
           </div>
 
           <div className="flex-1 min-h-[500px] bg-[#151515] border border-[#262626] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             {selectedJob ? (
-              (selectedJob.platform === "Upwork" || selectedJob.platform === "Upwork Inc") ? (
-                <UpworkProposalDisplayer job={selectedJob} proposalData={upworkJobProposal} />
+              selectedJob.platform === "Upwork" ||
+              selectedJob.platform === "Upwork_Inc" ? (
+                <UpworkProposalDisplayer
+                  job={selectedJob}
+                  proposalData={upworkJobProposal}
+                />
               ) : (
                 <div className="flex-1 p-12 overflow-y-auto">
-                  <h2 className="text-3xl font-bold text-[#EDEDED] mb-4">{selectedJob.title}</h2>
-                  <div className="flex items-center gap-4 text-[#A1A1AA] text-sm mb-8">
-                    <span className="font-medium text-[#C4F029]">{selectedJob.platform}</span>
-                    <span>•</span>
-                    <span>{selectedJob.company || "Unknown Company"}</span>
-                    <span>•</span>
-                    <span>{selectedJob.location || "Remote"}</span>
+                  <h2 className="text-3xl font-bold text-[#EDEDED] mb-6">
+                    {selectedJob.title}
+                  </h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[#A1A1AA] text-sm mb-8">
+                    <div>
+                      <span className="font-medium text-[#C4F029]">
+                        Platform:
+                      </span>{" "}
+                      {selectedJob.platform || "N/A"}
+                    </div>
+                    <div>
+                      <span className="font-medium text-[#C4F029]">
+                        Company:
+                      </span>{" "}
+                      {selectedJob.company || "Unknown Company"}
+                    </div>
+                    <div>
+                      <span className="font-medium text-[#C4F029]">
+                        Location:
+                      </span>{" "}
+                      {selectedJob.location || "Remote"}
+                    </div>
+
+                    <div>
+                      <span className="font-medium text-[#C4F029]">
+                        Experience:
+                      </span>{" "}
+                      {selectedJob.experience || "Not specified"}
+                    </div>
+                    <div>
+                      <span className="font-medium text-[#C4F029]">
+                        Job Type:
+                      </span>{" "}
+                      {selectedJob.type || "N/A"}
+                    </div>
                   </div>
-                  <div className="text-[#A1A1AA] text-base leading-relaxed whitespace-pre-wrap">
-                    {selectedJob.description}
+
+                  <div className="text-[#A1A1AA] text-base leading-relaxed whitespace-pre-wrap mb-8">
+                    <h3 className="text-xl font-semibold text-[#EDEDED] mb-4">
+                      Description
+                    </h3>
+                    {selectedJob.description || "No description available."}
                   </div>
                 </div>
               )
@@ -163,10 +235,12 @@ const Dashboard = () => {
                     <Briefcase className="w-8 h-8 text-[#C4F029]" />
                   </div>
                   <h2 className="text-3xl font-bold text-[#EDEDED] mb-3">
-                    {feeds.find((f) => f.id === selectedFeedId)?.title} Feed Selected
+                    {feeds.find((f) => f.id === selectedFeedId)?.title} Feed
+                    Selected
                   </h2>
                   <p className="text-[#A1A1AA] text-sm leading-relaxed mb-8">
-                    The scraping feed is fully synchronized. All matches are processed and categorized in your local database.
+                    The scraping feed is fully synchronized. All matches are
+                    processed and categorized in your local database.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
@@ -184,9 +258,12 @@ const Dashboard = () => {
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
                 <Briefcase className="w-16 h-16 text-[#262626] mx-auto mb-4" />
-                <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">No Feed Selected</h2>
+                <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">
+                  No Feed Selected
+                </h2>
                 <p className="text-[#A1A1AA] text-sm max-w-sm mx-auto">
-                  Select a feed from the left panel to view jobs, or create a new feed to get started.
+                  Select a feed from the left panel to view jobs, or create a
+                  new feed to get started.
                 </p>
               </div>
             )}
@@ -199,7 +276,13 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const UpworkProposalDisplayer = ({ job, proposalData }: { job: Job, proposalData?: UpworkJobProposal | null }) => {
+const UpworkProposalDisplayer = ({
+  job,
+  proposalData,
+}: {
+  job: Job;
+  proposalData?: UpworkJobProposal | null;
+}) => {
   const [proposalText, setProposalText] = useState("");
 
   useEffect(() => {
@@ -212,11 +295,18 @@ const UpworkProposalDisplayer = ({ job, proposalData }: { job: Job, proposalData
 
   return (
     <div className="flex-1 p-8 overflow-y-auto flex flex-col h-full relative">
-      <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">Upwork Proposal</h2>
-      <p className="text-[#A1A1AA] text-sm mb-6">Generated for: <span className="text-[#C4F029] font-medium">{job.title}</span></p>
-      
+      <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">
+        Upwork Proposal
+      </h2>
+      <p className="text-[#A1A1AA] text-sm mb-6">
+        Generated for:{" "}
+        <span className="text-[#C4F029] font-medium">{job.title}</span>
+      </p>
+
       <div className="flex-1 flex flex-col bg-[#1A1A1A] rounded-xl border border-[#262626] p-5 shadow-inner">
-        <label className="text-xs tracking-widest uppercase font-bold text-[#555] mb-3">Editable Proposal text</label>
+        <label className="text-xs tracking-widest uppercase font-bold text-[#555] mb-3">
+          Editable Proposal text
+        </label>
         {proposalData && proposalData.jobId === job.id ? (
           <textarea
             className="flex-1 w-full bg-transparent border-none outline-none text-[#EDEDED] resize-none whitespace-pre-wrap leading-relaxed focus:ring-0 p-0 text-sm"
@@ -231,7 +321,7 @@ const UpworkProposalDisplayer = ({ job, proposalData }: { job: Job, proposalData
         )}
       </div>
       <div className="mt-6 flex justify-end gap-3">
-        <button 
+        <button
           onClick={() => navigator.clipboard.writeText(proposalText)}
           className="px-6 py-2.5 rounded-xl bg-[#262626] hover:bg-[#333] active:bg-[#1a1a1a] text-[#EDEDED] font-semibold text-sm transition-all border border-[#333]"
         >

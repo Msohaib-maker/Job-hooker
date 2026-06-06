@@ -234,20 +234,80 @@ const LandingHowItWorks = () => {
             className="flex flex-col-reverse lg:flex-row bg-[#151515] border border-[#262626] rounded-3xl overflow-hidden shadow-2xl"
           >
             <div className="flex-1 bg-[#1A1A1A] border-r border-[#262626] relative min-h-[300px]">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
-              {/* Mock UI overlay */}
-              <div className="absolute inset-8 border border-[#262626] bg-[#0F0F0F]/80 backdrop-blur-md rounded-xl shadow-2xl p-6 flex flex-col gap-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-full h-12 border border-[#262626] rounded bg-[#151515] flex items-center px-4 justify-between"
-                  >
-                    <div className="w-1/2 h-2 bg-[#262626] rounded"></div>
-                    <div className="w-8 h-8 rounded bg-[#C4F029]/20 flex items-center justify-center text-[#C4F029] text-xs font-bold">
-                      {10 - i}
+              {/* Splash bg */}
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center opacity-30 mix-blend-luminosity" />
+
+              {/* Documents overlay */}
+              <div className="absolute inset-0 flex items-center justify-center gap-4 p-8">
+                {/* CV */}
+                <div
+                  className="w-[42%] bg-[#0F0F0F]/90 backdrop-blur-md border border-[#262626] rounded-xl overflow-hidden shadow-2xl rotate-[-4deg]"
+                  style={{ animation: "floatA 5s ease-in-out infinite" }}
+                >
+                  <div className="flex items-center gap-1.5 px-3 py-2 border-b border-[#1E1E1E] bg-[#111]">
+                    <div className="w-2 h-2 rounded-full bg-[#C4F029]/40" />
+                    <span className="text-[9px] font-medium text-[#555] tracking-widest uppercase">
+                      CV.pdf
+                    </span>
+                  </div>
+                  <div className="p-3 flex flex-col gap-2">
+                    <div className="w-2/3 h-2 bg-[#EDEDED]/10 rounded" />
+                    <div className="w-1/2 h-1.5 bg-[#EDEDED]/5 rounded" />
+                    <div className="h-px bg-[#1E1E1E] my-1" />
+                    {[80, 65, 90, 55, 75].map((w, i) => (
+                      <div
+                        key={i}
+                        className="h-1.5 bg-[#262626] rounded"
+                        style={{ width: `${w}%` }}
+                      />
+                    ))}
+                    <div className="h-px bg-[#1E1E1E] my-1" />
+                    {[70, 55, 85].map((w, i) => (
+                      <div
+                        key={i}
+                        className="h-1.5 bg-[#262626] rounded"
+                        style={{ width: `${w}%` }}
+                      />
+                    ))}
+                    <div className="flex gap-1 mt-1 flex-wrap">
+                      {["React", "TS", "NestJS"].map((s) => (
+                        <span
+                          key={s}
+                          className="text-[8px] px-1.5 py-0.5 rounded bg-[#C4F029]/8 border border-[#C4F029]/20 text-[#8DB820]"
+                        >
+                          {s}
+                        </span>
+                      ))}
                     </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Cover Letter */}
+                <div
+                  className="w-[42%] bg-[#0F0F0F]/90 backdrop-blur-md border border-[#262626] rounded-xl overflow-hidden shadow-2xl rotate-[4deg]"
+                  style={{ animation: "floatB 6s ease-in-out infinite 0.8s" }}
+                >
+                  <div className="flex items-center gap-1.5 px-3 py-2 border-b border-[#1E1E1E] bg-[#111]">
+                    <div className="w-2 h-2 rounded-full bg-[#4A9EFF]/40" />
+                    <span className="text-[9px] font-medium text-[#555] tracking-widest uppercase">
+                      cover.pdf
+                    </span>
+                  </div>
+                  <div className="p-3 flex flex-col gap-2">
+                    <div className="w-3/4 h-1.5 bg-[#EDEDED]/8 rounded" />
+                    <div className="h-px bg-[#1E1E1E] my-1" />
+                    {[90, 75, 85, 60, 80, 70, 55].map((w, i) => (
+                      <div
+                        key={i}
+                        className="h-1.5 bg-[#262626] rounded"
+                        style={{ width: `${w}%` }}
+                      />
+                    ))}
+                    <div className="h-px bg-[#1E1E1E] my-1" />
+                    <div className="w-1/3 h-1.5 bg-[#262626] rounded" />
+                    <div className="w-1/4 h-1.5 bg-[#C4F029]/20 rounded mt-1" />
+                  </div>
+                </div>
               </div>
             </div>
             <div className="flex-1 p-10 md:p-16 flex flex-col justify-center">
@@ -264,10 +324,9 @@ const LandingHowItWorks = () => {
                 job.
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                For every job that matches your criteria, <PlatformTitle />{" "}
-                generates a custom cover letter, a tailored CV, and a
-                ready-to-use interview preparation PDF — so you show up prepared
-                every time.
+                For every job that matches your criteria, jobHooker generates a
+                custom cover letter, a tailored CV, and a Upwork Proposals — so
+                you show up prepared every time.
               </p>
               <ul className="grid grid-cols-2 gap-3 mb-10 text-sm text-[#737373]">
                 <li className="flex items-center gap-2">
