@@ -3,8 +3,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Briefcase, Star, TrendingUp, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import FeedList from "../../components/FeedList";
 import JobList from "../../components/JobList";
-import { Feed } from "../../types";
-import { useJobFetcher } from "../../hooks/useJobFetcher";
+import { Feed, Job } from "../../types";
+import { useJobFetcher, UpworkJobProposal } from "../../hooks/useJobFetcher";
 
 const Dashboard = () => {
   const { signOut } = useAuth();
@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
 
-  const { feedJobs, loading, jobStats, selectedJob, checkSelected } = useJobFetcher({ feedId: selectedFeedId, feeds });
+  const { feedJobs, loading, jobStats, selectedJob, checkSelected, upworkJobProposal, setUpworkJob } = useJobFetcher({ feedId: selectedFeedId, feeds });
 
 
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
                 <div className="animate-spin w-10 h-10 border-4 border-[#C4F029] border-t-transparent rounded-full" />
               </div>
             ) : (
-              <JobList jobs={feedJobs} selectedJob={selectedJob} checkSelected={checkSelected} />
+              <JobList jobs={feedJobs} selectedJob={selectedJob} checkSelected={checkSelected} showUpworkProposal={setUpworkJob} />
             )}
           </div>
         </div>
@@ -137,7 +137,25 @@ const Dashboard = () => {
           </div>
 
           <div className="flex-1 min-h-[500px] bg-[#151515] border border-[#262626] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
-            {selectedFeedId ? (
+            {selectedJob ? (
+              (selectedJob.platform === "Upwork" || selectedJob.platform === "Upwork Inc") ? (
+                <UpworkProposalDisplayer job={selectedJob} proposalData={upworkJobProposal} />
+              ) : (
+                <div className="flex-1 p-12 overflow-y-auto">
+                  <h2 className="text-3xl font-bold text-[#EDEDED] mb-4">{selectedJob.title}</h2>
+                  <div className="flex items-center gap-4 text-[#A1A1AA] text-sm mb-8">
+                    <span className="font-medium text-[#C4F029]">{selectedJob.platform}</span>
+                    <span>•</span>
+                    <span>{selectedJob.company || "Unknown Company"}</span>
+                    <span>•</span>
+                    <span>{selectedJob.location || "Remote"}</span>
+                  </div>
+                  <div className="text-[#A1A1AA] text-base leading-relaxed whitespace-pre-wrap">
+                    {selectedJob.description}
+                  </div>
+                </div>
+              )
+            ) : selectedFeedId ? (
               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#C4F029]/5 rounded-full blur-[80px] pointer-events-none" />
                 <div className="relative z-10 max-w-lg">
@@ -180,3 +198,46 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const UpworkProposalDisplayer = ({ job, proposalData }: { job: Job, proposalData?: UpworkJobProposal | null }) => {
+  const [proposalText, setProposalText] = useState("");
+
+  useEffect(() => {
+    if (proposalData?.proposal && proposalData?.jobId === job.id) {
+      setProposalText(proposalData.proposal);
+    } else {
+      setProposalText("");
+    }
+  }, [proposalData, job.id]);
+
+  return (
+    <div className="flex-1 p-8 overflow-y-auto flex flex-col h-full relative">
+      <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">Upwork Proposal</h2>
+      <p className="text-[#A1A1AA] text-sm mb-6">Generated for: <span className="text-[#C4F029] font-medium">{job.title}</span></p>
+      
+      <div className="flex-1 flex flex-col bg-[#1A1A1A] rounded-xl border border-[#262626] p-5 shadow-inner">
+        <label className="text-xs tracking-widest uppercase font-bold text-[#555] mb-3">Editable Proposal text</label>
+        {proposalData && proposalData.jobId === job.id ? (
+          <textarea
+            className="flex-1 w-full bg-transparent border-none outline-none text-[#EDEDED] resize-none whitespace-pre-wrap leading-relaxed focus:ring-0 p-0 text-sm"
+            value={proposalText}
+            onChange={(e) => setProposalText(e.target.value)}
+            placeholder="Edit your AI-generated proposal here..."
+          />
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-[#555] text-sm italic">
+            Waiting for proposal generation...
+          </div>
+        )}
+      </div>
+      <div className="mt-6 flex justify-end gap-3">
+        <button 
+          onClick={() => navigator.clipboard.writeText(proposalText)}
+          className="px-6 py-2.5 rounded-xl bg-[#262626] hover:bg-[#333] active:bg-[#1a1a1a] text-[#EDEDED] font-semibold text-sm transition-all border border-[#333]"
+        >
+          Copy to Clipboard
+        </button>
+      </div>
+    </div>
+  );
+};

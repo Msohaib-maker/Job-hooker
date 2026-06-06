@@ -1,4 +1,4 @@
-import { LogOut, Bell, CreditCard } from "lucide-react";
+import { LogOut, Bell } from "lucide-react";
 
 interface BottomActionsProps {
   setBillingDialog: (value: boolean) => void;
@@ -8,7 +8,6 @@ interface BottomActionsProps {
 }
 
 const BottomActions = ({
-  setBillingDialog,
   isSettingsOpen,
   setIsSettingsOpen,
   signOut,
@@ -23,10 +22,10 @@ const BottomActions = ({
 
   return (
     <div className="border-t border-[#262626] pt-3 flex flex-col gap-1">
-      <button onClick={() => setBillingDialog(true)} className={buttonBase}>
+      {/* <button onClick={() => setBillingDialog(true)} className={buttonBase}>
         <CreditCard className="w-5 h-5 text-[#737373]" />
         <span className="text-sm">Billing</span>
-      </button>
+      </button> */}
 
       <button
         onClick={() => setIsSettingsOpen(!isSettingsOpen)}
@@ -37,7 +36,10 @@ const BottomActions = ({
       </button>
 
       {signOut && (
-        <button onClick={signOut} className={`${buttonBase} hover:text-red-400`}>
+        <button
+          onClick={signOut}
+          className={`${buttonBase} hover:text-red-400`}
+        >
           <LogOut className="w-5 h-5 text-[#737373]" />
           <span className="text-sm">Sign out</span>
         </button>
@@ -47,4 +49,3 @@ const BottomActions = ({
 };
 
 export default BottomActions;
-

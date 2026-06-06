@@ -12,6 +12,7 @@ import { JobModule } from "./src/modules/job/job.module";
 import { TelegramModule } from "./src/modules/telegram/telegram.module";
 import { SupabaseModule } from "./src/modules/supabase/supabase.module";
 import { ExportModule } from "./src/modules/export/export.module";
+import { EmailModule } from "./src/modules/email/email.module";
 
 @Module({
   providers: [JwtStrategy],
@@ -31,6 +32,7 @@ import { ExportModule } from "./src/modules/export/export.module";
     AuthModule,
     FeedsModule,
     JobModule,
+    EmailModule,
     TelegramModule,
     ExportModule,
   ],

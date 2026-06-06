@@ -4,9 +4,9 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #0a0a0a;
@@ -14,8 +14,8 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* ─── Custom Scrollbar ──────────────────────────────────────── */
@@ -36,7 +36,7 @@ code {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C4F029;
+  background: #c4f029;
 }
 
 /* Firefox */
@@ -46,53 +46,83 @@ code {
 }
 
 @keyframes bob {
-
   0%,
   100% {
-    transform: translateY(0)
+    transform: translateY(0);
   }
 
   50% {
-    transform: translateY(-12px)
+    transform: translateY(-12px);
   }
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     transform: translate(-50%, -50%) scale(1);
-    opacity: .07
+    opacity: 0.07;
   }
 
   50% {
     transform: translate(-50%, -50%) scale(1.18);
-    opacity: .14
+    opacity: 0.14;
   }
 }
 
 @keyframes pulse2 {
-
   0%,
   100% {
     transform: translate(-50%, -50%) scale(1);
-    opacity: .18
+    opacity: 0.18;
   }
 
   50% {
     transform: translate(-50%, -50%) scale(1.12);
-    opacity: .32
+    opacity: 0.32;
   }
 }
 
 @keyframes twinkle {
-
   0%,
   100% {
-    opacity: .15
+    opacity: 0.15;
   }
 
   50% {
-    opacity: .9
+    opacity: 0.9;
+  }
+}
+
+@keyframes fadeSlideInLoop {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  5%,
+  95% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes typewriterLoop {
+  0%,
+  100% {
+    width: 0;
+  }
+  15%,
+  85% {
+    width: 100%; /* Fully typed state remains visible */
+  }
+}
+
+@keyframes blinkCursor {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #c4f029;
   }
 }

@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Job } from "../types";
 import JobCard from "./JobCard";
 import { Search } from "lucide-react";
+import { UpworkJobProposal } from "../hooks/useJobFetcher";
 
 interface JobListProps {
   jobs: Job[];
   selectedJob: Job | null;
   checkSelected: (job: Job) => void;
+  showUpworkProposal: ({ jobId, proposal }: UpworkJobProposal) => void;
 }
 
-const JobList = ({ jobs, selectedJob, checkSelected }: JobListProps) => {
+const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobListProps) => {
   const [query, setQuery] = useState("");
 
   const filtered = query.trim()
@@ -59,6 +61,7 @@ const JobList = ({ jobs, selectedJob, checkSelected }: JobListProps) => {
               job={job}
               isSelected={selectedJob?.id === job.id}
               checkSelected={checkSelected}
+              showUpworkProposal={showUpworkProposal}
             />
           ))}
         </div>

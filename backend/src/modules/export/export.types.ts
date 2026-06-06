@@ -7,10 +7,15 @@ import { Job } from "@/src/models/job-model";
 //   description?: string;
 // }
 
+export interface Duration {
+  start: Date;
+  end: Date | "Present";
+}
+
 export interface Experience {
   company: string;
   role: string;
-  duration: string;
+  duration: Duration;
   description?: string;
 }
 
@@ -27,28 +32,29 @@ export interface Experience {
 // }
 
 export interface Education {
-    institution: string;
-    degree: string;
-    grade: string; // 0-100
+  institution: string;
+  degree: string;
+  grade: string; // 0-100
+  duration: Duration;
 }
 
 export interface SkillItem {
-    name: string;
-    expertise: number; // 0-5
+  name: string;
+  expertise: number; // 0-5
 }
 
 export interface ProfileForm {
-    name: string;
-    email: string;
-    website?: string;
-    otherLink?: string;
-    description?: string;
-    skills?: SkillItem[];
-    education?: Education[];
-    interests?: string[];
-    certificates?: string[];
-    experience?: Experience[];
-    languages?: string[];
+  name: string;
+  email: string;
+  website?: string;
+  otherLink?: string;
+  description?: string;
+  skills?: SkillItem[];
+  education?: Education[];
+  interests?: string[];
+  certificates?: string[];
+  experience?: Experience[];
+  languages?: string[];
 }
 
 export interface ExportPayload {

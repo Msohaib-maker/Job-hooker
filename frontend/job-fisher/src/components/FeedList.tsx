@@ -1,4 +1,4 @@
-import {  Loader2, Plus} from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import FeedDialog from "./FeedDialog";
 import type { Feed } from "../types";
 import { useFeedManager } from "../hooks/useFeedHook";
@@ -76,7 +76,9 @@ const FeedList = ({
             <div className="w-8 h-8 rounded-full bg-[#C4F029] flex items-center justify-center">
               <img src="./hook1.png" />
             </div>
-            <span className="text-xl font-extrabold text-[#EDEDED] tracking-wide"><PlatformTitle /></span>
+            <span className="text-xl font-extrabold text-[#EDEDED] tracking-wide">
+              <PlatformTitle />
+            </span>
           </div>
         </div>
         <hr className="border-[#262626] mx-0" />
@@ -85,7 +87,10 @@ const FeedList = ({
         {/* Create Feed — sticky below logo, never scrolls */}
         <div className="flex-shrink-0 px-4 pb-2">
           <button
-            onClick={() => { setEditingFeed(null); setIsDialogOpen(true); }}
+            onClick={() => {
+              setEditingFeed(null);
+              setIsDialogOpen(true);
+            }}
             className="w-full flex items-center gap-4 px-4 py-3 text-[#A1A1AA] hover:text-[#EDEDED] transition-colors group rounded-xl hover:bg-[#1A1A1A] border border-[#262626] hover:border-[#C4F029]/40"
           >
             <Plus className="w-5 h-5 text-[#737373] group-hover:text-[#C4F029] transition-colors" />
@@ -95,24 +100,26 @@ const FeedList = ({
 
         {/* Scrollable feeds list */}
         <div className="flex-1 overflow-y-auto px-4 py-2">
-          <div className="space-y-1 mb-6">
+          <div className="space-y-2 mb-6">
+            {" "}
+            {/* Adjusted spacing */}
             {isLoading ? (
               <div className="flex items-center justify-center py-4">
                 <Loader2 className="w-5 h-5 text-[#A1A1AA] animate-spin" />
               </div>
-            ) : feeds.map((feed) => (
-              <FeedItem
-                key={feed.id}
-                feed={feed}
-                isSelected={selectedFeedId === feed.id}
-                onSelect={() => onFeedSelect(feed.id)}
-                onEdit={handleEditFeed}
-                onDelete={handleDeleteFeed}
-              />
-            ))}
+            ) : (
+              feeds.map((feed) => (
+                <FeedItem
+                  key={feed.id}
+                  feed={feed}
+                  isSelected={selectedFeedId === feed.id}
+                  onSelect={() => onFeedSelect(feed.id)}
+                  onEdit={handleEditFeed}
+                  onDelete={handleDeleteFeed}
+                />
+              ))
+            )}
           </div>
-
-        
         </div>
 
         {/* Bottom Actions — sticky at bottom, never scrolls */}

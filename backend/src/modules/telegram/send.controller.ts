@@ -16,4 +16,16 @@ export class SendController {
 
     return { status: "ok" };
   }
+
+  @Get("dispatch/email")
+  async dispatchJobsOnEmail(@Query("token") token: string) {
+    console.log(process.env.CRON_SECRET);
+    if (token !== process.env.CRON_SECRET) {
+      throw new UnauthorizedException();
+    }
+
+    await this.sendService.sendJobsToEmails();
+
+    return { status: "ok" };
+  }
 }

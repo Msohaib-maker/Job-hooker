@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Play } from "lucide-react";
 import { motion } from "framer-motion";
 
+const EMBED_LINK =
+  "https://embed.app.guidde.com/playbooks/c2QdZyEqEuZDgDWDGULZrB?mode=videoOnly";
 const LandingVideo = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handlePlayVideo = () => {
+    setIsPlaying(true);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -26,30 +35,49 @@ const LandingVideo = () => {
           See how it works
         </h2>
         <p className="text-[#A1A1AA] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-          Watch our quick 2-minute tutorial to understand how AI finds the perfect opportunities for you with zero spam.
+          Watch our quick 3-minute tutorial to understand how AI finds the
+          perfect opportunities for you with zero spam.
         </p>
       </div>
 
       <motion.div
-        whileHover={{ scale: 1.02 }}
+        whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.4 }}
-        className="relative w-full max-w-5xl rounded-3xl overflow-hidden border border-[#262626] shadow-2xl group cursor-pointer z-10"
+        className="relative w-full max-w-6xl rounded-3xl overflow-hidden border border-[#262626] shadow-2xl group cursor-pointer z-10"
       >
-        {/* Dummy video wrapper */}
         <div className="aspect-video bg-[#151515] relative flex items-center justify-center">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-1000 ease-out grayscale group-hover:grayscale-0" />
-          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
-
-          {/* Play button overlay */}
-          <div className="relative z-10 w-24 h-24 bg-[#C4F029] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(196,240,41,0.3)] group-hover:scale-110 group-hover:bg-[#D4FF39] transition-all duration-500">
-            <Play className="w-10 h-10 text-[#0F0F0F] ml-1 fill-current" />
-          </div>
-
-          {/* Dummy Time badge */}
-          <div className="absolute bottom-6 right-6 bg-[#1A1A1A]/90 border border-[#262626] backdrop-blur-md px-3 py-1.5 rounded-lg text-[#EDEDED] text-sm font-medium">
-            2:14
-          </div>
+          {isPlaying ? (
+            <iframe
+              src={EMBED_LINK}
+              title="Tutorial Video"
+              className="absolute inset-0 w-full h-full"
+              frameBorder="0"
+              allow="autoplay; fullscreen; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div
+              onClick={handlePlayVideo}
+              className="absolute inset-0 w-full h-full"
+            >
+              <img
+                src="/thumbnail.png"
+                alt="Video Thumbnail"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-24 h-24 bg-[#C4F029] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(196,240,41,0.3)] group-hover:scale-110 group-hover:bg-[#D4FF39] transition-all duration-500 cursor-pointer">
+                  <Play className="w-10 h-10 text-[#0F0F0F] ml-1 fill-current" />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
+        {/* Floating Aesthetics */}
+        <div className="absolute top-4 left-4 w-12 h-12 bg-[#C4F029] rounded-full opacity-50 animate-pulse" />
+        <div className="absolute bottom-4 right-4 w-16 h-16 bg-[#C4F029] rounded-full opacity-50 animate-pulse" />
+        <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#C4F029] rounded-full opacity-30 animate-ping" />
       </motion.div>
     </motion.div>
   );

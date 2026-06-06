@@ -4,6 +4,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { TelegramFormatter } from "./formatter/telegram.formatter";
 import { InjectBot } from "nestjs-telegraf";
 import { Job, User } from "@prisma/client";
+import { MailerService } from "@nestjs-modules/mailer";
 
 @Injectable()
 export class SendService {
@@ -12,7 +13,8 @@ export class SendService {
   constructor(
     private readonly prisma: PrismaService,
     @InjectBot()
-    private readonly bot: Telegraf
+    private readonly bot: Telegraf,
+    private mailService: MailerService
   ) {}
 
   async sendJobsToUsers() {
@@ -43,6 +45,63 @@ export class SendService {
         }
       }
     }
+  }
+
+  async sendJobsToEmails() {
+    const jobs = await this.lockPendingJobs();
+    if (!jobs.length) {
+      this.logger.log("No jobs to dispatch via email");
+      return;
+    }
+
+    const users = await this.getEmailSubscribedUsers();
+    if (!users.length) {
+      this.logger.warn("No email-subscribed users found");
+      return;
+    }
+    for (const user of users) {
+      for (const job of jobs) {
+        try {
+          const filteredJob = await this.getFilteredJobs(user, job);
+          if (!filteredJob) continue;
+
+          const message = this.formatJobForEmail(filteredJob);
+
+          await this.mailService.sendMail({
+            from: '"Job Scrapper" <no-reply@job-hookers.com>', // Replace with your email
+            to: user.email,
+            subject: `New Job Opportunity: ${filteredJob.title}`,
+            html: message,
+          });
+
+          this.logger.log(`Job ${job.id} sent to user ${user.email} via email`);
+        } catch (err) {
+          this.logger.error(
+            `Failed sending job ${job.id} to user ${user.email} via email`,
+            err
+          );
+        }
+      }
+    }
+  }
+
+  private formatJobForEmail(job: Job): string {
+    return `
+      <h1 style="color: #333;">${job.title}</h1>
+      <p><strong>Type:</strong> ${job.type}</p>
+      <p><strong>Location:</strong> ${job.location}</p>
+      <p><strong>Salary:</strong> ${job.salary} ${job.salaryCurrency}</p>
+      <p><strong>Description:</strong></p>
+      <p>${job.tags}</p>
+    `;
+  }
+
+  private async getEmailSubscribedUsers() {
+    return this.prisma.user.findMany({
+      where: {
+        IsEmailSubscription: true,
+      },
+    });
   }
 
   // ---------------- PRIVATE METHODS ----------------

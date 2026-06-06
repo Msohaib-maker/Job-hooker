@@ -8,10 +8,16 @@ type JobFetcherProps = {
   feeds: Feed[];
 };
 
+export type UpworkJobProposal = {
+  jobId: string | undefined
+  proposal: string
+}
+
 export const useJobFetcher = ({ feedId, feeds }: JobFetcherProps) => {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [feedJobs, setFeedJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
+  const [upworkJobProposal, setUpworkJobProposal] = useState<UpworkJobProposal|null>(null)
   const [jobStats, setJobStats] = useState<JobGroups>({
     all: [],
     highScore: [],
@@ -54,6 +60,10 @@ export const useJobFetcher = ({ feedId, feeds }: JobFetcherProps) => {
   const checkSelected = (job: Job) => {
     console.log("select kia h job ko", job)
     setSelectedJob(job)
+  }
+
+  const setUpworkJob = (upworkJobProposal: UpworkJobProposal) => {
+    setUpworkJobProposal(upworkJobProposal)
   }
 
   useEffect(() => {
@@ -102,5 +112,5 @@ export const useJobFetcher = ({ feedId, feeds }: JobFetcherProps) => {
     };
   }, [feedId, feeds]);
 
-  return { feedJobs, loading, jobStats, selectedJob, checkSelected };
+  return { feedJobs, loading, jobStats, selectedJob, checkSelected, upworkJobProposal, setUpworkJob };
 };

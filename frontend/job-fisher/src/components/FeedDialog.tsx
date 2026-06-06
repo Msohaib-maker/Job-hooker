@@ -1,3 +1,4 @@
+// FeedDialog.tsx
 
 import type { CreateFeedDto } from "../types";
 import { InputElement } from "./InputElement";
@@ -18,19 +19,35 @@ interface FeedDialogProps {
 }
 
 const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
-
-
-
   const {
-    title, setTitle, exp, setExp, type, setType,
-    location, setLocation, salary, setSalary,
-    currency, setCurrency, tags, salaryType, setSalaryType,
-    platforms, step, setStep, isLoading, setIsLoading,
-    error, setError, salaryTypes, COUNTRIES, jobRoleOptions,
-    toggleTag, setPlatformList
+    title,
+    setTitle,
+    exp,
+    setExp,
+    type,
+    setType,
+    location,
+    setLocation,
+    salary,
+    setSalary,
+    currency,
+    setCurrency,
+    tags,
+    salaryType,
+    setSalaryType,
+    platforms,
+    step,
+    setStep,
+    isLoading,
+    setIsLoading,
+    error,
+    setError,
+    salaryTypes,
+    COUNTRIES,
+    jobRoleOptions,
+    toggleTag,
+    setPlatformList,
   } = useFeedForm({ feed });
-
-
 
   if (!isOpen) return null;
 
@@ -84,9 +101,10 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-      <div className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0B0F0D]/90 backdrop-blur-xl border border-[#1F2A24]">
+      {/* Styled to match main container colors of FeedItem */}
+      <div className="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0F0F0F] border border-[#262626] shadow-2xl">
         <DialogHeader feed={feed} onClose={onClose} />
         <StepIndicator step={step} />
 
@@ -95,27 +113,40 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 
           {step === 1 && (
             <StepOne
-              title={title} setTitle={setTitle} jobRoleOptions={jobRoleOptions}
-              exp={exp} setExp={setExp}
-              platforms={platforms} setPlatformList={setPlatformList}
-              type={type} setType={setType}
-              location={location} setLocation={setLocation}
+              title={title}
+              setTitle={setTitle}
+              jobRoleOptions={jobRoleOptions}
+              exp={exp}
+              setExp={setExp}
+              platforms={platforms}
+              setPlatformList={setPlatformList}
+              type={type}
+              setType={setType}
+              location={location}
+              setLocation={setLocation}
               COUNTRIES={COUNTRIES}
             />
           )}
 
           {step === 2 && (
             <StepTwo
-              tags={tags} toggleTag={toggleTag}
-              salaryTypes={salaryTypes} salaryType={salaryType} setSalaryType={setSalaryType}
-              salary={salary} setSalary={setSalary}
-              currency={currency} setCurrency={setCurrency}
+              tags={tags}
+              toggleTag={toggleTag}
+              salaryTypes={salaryTypes}
+              salaryType={salaryType}
+              setSalaryType={setSalaryType}
+              salary={salary}
+              setSalary={setSalary}
+              currency={currency}
+              setCurrency={setCurrency}
             />
           )}
 
           <DialogFooter
-            step={step} setStep={setStep}
-            isLoading={isLoading} feed={feed}
+            step={step}
+            setStep={setStep}
+            isLoading={isLoading}
+            feed={feed}
             handleSubmit={handleSubmit}
           />
         </div>
@@ -126,16 +157,19 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 
 export default FeedDialog;
 
-
 // ─── Step indicator ───────────────────────────────────────────────
 const StepIndicator = ({ step }: { step: number }) => (
   <div className="px-6 pt-4">
     <div className="flex items-center gap-2 text-sm">
-      <span className={`font-semibold ${step === 1 ? "text-green-400" : "text-[#8FAE9B]"}`}>
+      <span
+        className={`font-semibold ${step === 1 ? "text-[#C4F029]" : "text-[#737373]"}`}
+      >
         Step 1
       </span>
-      <div className="flex-1 h-px bg-[#1F2A24]" />
-      <span className={`font-semibold ${step === 2 ? "text-green-400" : "text-[#8FAE9B]"}`}>
+      <div className="flex-1 h-px bg-[#262626]" />
+      <span
+        className={`font-semibold ${step === 2 ? "text-[#C4F029]" : "text-[#737373]"}`}
+      >
         Step 2
       </span>
     </div>
@@ -143,15 +177,21 @@ const StepIndicator = ({ step }: { step: number }) => (
 );
 
 // ─── Dialog header ────────────────────────────────────────────────
-const DialogHeader = ({ feed, onClose }: { feed: FeedDialogProps["feed"]; onClose: () => void }) => (
-  <div className="flex items-center justify-between p-6 border-b border-[#1F2A24]">
-    <h2 className="text-2xl font-extrabold text-white tracking-wide">
+const DialogHeader = ({
+  feed,
+  onClose,
+}: {
+  feed: FeedDialogProps["feed"];
+  onClose: () => void;
+}) => (
+  <div className="flex items-center justify-between p-6 border-b border-[#262626]">
+    <h2 className="text-2xl font-extrabold text-[#EDEDED] tracking-wide">
       {feed ? "Edit Feed ⚙️" : "Create Feed ✨"}
     </h2>
     <button
       type="button"
       onClick={onClose}
-      className="p-2 rounded-lg text-[#8FAE9B] hover:text-white hover:bg-[#050807] transition"
+      className="p-2 rounded-lg text-[#737373] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition"
     >
       <X className="w-5 h-5" />
     </button>
@@ -160,7 +200,7 @@ const DialogHeader = ({ feed, onClose }: { feed: FeedDialogProps["feed"]; onClos
 
 // ─── Error banner ─────────────────────────────────────────────────
 const ErrorBanner = ({ message }: { message: string }) => (
-  <div className="md:col-span-2 p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-400 text-sm">
+  <div className="md:col-span-2 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
     {message}
   </div>
 );
@@ -176,10 +216,10 @@ const SalaryTypeToggle = ({
   onToggle: (t: SalaryType) => void;
 }) => (
   <div className="md:col-span-2">
-    <label className="block text-sm font-medium text-[#8FAE9B] mb-3">
-      Salary Type <span className="text-[#00FF88]">*</span>
+    <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
+      Salary Type <span className="text-[#C4F029]">*</span>
     </label>
-    <div className="inline-flex p-1 rounded-xl bg-[#060A07] border border-[#1F2A24]">
+    <div className="inline-flex p-1 rounded-xl bg-[#0F0F0F] border border-[#262626]">
       {salaryTypes.map((t) => (
         <button
           key={t}
@@ -187,9 +227,10 @@ const SalaryTypeToggle = ({
           onClick={() => onToggle(t)}
           className={`
             relative px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200
-            ${salaryType === t
-              ? "bg-[#0B0F0D] text-[#00FF88] border border-[#00FF88]/30"
-              : "text-[#4A6157] hover:text-[#8FAE9B] border border-transparent"
+            ${
+              salaryType === t
+                ? "bg-[#151515] text-[#C4F029] border border-[#C4F029]/30"
+                : "text-[#737373] hover:text-[#A1A1AA] border border-transparent"
             }
           `}
         >
@@ -215,8 +256,8 @@ const SalaryField = ({
   setCurrency: (v: string) => void;
 }) => (
   <div>
-    <label className="block text-sm font-medium text-[#8FAE9B] mb-3">
-      Salary <span className="text-[#00FF88]">*</span>
+    <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
+      Salary <span className="text-[#C4F029]">*</span>
     </label>
     <div className="flex gap-3">
       {salaryType === "Fixed" ? (
@@ -257,26 +298,53 @@ const SalaryField = ({
 
 // ─── Step 1 ───────────────────────────────────────────────────────
 const StepOne = ({
-  title, setTitle, jobRoleOptions,
-  exp, setExp,
-  platforms, setPlatformList,
-  type, setType,
-  location, setLocation,
+  title,
+  setTitle,
+  jobRoleOptions,
+  exp,
+  setExp,
+  platforms,
+  setPlatformList,
+  type,
+  setType,
+  location,
+  setLocation,
   COUNTRIES,
 }: {
-  title: JobRole; setTitle: (v: JobRole) => void; jobRoleOptions: DropdownOption<JobRole>[];
-  exp: string; setExp: (v: string) => void;
-  platforms: Platform[]; setPlatformList: (v: Platform) => void;
-  type: JobType; setType: (v: JobType) => void;
-  location: string; setLocation: (v: string) => void;
+  title: JobRole;
+  setTitle: (v: JobRole) => void;
+  jobRoleOptions: DropdownOption<JobRole>[];
+  exp: string;
+  setExp: (v: string) => void;
+  platforms: Platform[];
+  setPlatformList: (v: Platform) => void;
+  type: JobType;
+  setType: (v: JobType) => void;
+  location: string;
+  setLocation: (v: string) => void;
   COUNTRIES: string[];
 }) => (
   <>
     <DropdownWrapper>
-      <Dropdown label="Select Role" options={jobRoleOptions} value={title} onChange={setTitle} required />
+      <Dropdown
+        label="Select Role"
+        options={jobRoleOptions}
+        value={title}
+        onChange={setTitle}
+        required
+      />
     </DropdownWrapper>
 
-    <InputElement id="feed-exp" label="Experience" value={exp} onChange={setExp} type="number" min={0} step={1} required />
+    <InputElement
+      id="feed-exp"
+      label="Experience"
+      value={exp}
+      onChange={setExp}
+      type="number"
+      min={0}
+      step={1}
+      required
+    />
 
     <DropdownWrapper>
       <Dropdown
@@ -284,13 +352,41 @@ const StepOne = ({
         label="Platforms"
         placeholder="Select platforms"
         options={[
-          { value: "Upwork", label: "Upwork", icon: <img src="/upwork.png" className="w-4 h-4" /> },
-          { value: "LinkedIn", label: "LinkedIn", icon: <img src="/linkedIn.png" className="w-4 h-4" /> },
-          { value: "Fiverr", label: "Fiverr", icon: <img src="/fiverr.png" className="w-4 h-4" /> },
-          { value: "CareerBuilder", label: "CareerBuilder", icon: <img src="/career-builder.png" className="w-4 h-4" /> },
-          { value: "Glassdoor", label: "Glassdoor", icon: <img src="/glassdoor.png" className="w-4 h-4" /> },
-          { value: "Indeed", label: "Indeed", icon: <img src="/indeed.png" className="w-4 h-4" /> },
-          { value: "YC", label: "Y Combinator", icon: <img src="/YC.png" className="w-4 h-4" /> },
+          {
+            value: "Upwork",
+            label: "Upwork",
+            icon: <img src="/upwork.png" className="w-4 h-4" />,
+          },
+          {
+            value: "LinkedIn",
+            label: "LinkedIn",
+            icon: <img src="/linkedIn.png" className="w-4 h-4" />,
+          },
+          {
+            value: "Fiverr",
+            label: "Fiverr",
+            icon: <img src="/fiverr.png" className="w-4 h-4" />,
+          },
+          {
+            value: "CareerBuilder",
+            label: "CareerBuilder",
+            icon: <img src="/career-builder.png" className="w-4 h-4" />,
+          },
+          {
+            value: "Glassdoor",
+            label: "Glassdoor",
+            icon: <img src="/glassdoor.png" className="w-4 h-4" />,
+          },
+          {
+            value: "Indeed",
+            label: "Indeed",
+            icon: <img src="/indeed.png" className="w-4 h-4" />,
+          },
+          {
+            value: "YC",
+            label: "Y Combinator",
+            icon: <img src="/YC.png" className="w-4 h-4" />,
+          },
         ]}
         value={platforms}
         onChange={setPlatformList}
@@ -298,7 +394,13 @@ const StepOne = ({
     </DropdownWrapper>
 
     <DropdownWrapper>
-      <Dropdown label="Type" options={JOB_TYPES} value={type} onChange={setType} required />
+      <Dropdown
+        label="Type"
+        options={JOB_TYPES}
+        value={type}
+        onChange={setType}
+        required
+      />
     </DropdownWrapper>
 
     <DropdownWrapper>
@@ -315,15 +417,25 @@ const StepOne = ({
 
 // ─── Step 2 ───────────────────────────────────────────────────────
 const StepTwo = ({
-  tags, toggleTag,
-  salaryTypes, salaryType, setSalaryType,
-  salary, setSalary,
-  currency, setCurrency,
+  tags,
+  toggleTag,
+  salaryTypes,
+  salaryType,
+  setSalaryType,
+  salary,
+  setSalary,
+  currency,
+  setCurrency,
 }: {
-  tags: string[]; toggleTag: (v: string) => void;
-  salaryTypes: SalaryType[]; salaryType: SalaryType; setSalaryType: (v: SalaryType) => void;
-  salary: string; setSalary: (v: string) => void;
-  currency: string; setCurrency: (v: string) => void;
+  tags: string[];
+  toggleTag: (v: string) => void;
+  salaryTypes: SalaryType[];
+  salaryType: SalaryType;
+  setSalaryType: (v: SalaryType) => void;
+  salary: string;
+  setSalary: (v: string) => void;
+  currency: string;
+  setCurrency: (v: string) => void;
 }) => (
   <>
     <div className="md:col-span-2">
@@ -337,7 +449,11 @@ const StepTwo = ({
       />
     </div>
 
-    <SalaryTypeToggle salaryTypes={salaryTypes} salaryType={salaryType} onToggle={setSalaryType} />
+    <SalaryTypeToggle
+      salaryTypes={salaryTypes}
+      salaryType={salaryType}
+      onToggle={setSalaryType}
+    />
 
     <SalaryField
       salary={salary}
@@ -351,12 +467,16 @@ const StepTwo = ({
 
 // ─── Footer ───────────────────────────────────────────────────────
 const DialogFooter = ({
-  step, setStep,
-  isLoading, feed,
+  step,
+  setStep,
+  isLoading,
+  feed,
   handleSubmit,
 }: {
-  step: number; setStep: (v: number) => void;
-  isLoading: boolean; feed: FeedDialogProps["feed"];
+  step: number;
+  setStep: (v: number) => void;
+  isLoading: boolean;
+  feed: FeedDialogProps["feed"];
   handleSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }) => (
   <div className="md:col-span-2 flex gap-3 pt-6">
@@ -364,7 +484,7 @@ const DialogFooter = ({
       <button
         type="button"
         onClick={() => setStep(1)}
-        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8FAE9B] bg-transparent border border-[#1F2A24] hover:border-[#2A3D30] hover:text-white transition-all duration-200"
+        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#737373] bg-transparent border border-[#262626] hover:border-[#A1A1AA] hover:text-white transition-all duration-200"
       >
         ← Back
       </button>
@@ -374,7 +494,7 @@ const DialogFooter = ({
       <button
         type="button"
         onClick={() => setStep(2)}
-        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#00FF88] bg-[#00FF88]/8 border border-[#00FF88]/25 hover:bg-[#00FF88]/15 hover:border-[#00FF88]/50 transition-all duration-200"
+        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#C4F029] bg-[#C4F029]/10 border border-[#C4F029]/25 hover:bg-[#C4F029]/20 hover:border-[#C4F029]/50 transition-all duration-200"
       >
         Next →
       </button>
@@ -383,7 +503,7 @@ const DialogFooter = ({
         type="submit"
         disabled={isLoading}
         onClick={handleSubmit}
-        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#0B0F0D] bg-[#00FF88] hover:bg-[#1AFFA0] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#0F0F0F] bg-[#C4F029] hover:bg-[#d2f454] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
       >
         {isLoading ? "Saving..." : feed ? "Update Feed" : "Create Feed"}
       </button>

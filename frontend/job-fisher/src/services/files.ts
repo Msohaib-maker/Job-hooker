@@ -19,4 +19,8 @@ export const filesService = {
         });
         return response.data;
     },
+    getUpworkProposal: async (payload: ExportPayload): Promise<string> => {
+        const response = await api.post("/generate/proposalLetter", payload);
+        return response.data;
+    }
 }

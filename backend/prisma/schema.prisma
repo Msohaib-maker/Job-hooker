@@ -26,6 +26,7 @@ model Job {
   description    String?
   location       String?
   company        String?
+  platform       Platform?
   salary         Int?
   salaryCurrency String     @default("USD")
   experience     String?
@@ -90,6 +91,7 @@ model User {
   telegram_handle String?
   telegram_one_time_code  String? @unique
   email_handler   String?
+  IsEmailSubscription Boolean @default(false)
 
   // relation: a user can have 0, 1, or many feeds
   jobFeeds        JobFeed[]
@@ -107,5 +109,10 @@ enum SalaryType {
   Hourly
 }
 
-
-
+enum Platform {
+  Upwork
+  Upwork_Inc
+  YC
+  Y_Combinator
+  Fiverr
+}
