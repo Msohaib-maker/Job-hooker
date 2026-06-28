@@ -16,22 +16,19 @@ export const CreateJob = ({
     <div className="space-y-6">
       {/* Header */}
 
-      <button
-        onClick={addJobHandler}
-        className="
-  inline-flex items-center gap-2
-  bg-blue-600 hover:bg-blue-500
-  text-white font-medium
-  px-5 py-2.5
-  rounded-lg
-  shadow-sm hover:shadow
-  transition
-  focus:outline-none focus:ring-2 focus:ring-blue-400
-"
-      >
-        <span className="text-lg leading-none">＋</span>
-        Add New Job
-      </button>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold heading-gradient mb-2">Create Job</h1>
+          <p className="text-[var(--text-muted)]">Add new job postings to the system</p>
+        </div>
+        <button
+          onClick={addJobHandler}
+          className="btn-glow flex items-center gap-2"
+        >
+          <span className="text-lg leading-none">＋</span>
+          Add New Job
+        </button>
+      </div>
 
       {/* Main Card */}
       {jobList.map((value) => (

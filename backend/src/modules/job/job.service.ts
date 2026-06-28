@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { Job } from "@/src/models/job-model";
 import { JobFeed } from "@/src/models/job-feed-model";
 
 
@@ -96,37 +95,61 @@ import { JobFeed } from "@/src/models/job-feed-model";
 export class JobService {
   constructor(private prisma: PrismaService) { }
 
-  async getFilteredJobs(feed: JobFeed) {
-    const { title, location, salary, type } = feed;
 
-    const jobs = await this.prisma.job.findMany();
-
-    const filteredJobs = [];
-
-    for (const job of jobs) {
-      const jobTitle = job.title?.toLowerCase() || "";
-      const searchTitle = title?.toLowerCase() || "";
-      const jobLoc = job.location?.toLowerCase() || "";
-      const searchLoc = location?.toLowerCase() || "";
-
-      const titleCheck = !searchTitle || jobTitle.includes(searchTitle);
-      const typeCheck = !type || job.type === type;
-      const salaryCheck = !salary || (job.salary && job.salary >= salary);
-      const locationCheck = !searchLoc || jobLoc.includes(searchLoc);
-
-      // Less rigid: matching title or location or type is enough if they are provided.
-      // But let's just make the matching case-insensitive and allow partial matches.
-      // We will include the job if it matches at least one of the provided search criteria 
-      // or if we use standard AND filtering but with relaxed strings.
-      // Let's use relaxed AND filtering.
-      if (!typeCheck || !locationCheck) {
-        continue
-      }
-      if (titleCheck || salaryCheck) {
-        filteredJobs.push(job);
-
-      }
-    }
-    return { filteredJobs: filteredJobs };
+   private extractKeywords(text: string): string[] {
+    return text
+      .toLowerCase()
+      .replace(/[()\/]/g, " ")   // remove brackets, slashes
+      .split(/\s+/)
+      .filter(w => w.length > 2) // drop tiny words like "a", "of"
+      .filter(w => !["and", "the", "for", "with"].includes(w));
   }
+
+  private matchScore(jobTitle: string, searchRole: string): number {
+  const jobKeywords = this.extractKeywords(jobTitle);
+  const searchKeywords = this.extractKeywords(searchRole);
+
+  let score = 0;
+  for (const kw of searchKeywords) {
+    if (jobKeywords.some(jk => jk.includes(kw) || kw.includes(jk))) {
+      score++;
+    }
+  }
+  return score;
+}
+
+
+  async getFilteredJobs(feed: JobFeed) {
+  const { title, location, type } = feed;
+  const jobsKey = "Filtered Jobs";
+
+  const jobs = await this.prisma.job.findMany({
+    where: {
+      ...(type && { type }),
+      ...(location && {
+        location: { contains: location, mode: "insensitive" },
+      }),
+    },
+  });
+
+  const searchKeywords = this.extractKeywords(title);
+  let minScore = Math.ceil(searchKeywords.length / 2); // e.g. "Frontend Developer" → needs 1 out of 2... 
+
+  // Actually for 2-word queries, require ALL keywords to match
+  minScore = searchKeywords.length >= 3
+    ? Math.ceil(searchKeywords.length / 2)  // 3+ words: majority match
+    : searchKeywords.length; 
+
+
+
+  const filteredJobs = jobs
+    .map(job => ({ job, score: this.matchScore(job.title ?? "", title) }))
+    .filter(({ score }) => score >= minScore)
+    .sort((a, b) => b.score - a.score)
+    .map(({ job }) => job); // pure Prisma Job[], no extra props
+
+  console.log(title)
+  console.log(`${jobsKey} `, filteredJobs)
+  return { filteredJobs };
+}
 }

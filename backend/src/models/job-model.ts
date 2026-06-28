@@ -2,7 +2,7 @@ export type Job = {
   id?: string;
   title: string;
   description?: string;
-  platform?: "Upwork" | "Upwork_Inc" | "YC" | "Y_Combinator" | "Fiverr";
+  platform?: "Upwork" | "Upwork_Inc" | "YC" | "Y_Combinator" | "Fiverr" | null;
   company?: string;
   location?: string;
   creation: Date;

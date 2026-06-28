@@ -10,7 +10,10 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@types/country-list": "^2.1.4",
     "axios": "^1.6.2",
+    "country-list": "^2.4.1",
+    "currency-codes": "^2.2.0",
     "lucide-react": "^0.294.0",
     "papaparse": "^5.5.3",
     "react": "^18.2.0",

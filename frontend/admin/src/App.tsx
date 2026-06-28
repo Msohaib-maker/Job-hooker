@@ -39,6 +39,8 @@ function App() {
           type: "remote",
           url: "",
           contactEmail: "",
+          platform: null,
+          status: "pending",
         },
       },
     ]);
@@ -52,11 +54,11 @@ function App() {
   // main jobs idher
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="flex">
+    <div className="min-h-screen relative">
+      <div className="flex relative z-10">
         <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
-        <main className="ml-64 p-8 min-h-screen overflow-auto">
-          <div className="max-w-7xl mx-auto">
+        <main className="ml-64 p-8 min-h-screen overflow-auto w-full">
+          <div className="max-w-7xl mx-auto animate-slide-up">
             <Dashboard
               view={currentView}
               jobList={jobList}

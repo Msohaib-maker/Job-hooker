@@ -2,16 +2,18 @@ export type Job = {
   id?: string;
   title: string;
   description?: string;
+  platform?: "Upwork" | "Upwork_Inc" | "YC" | "Y_Combinator" | "Fiverr" | null | "";
   company?: string;
   location?: string;
   creation: Date | string;
   salary?: number;
   experience?: string;
-  salaryCurrency: string;
-  tags: string;
   type: "remote" | "on_site";
   url?: string;
-  contactEmail: string;
+  tags: string;
+  contactEmail?: string;
+  salaryCurrency: string;
+  status: "pending" | "approved" | "rejected";
 };
 
 export type JobBody = {

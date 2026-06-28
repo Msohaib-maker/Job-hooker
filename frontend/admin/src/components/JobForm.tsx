@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { CheckCircle2, XCircle, Loader2, Briefcase } from "lucide-react";
+import { getNames } from "country-list";
+import cc from "currency-codes";
 import type { Job } from "../types";
 
 type JobFormProps = {
@@ -51,6 +53,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
     try {
       const jobData: Job = {
         ...formData,
+        platform: formData.platform === "" ? null : formData.platform,
         creation: new Date(formData.creation),
       };
 
@@ -69,12 +72,14 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
         location: "",
         creation: new Date().toISOString().split("T")[0],
         salary: 0,
-        salaryCurrency: "usd",
+        salaryCurrency: "USD",
         experience: "0",
         tags: "",
         type: "remote",
         url: "",
         contactEmail: "",
+        platform: "",
+        status: "pending",
       });
 
       setTimeout(() => {
@@ -108,34 +113,36 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
       type: "remote", // options: remote, hybrid, onsite
       url: "https://example.com/jobs/123",
       contactEmail: "hr@example.com",
+      platform: "",
+      status: "approved",
     }));
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="w-full py-4 animate-slide-up">
+      <div className="max-w-4xl mx-auto">
         <button
           onClick={autoFillData}
-          className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
+          className="btn-glow text-sm mb-6 px-4 py-2"
         >
-          Auto Fill
+          Auto Fill Demo Data
         </button>
 
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-orange-500/20 rounded-lg">
-              <Briefcase className="w-6 h-6 text-orange-500" />
+            <div className="p-2 bg-gradient-to-br from-[#00d4ff] to-[#7000ff] rounded-xl shadow-[0_0_15px_rgba(0,212,255,0.4)]">
+              <Briefcase className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white">Create New Job</h1>
+            <h1 className="text-3xl font-bold heading-gradient">Create New Job</h1>
           </div>
-          <p className="text-gray-400">
+          <p className="text-[var(--text-muted)]">
             Fill in the details to create a new job posting
           </p>
         </div>
 
         {/* Form Card */}
-        <div className="bg-gray-800 rounded-xl border border-gray-700 shadow-xl p-8">
+        <div className="glass-panel p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Field */}
             <div>
@@ -172,7 +179,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="company"
                   value={formData.company}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                   placeholder="e.g., Tech Corp Inc."
                 />
               </div>
@@ -184,15 +191,20 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                 >
                   Location
                 </label>
-                <input
-                  type="text"
+                <select
                   id="location"
                   name="location"
                   value={formData.location}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-                  placeholder="e.g., San Francisco, CA"
-                />
+                  className="premium-input"
+                >
+                  <option value="">Select a country</option>
+                  {getNames().map((country) => (
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 
@@ -211,7 +223,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="salary"
                   value={formData.salary}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                   placeholder="e.g., 100000"
                   min="0"
                 />
@@ -229,13 +241,13 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="salaryCurrency"
                   value={formData.salaryCurrency}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                 >
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                  <option value="INR">INR</option>
-                  <option value="CAD">CAD</option>
+                  {cc.codes().map((code) => (
+                    <option key={code} value={code}>
+                      {code}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -255,7 +267,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                   placeholder="e.g., 3-5 years"
                 />
               </div>
@@ -272,7 +284,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                 >
                   <option value="remote">Remote</option>
 
@@ -296,7 +308,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="url"
                   value={formData.url}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                   placeholder="https://company.com/job/123"
                 />
               </div>
@@ -314,11 +326,58 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                   name="contactEmail"
                   value={formData.contactEmail}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="premium-input"
                   placeholder="hr@company.com"
                 />
               </div>
             </div>
+
+            {/* Platform and Status Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  htmlFor="platform"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Platform
+                </label>
+                <select
+                  id="platform"
+                  name="platform"
+                  value={formData.platform ?? ""}
+                  onChange={handleChange}
+                  className="premium-input"
+                >
+                  <option value="">Select a platform</option>
+                  <option value="Upwork">Upwork</option>
+                  <option value="Upwork_Inc">Upwork Inc</option>
+                  <option value="YC">YC</option>
+                  <option value="Y_Combinator">Y Combinator</option>
+                  <option value="Fiverr">Fiverr</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="status"
+                  className="block text-sm font-semibold text-gray-200 mb-2"
+                >
+                  Status
+                </label>
+                <select
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="premium-input"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+            </div>
+
 
             {/* Tags Field */}
             <div>
@@ -356,7 +415,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                 value={formData.description}
                 onChange={handleChange}
                 rows={6}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all resize-none"
+                className="premium-input resize-none"
                 placeholder="Enter job description, requirements, responsibilities, and benefits..."
               />
             </div>
@@ -375,7 +434,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
                 name="creation"
                 value={formData.creation}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all [color-scheme:dark]"
+                className="premium-input [color-scheme:dark]"
               />
             </div>
 
@@ -402,7 +461,7 @@ export default function JobForm({ id, job, onJobCreate }: JobFormProps) {
               <button
                 type="submit"
                 disabled={isSubmitting || !formData.title}
-                className="flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-500/20"
+                className="btn-glow flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
