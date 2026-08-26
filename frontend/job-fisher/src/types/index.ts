@@ -62,3 +62,25 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+/** Sanitised job returned by GET /jobs/public — no apply url, no contact email. */
+export interface PublicJob {
+  id: string;
+  title: string;
+  description: string | null;
+  company: string | null;
+  platform: string | null;
+  location: string | null;
+  salary: number | null;
+  salaryCurrency: string;
+  experience: string | null;
+  type: string;
+  tags: string;
+  creation: string;
+}
+
+export interface PublicJobsResponse {
+  jobs: PublicJob[];
+  total: number;
+  returned: number;
+}

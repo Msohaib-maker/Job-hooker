@@ -245,8 +245,8 @@ const JobCard = ({
           flex flex-col gap-4 cursor-pointer hover:-translate-y-0.5
           ${
             isSelected
-              ? "border-[#C4F029] shadow-[0_0_25px_rgba(196,240,41,0.12)]"
-              : "border-[#262626] hover:border-[#C4F029]/30 hover:shadow-[0_0_30px_rgba(196,240,41,0.06)]"
+              ? "border-[#10B981] shadow-[0_0_25px_rgba(16, 185, 129,0.12)]"
+              : "border-[#262626] hover:border-[#10B981]/30 hover:shadow-[0_0_30px_rgba(16, 185, 129,0.06)]"
           }
         `}
       >
@@ -342,8 +342,8 @@ const JobCard = ({
               <button
                 onClick={handleGenerate}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold
-                  bg-[#1A1A1A] border border-[#C4F029]/40 text-[#C4F029]
-                  hover:bg-[#C4F029]/10 active:scale-[0.97] transition-all duration-150"
+                  bg-[#1A1A1A] border border-[#10B981]/40 text-[#10B981]
+                  hover:bg-[#10B981]/10 active:scale-[0.97] transition-all duration-150"
               >
                 <Sparkles className="w-3.5 h-3.5" /> Generate
               </button>
@@ -355,7 +355,7 @@ const JobCard = ({
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold
-                  bg-[#C4F029] text-[#0F0F0F] hover:bg-[#D4FF39] active:scale-[0.97] transition-all duration-150"
+                  bg-[#10B981] text-[#0F0F0F] hover:bg-[#34D399] active:scale-[0.97] transition-all duration-150"
               >
                 Apply Now <ExternalLink className="w-3.5 h-3.5" />
               </a>

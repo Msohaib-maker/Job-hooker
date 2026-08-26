@@ -1,273 +1,463 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import {
-  UserPlus,
   Mail,
-  ShieldCheck,
   Loader2,
   ArrowLeft,
-  Briefcase,
+  ArrowRight,
   Zap,
   Bell,
+  FileText,
+  ShieldCheck,
+  AlertCircle,
+  KeyRound,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { PlatformTitle } from "../../components/PlatformTitle";
+
+const OTP_LENGTH = 6;
+const RESEND_COOLDOWN = 30;
+
+const SOURCES = [
+  { name: "Upwork", logo: "/upwork.png" },
+  { name: "Y Combinator", logo: "/YC.png" },
+  { name: "LinkedIn", logo: "/linkedIn.png" },
+  { name: "Fiverr", logo: "/fiverr.png" },
+  { name: "Indeed", logo: "/indeed.png" },
+  { name: "Glassdoor", logo: "/glassdoor.png" },
+];
+
+const VALUE_PROPS = [
+  {
+    icon: Zap,
+    text: "Every role scored against your profile before you read it",
+  },
+  {
+    icon: FileText,
+    text: "Cover letters, CVs and proposals drafted per opening",
+  },
+  { icon: Bell, text: "Instant Telegram and email alerts on new matches" },
+];
+
+const maskEmail = (email: string) => {
+  const [user, domain] = email.split("@");
+  if (!domain) return email;
+  const head = user.slice(0, 2);
+  return `${head}${"•".repeat(Math.max(user.length - 2, 1))}@${domain}`;
+};
 
 const Register = () => {
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
+  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const { verifyEmail, otpVerify } = useAuth();
   const navigate = useNavigate();
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const code = useMemo(() => digits.join(""), [digits]);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = window.setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => window.clearInterval(id);
+  }, [cooldown]);
+
+  useEffect(() => {
+    if (otpSent) inputsRef.current[0]?.focus();
+  }, [otpSent]);
+
+  const sendOtp = async (resend = false) => {
     setError("");
     setIsLoading(true);
     try {
       const data = await verifyEmail(email);
-      if (data.token) { navigate("/dashboard"); return; }
+      if (data.token) {
+        navigate("/dashboard");
+        return;
+      }
+      if (resend) setDigits(Array(OTP_LENGTH).fill(""));
       setOtpSent(true);
+      setCooldown(RESEND_COOLDOWN);
     } catch {
-      setError("Failed to send verification email");
+      setError(
+        "We could not send that email. Check the address and try again.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const verifyCode = async (value: string) => {
+    if (value.length !== OTP_LENGTH || isLoading) return;
     setError("");
     setIsLoading(true);
     try {
-      await otpVerify(email, otp);
+      await otpVerify(email, value);
       navigate("/dashboard");
     } catch {
-      setError("Invalid or expired OTP");
+      setError("That code is invalid or has expired. Request a new one.");
+      setDigits(Array(OTP_LENGTH).fill(""));
+      inputsRef.current[0]?.focus();
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleDigitChange = (index: number, raw: string) => {
+    const value = raw.replace(/\D/g, "");
+
+    if (!value) {
+      setDigits((prev) => prev.map((d, i) => (i === index ? "" : d)));
+      return;
+    }
+
+    // Typing or pasting several digits at once fills forward from this box.
+    const next = [...digits];
+    value.split("").forEach((char, offset) => {
+      if (index + offset < OTP_LENGTH) next[index + offset] = char;
+    });
+    setDigits(next);
+
+    const landed = Math.min(index + value.length, OTP_LENGTH - 1);
+    inputsRef.current[landed]?.focus();
+
+    if (!next.includes("")) {
+      void verifyCode(next.join(""));
+    }
+  };
+
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Backspace" && !digits[index] && index > 0) {
+      e.preventDefault();
+      setDigits((prev) => prev.map((d, i) => (i === index - 1 ? "" : d)));
+      inputsRef.current[index - 1]?.focus();
+    }
+    if (e.key === "ArrowLeft" && index > 0) {
+      inputsRef.current[index - 1]?.focus();
+    }
+    if (e.key === "ArrowRight" && index < OTP_LENGTH - 1) {
+      inputsRef.current[index + 1]?.focus();
+    }
+  };
+
+  const resetToEmail = () => {
+    setOtpSent(false);
+    setError("");
+    setDigits(Array(OTP_LENGTH).fill(""));
+  };
+
   return (
-    <div className="min-h-screen bg-[#0F0F0F] flex font-sans overflow-hidden">
+    <div className="min-h-screen bg-[#0F0F0F] flex font-sans">
+      {/* ── Brand panel ── */}
+      <div className="hidden lg:flex w-[38%] xl:w-[34%] max-w-[480px] relative flex-col justify-between p-10 xl:p-12 bg-[#111111] border-r border-[#262626] overflow-hidden">
+        <div className="absolute -top-32 -left-28 w-[420px] h-[420px] bg-[#10B981]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-[#059669]/10 rounded-full blur-[90px] pointer-events-none" />
 
-      {/* ── Left panel ── */}
-      <div className="hidden lg:flex flex-1 relative flex-col justify-between p-12 bg-[#111111] border-r border-[#262626] overflow-hidden">
-        {/* background glow */}
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-[#C4F029]/8 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-72 h-72 bg-[#C4F029]/5 rounded-full blur-[80px] pointer-events-none" />
+        <Link
+          to="/"
+          className="relative z-10 flex items-center gap-2.5 w-fit"
+          aria-label="JobHooker home"
+        >
+          <img src="/hook1.png" alt="" className="w-8 h-8" />
+          <span className="font-extrabold text-2xl tracking-tight text-[#EDEDED]">
+            <PlatformTitle />
+          </span>
+        </Link>
 
-        {/* Logo */}
         <div className="relative z-10">
-          <Link to="/" className="flex items-center gap-2">
-            <span className=" font-extrabold text-2xl tracking-tight"><PlatformTitle /></span>
-          </Link>
-        </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-[2rem] xl:text-[2.375rem] font-extrabold leading-[1.12] tracking-tight text-[#EDEDED] [text-wrap:balance]"
+          >
+            One inbox for{" "}
+            <span className="text-[#10B981]">every opening</span> worth your
+            time.
+          </motion.h1>
 
-        {/* Center illustration */}
-        <div className="relative z-10 flex flex-col items-start gap-10">
-          {/* Mock job cards */}
-          <div className="w-full max-w-sm flex flex-col gap-3">
-            {[
-              { title: "Senior React Developer", company: "Stripe", score: 9 },
-              { title: "Frontend Engineer", company: "Vercel", score: 8 },
-              { title: "Full Stack Engineer", company: "Linear", score: 7 },
-            ].map((job, i) => (
+          <p className="mt-9 mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#737373]">
+            Pulling from
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {SOURCES.map((source, i) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.15 }}
-                className="flex items-center justify-between bg-[#151515] border border-[#262626] rounded-xl px-4 py-3"
+                key={source.name}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 + i * 0.06, duration: 0.35 }}
+                className="flex items-center gap-2.5 min-w-0 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08]"
               >
-                <div>
-                  <p className="text-[#EDEDED] text-sm font-semibold">{job.title}</p>
-                  <p className="text-[#737373] text-xs mt-0.5">{job.company}</p>
-                </div>
-                <span className="text-xs font-bold px-2 py-1 rounded bg-[#C4F029]/15 text-[#C4F029]">
-                  {job.score}/10
+                <img
+                  src={source.logo}
+                  alt=""
+                  className="w-5 h-5 shrink-0 object-contain rounded"
+                />
+                <span className="text-xs font-medium text-[#A1A1AA] truncate">
+                  {source.name}
                 </span>
               </motion.div>
             ))}
           </div>
 
-          {/* Feature pills */}
-          <div className="flex flex-col gap-4">
-            {[
-              { icon: Zap, text: "AI scores every job against your profile" },
-              { icon: Bell, text: "Instant Telegram & email alerts" },
-              { icon: Briefcase, text: "Custom CVs and cover letters per role" },
-            ].map(({ icon: Icon, text }, i) => (
+          <div className="mt-9 flex flex-col gap-3.5">
+            {VALUE_PROPS.map(({ icon: Icon, text }, i) => (
               <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -16 }}
+                key={text}
+                initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + i * 0.1 }}
-                className="flex items-center gap-3 text-[#A1A1AA] text-sm"
+                transition={{ delay: 0.55 + i * 0.1, duration: 0.4 }}
+                className="flex items-start gap-3 text-[#A1A1AA] text-[13px] leading-relaxed"
               >
-                <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-[#C4F029]" />
+                <div className="w-7 h-7 rounded-lg bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-3.5 h-3.5 text-[#10B981]" />
                 </div>
-                {text}
+                <span className="pt-[3px]">{text}</span>
               </motion.div>
             ))}
           </div>
         </div>
 
-        {/* Footer quote */}
-        <div className="relative z-10">
-          <p className="text-[#525252] text-xs leading-relaxed max-w-xs">
-            "JobHooker helped me land interviews at 3 top companies within a week."
-          </p>
-          <p className="text-[#3f3f3f] text-xs mt-2">— Early beta user</p>
-        </div>
+        <figure className="relative z-10 border-l-2 border-[#10B981]/40 pl-4">
+          <blockquote className="text-[#A1A1AA] text-[13px] leading-relaxed">
+            JobHooker helped me land interviews at three top companies inside a
+            week.
+          </blockquote>
+          <figcaption className="text-[#525252] text-xs mt-2">
+            — Early beta user
+          </figcaption>
+        </figure>
       </div>
 
-      {/* ── Right panel ── */}
+      {/* ── Auth panel ── */}
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 relative">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#C4F029]/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#10B981]/[0.07] rounded-full blur-[110px] pointer-events-none" />
 
-        {/* Back link (mobile only — desktop has logo on left) */}
         <Link
           to="/"
-          className="lg:hidden absolute top-8 left-8 text-[#A1A1AA] hover:text-[#C4F029] flex items-center gap-2 transition group z-20"
+          className="lg:hidden absolute top-8 left-6 text-[#A1A1AA] hover:text-[#10B981] flex items-center gap-2 transition group z-20 text-sm font-medium"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          Back
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to site
         </Link>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-md z-10"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+          className="w-full max-w-[420px] z-10"
         >
-          <div className="relative bg-[#151515] rounded-3xl p-10 border border-[#262626] shadow-2xl shadow-black/50">
-
-            {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-center mb-8"
-            >
-              <div className="mx-auto mb-4 w-16 h-16 rounded-2xl bg-[#1A1A1A] border border-[#262626] flex items-center justify-center">
-                <UserPlus className="w-8 h-8 text-[#C4F029]" />
+          <div
+            className="relative rounded-3xl p-8 sm:p-10 overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(16,185,129,0.03) 50%, rgba(255,255,255,0.02) 100%)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              backdropFilter: "blur(18px) saturate(140%)",
+              WebkitBackdropFilter: "blur(18px) saturate(140%)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.10), 0 24px 60px rgba(0,0,0,0.5)",
+            }}
+          >
+            <div className="mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/25 flex items-center justify-center mb-5">
+                {otpSent ? (
+                  <KeyRound className="w-5 h-5 text-[#10B981]" />
+                ) : (
+                  <Mail className="w-5 h-5 text-[#10B981]" />
+                )}
               </div>
-              <h2 className="text-3xl font-bold text-[#EDEDED]">Welcome aboard</h2>
-              <p className="text-sm text-[#A1A1AA] mt-2">
-                {otpSent ? "Enter the OTP sent to your email" : "Put your Email in the box"}
+              <h2 className="text-2xl font-bold text-[#EDEDED] tracking-tight">
+                {otpSent ? "Check your inbox" : "Sign in or create an account"}
+              </h2>
+              <p className="text-sm text-[#A1A1AA] mt-2 leading-relaxed">
+                {otpSent ? (
+                  <>
+                    We sent a {OTP_LENGTH}-digit code to{" "}
+                    <span className="text-[#EDEDED] font-medium">
+                      {maskEmail(email)}
+                    </span>
+                    . It expires in a few minutes.
+                  </>
+                ) : (
+                  "One email address is all it takes — no password to remember."
+                )}
               </p>
-            </motion.div>
+            </div>
 
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mb-5 p-3 rounded-xl border border-red-900/50 bg-red-900/20 text-red-400 text-sm text-center font-medium"
-              >
-                {error}
-              </motion.div>
-            )}
+            <AnimatePresence initial={false}>
+              {error && (
+                <motion.div
+                  key={error}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  role="alert"
+                  className="overflow-hidden"
+                >
+                  <div className="mb-5 flex items-start gap-2.5 p-3 rounded-xl border border-red-900/50 bg-red-950/40 text-red-300 text-sm">
+                    <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            {!otpSent && (
-              <motion.form
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                onSubmit={handleSendOtp}
+            {!otpSent ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void sendOtp();
+                }}
                 className="space-y-6"
               >
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#737373] w-5 h-5 group-focus-within:text-[#C4F029] transition-colors" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder="Email address"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl bg-[#1A1A1A] border border-[#262626]
-                    text-[#EDEDED] placeholder:text-[#737373]
-                    focus:outline-none focus:border-[#C4F029] focus:ring-1 focus:ring-[#C4F029] transition-all shadow-inner"
-                  />
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-xs font-semibold uppercase tracking-[0.14em] text-[#A1A1AA] mb-4"
+                  >
+                    Email address
+                  </label>
+
+                  <div className="relative group">
+                    <Mail
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 shrink-0 text-[#8A8A8A] group-focus-within:text-[#10B981] transition-colors pointer-events-none"
+                    />
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      autoFocus
+                      autoComplete="email"
+                      placeholder="you@company.com"
+                      className="w-full h-12 pl-12 pr-4 rounded-xl bg-[#151515] border border-[#333333] text-[#F5F5F5] text-[15px] font-medium caret-[#10B981] placeholder:text-[#7A7A7A] placeholder:font-normal focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/60 transition-all"
+                    />
+                  </div>
                 </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full h-14 rounded-xl bg-[#C4F029] text-[#0F0F0F] font-bold text-lg
-                  shadow-[0_0_15px_rgba(196,240,41,0.2)]
-                  hover:shadow-[0_0_25px_rgba(196,240,41,0.4)] hover:bg-[#D4FF39]
-                  transition-all flex items-center justify-center gap-2
-                  disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</> : "Register"}
-                </motion.button>
-
-                <div className="flex flex-col items-center gap-2 mt-6">
-
-                  <p className="text-center text-xs text-[#52525B]">
-                    By continuing, you agree to our{" "}
-                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-[#C4F029] hover:underline font-medium">
-                      Privacy Policy
-                    </a>.
-                  </p>
-                </div>
-              </motion.form>
-            )}
-
-            {otpSent && (
-              <motion.form
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                onSubmit={handleVerifyOtp}
-                className="space-y-6"
-              >
-                <div className="relative group">
-                  <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-[#737373] w-5 h-5 group-focus-within:text-[#C4F029] transition-colors" />
-                  <input
-                    type="text"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    required
-                    placeholder="Enter OTP"
-                    className="w-full pl-12 pr-4 py-4 rounded-xl bg-[#1A1A1A] border border-[#262626]
-                    text-[#EDEDED] tracking-widest text-lg font-bold
-                    focus:outline-none focus:border-[#C4F029] focus:ring-1 focus:ring-[#C4F029] transition-all shadow-inner"
-                  />
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full h-14 rounded-xl font-bold text-[#0F0F0F] text-lg bg-[#C4F029]
-                  shadow-[0_0_15px_rgba(196,240,41,0.2)]
-                  hover:shadow-[0_0_25px_rgba(196,240,41,0.4)] hover:bg-[#D4FF39]
-                  transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Verifying</> : "Verify OTP"}
-                </motion.button>
 
                 <button
-                  type="button"
-                  onClick={() => setOtpSent(false)}
-                  className="w-full text-sm text-[#A1A1AA] hover:text-[#C4F029] transition font-medium"
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-12 rounded-xl bg-[#10B981] text-[#04140E] font-bold shadow-[0_0_18px_rgba(16,185,129,0.22)] hover:shadow-[0_0_28px_rgba(16,185,129,0.4)] hover:bg-[#34D399] active:bg-[#059669] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  ← Change email
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending code…
+                    </>
+                  ) : (
+                    <>
+                      Continue with email
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
-              </motion.form>
+
+                <div className="flex items-start gap-2 pt-1 text-xs text-[#8A8A8A]">
+                  <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
+                  <span>New or returning — the same code does both.</span>
+                </div>
+              </form>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void verifyCode(code);
+                }}
+                className="space-y-6"
+              >
+                <div>
+                  <label
+                    htmlFor="otp-0"
+                    className="block text-xs font-semibold uppercase tracking-[0.14em] text-[#A1A1AA] mb-4"
+                  >
+                    Verification code
+                  </label>
+                  <div className="flex gap-2 sm:gap-2.5">
+                    {digits.map((digit, index) => (
+                      <input
+                        key={index}
+                        id={`otp-${index}`}
+                        ref={(el) => {
+                          inputsRef.current[index] = el;
+                        }}
+                        value={digit}
+                        onChange={(e) =>
+                          handleDigitChange(index, e.target.value)
+                        }
+                        onKeyDown={(e) => handleKeyDown(index, e)}
+                        onFocus={(e) => e.target.select()}
+                        inputMode="numeric"
+                        autoComplete={index === 0 ? "one-time-code" : "off"}
+                        maxLength={OTP_LENGTH}
+                        aria-label={`Digit ${index + 1} of ${OTP_LENGTH}`}
+                        className="w-full min-w-0 aspect-square rounded-xl bg-[#151515] border border-[#333333] text-[#F5F5F5] text-center text-xl font-bold caret-[#10B981] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/60 transition-all"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading || code.length < OTP_LENGTH}
+                  className="w-full py-3.5 rounded-xl bg-[#10B981] text-[#04140E] font-bold shadow-[0_0_18px_rgba(16,185,129,0.22)] hover:shadow-[0_0_28px_rgba(16,185,129,0.4)] hover:bg-[#34D399] active:bg-[#059669] transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Verifying…
+                    </>
+                  ) : (
+                    "Verify and continue"
+                  )}
+                </button>
+
+                <div className="flex items-center justify-between text-sm">
+                  <button
+                    type="button"
+                    onClick={resetToEmail}
+                    className="text-[#A1A1AA] hover:text-[#EDEDED] transition font-medium flex items-center gap-1.5"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    Change email
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={cooldown > 0 || isLoading}
+                    onClick={() => void sendOtp(true)}
+                    className="text-[#10B981] hover:text-[#34D399] transition font-medium disabled:text-[#525252] disabled:cursor-not-allowed"
+                  >
+                    {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+                  </button>
+                </div>
+              </form>
             )}
           </div>
+
+          <p className="text-center text-xs text-[#8A8A8A] mt-6 leading-relaxed">
+            By continuing you agree to our{" "}
+            <a
+              href="/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#A1A1AA] hover:text-[#10B981] underline underline-offset-2 transition-colors"
+            >
+              Privacy Policy
+            </a>
+            .
+          </p>
         </motion.div>
       </div>
     </div>

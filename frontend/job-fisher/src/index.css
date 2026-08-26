@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Brand palette ──────────────────────────────────────────
+   Single source of truth for the JobHooker accent (emerald).
+   brand        #10B981  primary — buttons, icons, key text
+   brand-bright #34D399  hover / highlights
+   brand-deep   #059669  pressed states, gradients
+   brand-soft   #6EE7B7  faint accents on dark surfaces        */
+:root {
+  --brand: #10b981;
+  --brand-rgb: 16, 185, 129;
+  --brand-bright: #34d399;
+  --brand-deep: #059669;
+  --brand-soft: #6ee7b7;
+}
+
 body {
   margin: 0;
   font-family:
@@ -36,7 +50,7 @@ code {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c4f029;
+  background: #10B981;
 }
 
 /* Firefox */
@@ -123,7 +137,7 @@ code {
     border-color: transparent;
   }
   50% {
-    border-color: #c4f029;
+    border-color: #10B981;
   }
 }
 
@@ -142,13 +156,13 @@ code {
   0%,
   100% {
     box-shadow:
-      0 0 0 6px rgba(196, 240, 41, 0.15),
-      0 0 30px 10px rgba(196, 240, 41, 0.5);
+      0 0 0 6px rgba(16, 185, 129, 0.15),
+      0 0 30px 10px rgba(16, 185, 129, 0.5);
   }
   50% {
     box-shadow:
-      0 0 0 10px rgba(196, 240, 41, 0.08),
-      0 0 50px 18px rgba(196, 240, 41, 0.6);
+      0 0 0 10px rgba(16, 185, 129, 0.08),
+      0 0 50px 18px rgba(16, 185, 129, 0.6);
   }
 }
 @keyframes floatA {
@@ -186,5 +200,40 @@ code {
   }
   50% {
     transform: translateY(8px) rotate(1.5deg);
+  }
+}
+
+@keyframes sheen {
+  0%,
+  60%,
+  100% {
+    background-position: 150% 0;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  45% {
+    background-position: -50% 0;
+    opacity: 0.6;
+  }
+}
+
+@keyframes tileFloatA {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes tileFloatB {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
   }
 }

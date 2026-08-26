@@ -33,8 +33,8 @@ const FeedItem = ({
         border transition-all duration-300 ease-out select-none mb-0
         ${
           isSelected
-            ? "bg-[#151515] border-[#C4F029] shadow-[0_0_20px_rgba(196,240,41,0.15)]"
-            : "bg-[#0F0F0F] border-[#262626] hover:bg-[#1A1A1A] hover:border-[#C4F029]/40 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
+            ? "bg-[#151515] border-[#10B981] shadow-[0_0_20px_rgba(16, 185, 129,0.15)]"
+            : "bg-[#0F0F0F] border-[#262626] hover:bg-[#1A1A1A] hover:border-[#10B981]/40 hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
         }
       `}
     >
@@ -43,7 +43,7 @@ const FeedItem = ({
         <div
           className={`
             p-2 rounded-lg transition-colors duration-300 mt-0.5
-            ${isSelected ? "bg-[#C4F029]/10 text-[#C4F029]" : "bg-[#262626] text-[#737373] group-hover:text-[#C4F029]"}
+            ${isSelected ? "bg-[#10B981]/10 text-[#10B981]" : "bg-[#262626] text-[#737373] group-hover:text-[#10B981]"}
           `}
         >
           <Rss className="w-4 h-4 flex-shrink-0" />
@@ -53,7 +53,7 @@ const FeedItem = ({
         <div className="flex-1 min-w-0 pr-16">
           {" "}
           {/* pr-16 leaves safe room for hover actions */}
-          <h3 className="font-medium text-sm text-[#EDEDED] group-hover:text-[#C4F029] tracking-wide truncate transition-colors">
+          <h3 className="font-medium text-sm text-[#EDEDED] group-hover:text-[#10B981] tracking-wide truncate transition-colors">
             {feed.title}
           </h3>
           <div className="text-xs text-[#A1A1AA] mt-1.5 space-y-1 font-normal">
@@ -71,7 +71,7 @@ const FeedItem = ({
               Experience:{" "}
               <span className="text-[#EDEDED] font-medium">{feed.exp}yr</span>
               <span className="text-[#262626] mx-0.5">•</span>
-              <span className="text-[#C4F029] font-medium">
+              <span className="text-[#10B981] font-medium">
                 {feed.salary.toLocaleString()} {feed.salaryCurrency}
               </span>
             </p>
@@ -84,7 +84,7 @@ const FeedItem = ({
         <div className="flex items-center gap-1 bg-[#0F0F0F]/90 backdrop-blur-sm p-1 rounded-lg border border-[#262626] shadow-xl">
           <button
             onClick={(e) => handleAction(e, (ev) => onEdit(feed, ev))}
-            className="p-1.5 rounded-md text-[#A1A1AA] hover:text-[#C4F029] hover:bg-[#1A1A1A] transition-all"
+            className="p-1.5 rounded-md text-[#A1A1AA] hover:text-[#10B981] hover:bg-[#1A1A1A] transition-all"
             title="Edit feed"
           >
             <Edit2 className="w-3.5 h-3.5" />

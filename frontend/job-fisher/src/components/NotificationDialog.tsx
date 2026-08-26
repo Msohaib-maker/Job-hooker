@@ -89,7 +89,7 @@ export const NotificationDialog = ({
           ${
             telegramStatus === "connected"
               ? "border-green-500 shadow-[0_0_25px_rgba(0,255,136,0.3)]"
-              : "border-[#1F2A24] hover:border-[#00FF88]/50 shadow-[0_0_15px_rgba(0,255,136,0.1)]"
+              : "border-[#1F2A24] hover:border-[#34D399]/50 shadow-[0_0_15px_rgba(0,255,136,0.1)]"
           }
           bg-[#0B0F0D]/30
           min-h-[80px]
@@ -137,7 +137,7 @@ export const NotificationDialog = ({
     ${
       emailStatus === "subscribed"
         ? "border-green-500 shadow-[0_0_25px_rgba(0,255,136,0.3)]"
-        : "border-[#1F2A24] hover:border-[#00FF88]/50 shadow-[0_0_15px_rgba(0,255,136,0.1)]"
+        : "border-[#1F2A24] hover:border-[#34D399]/50 shadow-[0_0_15px_rgba(0,255,136,0.1)]"
     }
     bg-[#0B0F0D]/30
     min-h-[80px]

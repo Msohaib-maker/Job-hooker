@@ -60,7 +60,7 @@ const Dashboard = () => {
           <div className="p-6 border-b border-[#1F1F1F] flex items-center justify-between flex-shrink-0">
             <div>
               <h2 className="text-xl font-bold text-[#EDEDED] flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-[#C4F029]" />
+                <Briefcase className="w-5 h-5 text-[#10B981]" />
                 {feeds.find((f) => f.id === selectedFeedId)?.title ||
                   "Feed"}{" "}
                 Jobs
@@ -71,7 +71,7 @@ const Dashboard = () => {
             </div>
             <button
               onClick={() => setIsPanelOpen(false)}
-              className="p-2 hover:bg-[#1A1A1A] text-[#A1A1AA] hover:text-[#C4F029] rounded-lg transition-colors cursor-pointer"
+              className="p-2 hover:bg-[#1A1A1A] text-[#A1A1AA] hover:text-[#10B981] rounded-lg transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -80,7 +80,7 @@ const Dashboard = () => {
           <div className="flex-1 overflow-y-auto p-6 space-y-4">
             {loading ? (
               <div className="flex justify-center py-20">
-                <div className="animate-spin w-10 h-10 border-4 border-[#C4F029] border-t-transparent rounded-full" />
+                <div className="animate-spin w-10 h-10 border-4 border-[#10B981] border-t-transparent rounded-full" />
               </div>
             ) : (
               <JobList
@@ -101,7 +101,7 @@ const Dashboard = () => {
           className="
       flex-shrink-0 self-center
       bg-[#1A1A1A] border border-[#262626] border-l-0
-      text-[#C4F029]
+      text-[#10B981]
       rounded-r-xl px-2 py-8
       transition-all duration-300 hover:bg-[#222222]
       flex items-center justify-center cursor-pointer
@@ -115,8 +115,8 @@ const Dashboard = () => {
       {/* ── Main content ── */}
       <div className="flex-1 flex flex-col overflow-y-auto relative p-8">
         <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#C4F029]/10 blur-[160px]" />
-          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#C4F029]/5 blur-[140px]" />
+          <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#10B981]/10 blur-[160px]" />
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#10B981]/5 blur-[140px]" />
         </div>
 
         <div className="max-w-6xl w-full mx-auto relative z-10 flex flex-col h-full gap-8">
@@ -132,8 +132,8 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#151515] border border-[#262626] rounded-xl p-5 flex flex-col shadow-lg">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
-                  <Star className="w-4 h-4 text-[#C4F029]" />
+                <div className="w-8 h-8 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
+                  <Star className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
                   High-Score Matches
@@ -145,8 +145,8 @@ const Dashboard = () => {
             </div>
             <div className="bg-[#151515] border border-[#262626] rounded-xl p-5 flex flex-col shadow-lg">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 text-[#C4F029]" />
+                <div className="w-8 h-8 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
                   New Today
@@ -158,8 +158,8 @@ const Dashboard = () => {
             </div>
             <div className="bg-[#151515] border border-[#262626] rounded-xl p-5 flex flex-col shadow-lg">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#C4F029]/10 flex items-center justify-center">
-                  <CalendarDays className="w-4 h-4 text-[#C4F029]" />
+                <div className="w-8 h-8 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
+                  <CalendarDays className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
                   New This Week
@@ -187,32 +187,32 @@ const Dashboard = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[#A1A1AA] text-sm mb-8">
                     <div>
-                      <span className="font-medium text-[#C4F029]">
+                      <span className="font-medium text-[#10B981]">
                         Platform:
                       </span>{" "}
                       {selectedJob.platform || "N/A"}
                     </div>
                     <div>
-                      <span className="font-medium text-[#C4F029]">
+                      <span className="font-medium text-[#10B981]">
                         Company:
                       </span>{" "}
                       {selectedJob.company || "Unknown Company"}
                     </div>
                     <div>
-                      <span className="font-medium text-[#C4F029]">
+                      <span className="font-medium text-[#10B981]">
                         Location:
                       </span>{" "}
                       {selectedJob.location || "Remote"}
                     </div>
 
                     <div>
-                      <span className="font-medium text-[#C4F029]">
+                      <span className="font-medium text-[#10B981]">
                         Experience:
                       </span>{" "}
                       {selectedJob.experience || "Not specified"}
                     </div>
                     <div>
-                      <span className="font-medium text-[#C4F029]">
+                      <span className="font-medium text-[#10B981]">
                         Job Type:
                       </span>{" "}
                       {selectedJob.type || "N/A"}
@@ -229,10 +229,10 @@ const Dashboard = () => {
               )
             ) : selectedFeedId ? (
               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#C4F029]/5 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#10B981]/5 rounded-full blur-[80px] pointer-events-none" />
                 <div className="relative z-10 max-w-lg">
-                  <div className="w-16 h-16 rounded-2xl bg-[#C4F029]/10 border border-[#C4F029]/20 flex items-center justify-center mx-auto mb-6">
-                    <Briefcase className="w-8 h-8 text-[#C4F029]" />
+                  <div className="w-16 h-16 rounded-2xl bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center mx-auto mb-6">
+                    <Briefcase className="w-8 h-8 text-[#10B981]" />
                   </div>
                   <h2 className="text-3xl font-bold text-[#EDEDED] mb-3">
                     {feeds.find((f) => f.id === selectedFeedId)?.title} Feed
@@ -245,7 +245,7 @@ const Dashboard = () => {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
                       onClick={() => setIsPanelOpen(true)}
-                      className="px-8 py-3.5 rounded-xl bg-[#C4F029] hover:bg-[#a9cf24] text-[#0F0F0F] font-bold text-sm tracking-wide active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
+                      className="px-8 py-3.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-[#0F0F0F] font-bold text-sm tracking-wide active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                     >
                       <ChevronRight className="w-5 h-5" /> Open Jobs List Panel
                     </button>
@@ -300,7 +300,7 @@ const UpworkProposalDisplayer = ({
       </h2>
       <p className="text-[#A1A1AA] text-sm mb-6">
         Generated for:{" "}
-        <span className="text-[#C4F029] font-medium">{job.title}</span>
+        <span className="text-[#10B981] font-medium">{job.title}</span>
       </p>
 
       <div className="flex-1 flex flex-col bg-[#1A1A1A] rounded-xl border border-[#262626] p-5 shadow-inner">

@@ -28,7 +28,7 @@ const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobLi
           placeholder="Search by job title..."
           value={query}
           onChange={e => setQuery(e.target.value)}
-          className="w-full bg-[#1A1A1A] border border-[#262626] rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-[#C4F029] transition"
+          className="w-full bg-[#1A1A1A] border border-[#262626] rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-[#10B981] transition"
         />
         {query && (
           <button
@@ -42,7 +42,7 @@ const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobLi
 
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#C4F029]">
+        <h2 className="text-2xl font-bold text-[#10B981]">
           {filtered.length} {filtered.length === 1 ? "Job" : "Jobs"} Found
         </h2>
       </div>

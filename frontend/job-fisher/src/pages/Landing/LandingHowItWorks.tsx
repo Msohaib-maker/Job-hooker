@@ -12,8 +12,8 @@ const LandingHowItWorks = () => {
         {/* Header */}
         <div className="mb-20">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-[2px] bg-[#C4F029]"></div>
-            <span className="text-[#C4F029] text-sm font-bold tracking-widest uppercase">
+            <div className="w-8 h-[2px] bg-[#10B981]"></div>
+            <span className="text-[#10B981] text-sm font-bold tracking-widest uppercase">
               How it works
             </span>
           </div>
@@ -23,7 +23,7 @@ const LandingHowItWorks = () => {
           </h2>
 
           <p className="text-[#A1A1AA] text-lg max-w-2xl mb-12">
-            Create feeds with your own filters and AI prompts. Job Hooker
+            Create feeds with your own filters and AI prompts. JobHooker
             creates custom cover letters, cvs and interview sheets for every job
             matching your feeds.
           </p>
@@ -43,7 +43,7 @@ const LandingHowItWorks = () => {
                 <span className="text-4xl font-extrabold text-[#262626]">
                   01
                 </span>
-                <span className="px-3 py-1 rounded-md border border-[#C4F029]/30 text-[#C4F029] text-sm font-bold bg-[#C4F029]/5">
+                <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
                   Feeds
                 </span>
               </div>
@@ -56,23 +56,23 @@ const LandingHowItWorks = () => {
               </p>
               <ul className="space-y-3 mb-10 text-sm text-[#737373]">
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Hourly/Fixed Types
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Key skills
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Unlimited feeds
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Job Location
                 </li>
               </ul>
-              <button className="text-[#C4F029] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
+              <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
                 Try it now{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -83,7 +83,7 @@ const LandingHowItWorks = () => {
               <div className="absolute inset-0 flex">
                 {/* Sidebar strip */}
                 <div className="w-[140px] flex-shrink-0 bg-[#0D0D0D] border-r border-[#262626] flex flex-col py-3 px-2 gap-1.5">
-                  <p className="text-[10px] font-bold text-[#C4F029] tracking-widest px-2 mb-1">
+                  <p className="text-[10px] font-bold text-[#10B981] tracking-widest px-2 mb-1">
                     FEEDS
                   </p>
                   {[
@@ -108,10 +108,10 @@ const LandingHowItWorks = () => {
                     </div>
                   ))}
                   <div
-                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-[#1A1A1A] border border-[#C4F029]/20"
+                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-[#1A1A1A] border border-[#10B981]/20"
                     style={{ animation: `fadeSlideIn 0.4s ease 0.4s both` }}
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C4F029] flex-shrink-0 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] flex-shrink-0 animate-pulse" />
                     <span className="text-[10px] text-[#EDEDED] truncate">
                       New feed…
                     </span>
@@ -141,7 +141,7 @@ const LandingHowItWorks = () => {
                           // Runs typewriter loop and cursor blink simultaneously and infinitely
                           animation:
                             "typewriterLoop 5s steps(22) infinite, blinkCursor 0.8s step-end infinite",
-                          borderRight: "2px solid #C4F029",
+                          borderRight: "2px solid #10B981",
                         }}
                       >
                         AI / LLM integrations
@@ -158,7 +158,7 @@ const LandingHowItWorks = () => {
                               key={t}
                               className={`text-[9px] px-2 py-0.5 rounded-full border ${
                                 i < 2
-                                  ? "bg-[#C4F029]/10 border-[#C4F029]/40 text-[#C4F029]"
+                                  ? "bg-[#10B981]/10 border-[#10B981]/40 text-[#10B981]"
                                   : "bg-[#1A1A1A] border-[#2A2A2A] text-[#555]"
                               }`}
                             >
@@ -178,7 +178,7 @@ const LandingHowItWorks = () => {
                             (s) => (
                               <span
                                 key={s}
-                                className="text-[9px] px-2 py-0.5 rounded-full bg-[#C4F029]/10 border border-[#C4F029]/40 text-[#C4F029]"
+                                className="text-[9px] px-2 py-0.5 rounded-full bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981]"
                               >
                                 {s}
                               </span>
@@ -216,7 +216,7 @@ const LandingHowItWorks = () => {
                       <div className="text-[9px] px-3 py-1 rounded-lg border border-[#2A2A2A] text-[#888]">
                         Cancel
                       </div>
-                      <div className="text-[9px] px-3 py-1 rounded-lg bg-[#C4F029] text-[#111] font-medium">
+                      <div className="text-[9px] px-3 py-1 rounded-lg bg-[#10B981] text-[#111] font-medium">
                         Create Feed
                       </div>
                     </div>
@@ -245,7 +245,7 @@ const LandingHowItWorks = () => {
                   style={{ animation: "floatA 5s ease-in-out infinite" }}
                 >
                   <div className="flex items-center gap-1.5 px-3 py-2 border-b border-[#1E1E1E] bg-[#111]">
-                    <div className="w-2 h-2 rounded-full bg-[#C4F029]/40" />
+                    <div className="w-2 h-2 rounded-full bg-[#10B981]/40" />
                     <span className="text-[9px] font-medium text-[#555] tracking-widest uppercase">
                       CV.pdf
                     </span>
@@ -273,7 +273,7 @@ const LandingHowItWorks = () => {
                       {["React", "TS", "NestJS"].map((s) => (
                         <span
                           key={s}
-                          className="text-[8px] px-1.5 py-0.5 rounded bg-[#C4F029]/8 border border-[#C4F029]/20 text-[#8DB820]"
+                          className="text-[8px] px-1.5 py-0.5 rounded bg-[#10B981]/8 border border-[#10B981]/20 text-[#047857]"
                         >
                           {s}
                         </span>
@@ -305,7 +305,7 @@ const LandingHowItWorks = () => {
                     ))}
                     <div className="h-px bg-[#1E1E1E] my-1" />
                     <div className="w-1/3 h-1.5 bg-[#262626] rounded" />
-                    <div className="w-1/4 h-1.5 bg-[#C4F029]/20 rounded mt-1" />
+                    <div className="w-1/4 h-1.5 bg-[#10B981]/20 rounded mt-1" />
                   </div>
                 </div>
               </div>
@@ -315,7 +315,7 @@ const LandingHowItWorks = () => {
                 <span className="text-4xl font-extrabold text-[#262626]">
                   02
                 </span>
-                <span className="px-3 py-1 rounded-md border border-[#C4F029]/30 text-[#C4F029] text-sm font-bold bg-[#C4F029]/5">
+                <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
                   AI Documents
                 </span>
               </div>
@@ -324,29 +324,29 @@ const LandingHowItWorks = () => {
                 job.
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                For every job that matches your criteria, jobHooker generates a
+                For every job that matches your criteria, JobHooker generates a
                 custom cover letter, a tailored CV, and a Upwork Proposals — so
                 you show up prepared every time.
               </p>
               <ul className="grid grid-cols-2 gap-3 mb-10 text-sm text-[#737373]">
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Custom cover letters per job
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Tailored CV per role
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Common & custom interview prep PDFs
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   One-click download, ready to send
                 </li>
               </ul>
-              <button className="text-[#C4F029] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
+              <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
                 Try it now{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -365,7 +365,7 @@ const LandingHowItWorks = () => {
                 <span className="text-4xl font-extrabold text-[#262626]">
                   03
                 </span>
-                <span className="px-3 py-1 rounded-md border border-[#C4F029]/30 text-[#C4F029] text-sm font-bold bg-[#C4F029]/5">
+                <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
                   Notifications
                 </span>
               </div>
@@ -373,30 +373,30 @@ const LandingHowItWorks = () => {
                 Instant job alerts to Telegram and email.
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                The moment a high-scoring job is found, Jobfisher pushes it
+                The moment a high-scoring job is found, JobHooker pushes it
                 straight to your Telegram channel and inbox — with the score,
                 title, and a direct link. No dashboard refreshing, no missed
                 opportunities.
               </p>
               <ul className="grid grid-cols-2 gap-3 mb-10 text-sm text-[#737373]">
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Telegram channel feed
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Email digest & instant alerts
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Score shown in every alert
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#C4F029] rounded-full"></span>{" "}
+                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
                   Direct link to apply fast
                 </li>
               </ul>
-              <button className="text-[#C4F029] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
+              <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
                 Try it now{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -421,7 +421,7 @@ const LandingHowItWorks = () => {
                   </div>
                   <div>
                     <p className="text-[#EDEDED] text-xs font-bold leading-none">
-                      Jobfisher Alerts
+                      JobHooker Alerts
                     </p>
                     <p className="text-[#737373] text-[10px] mt-0.5">
                       4,231 subscribers
@@ -463,7 +463,7 @@ const LandingHowItWorks = () => {
                           {job.title}
                         </span>
                         <span
-                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${job.hot ? "bg-[#C4F029]/20 text-[#C4F029]" : "bg-[#262626] text-[#737373]"}`}
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${job.hot ? "bg-[#10B981]/20 text-[#10B981]" : "bg-[#262626] text-[#737373]"}`}
                         >
                           {job.score}/10
                         </span>
@@ -491,7 +491,7 @@ const LandingHowItWorks = () => {
         <div className="mt-24 text-center pb-12">
           <button
             onClick={() => navigate("/register")}
-            className="bg-[#C4F029] text-[#0F0F0F] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#D4FF39] transition shadow-[0_0_20px_rgba(196,240,41,0.3)] hover:shadow-[0_0_30px_rgba(196,240,41,0.5)] flex items-center gap-2 mx-auto group"
+            className="bg-[#10B981] text-[#0F0F0F] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#34D399] transition shadow-[0_0_20px_rgba(16, 185, 129,0.3)] hover:shadow-[0_0_30px_rgba(16, 185, 129,0.5)] flex items-center gap-2 mx-auto group"
           >
             Get Started Free
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

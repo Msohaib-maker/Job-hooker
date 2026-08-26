@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { JobFeed } from "@/src/models/job-feed-model";
+import {
+  PublicJob,
+  PublicJobsQuery,
+  PublicJobsResponse,
+} from "./dto/public-jobs.dto";
 
 
 // const DUMMY_JOBS = [
@@ -152,4 +157,116 @@ export class JobService {
   console.log(`${jobsKey} `, filteredJobs)
   return { filteredJobs };
 }
+
+  /** Hard ceiling so the public endpoint can never be used to dump the table. */
+  private static readonly PUBLIC_MAX_LIMIT = 24;
+  private static readonly PUBLIC_DEFAULT_LIMIT = 9;
+  private static readonly PUBLIC_DESCRIPTION_CHARS = 220;
+  /** How many extra rows to pull so dedupe still fills the preview. */
+  private static readonly PUBLIC_OVERFETCH = 6;
+
+  private parseLimit(raw?: string): number {
+    const parsed = Number.parseInt(raw ?? "", 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return JobService.PUBLIC_DEFAULT_LIMIT;
+    }
+    return Math.min(parsed, JobService.PUBLIC_MAX_LIMIT);
+  }
+
+  /**
+   * Strips everything a signed-out visitor should not get: the apply `url`
+   * and `contactEmail` never leave the server, and the description is cut to
+   * a teaser length.
+   */
+  private toPublicJob(job: any): PublicJob {
+    const description: string | null = job.description ?? null;
+    const truncated =
+      description && description.length > JobService.PUBLIC_DESCRIPTION_CHARS
+        ? `${description.slice(0, JobService.PUBLIC_DESCRIPTION_CHARS).trimEnd()}…`
+        : description;
+
+    return {
+      id: job.id,
+      title: job.title,
+      description: truncated,
+      company: job.company ?? null,
+      platform: job.platform ?? null,
+      location: job.location ?? null,
+      salary: job.salary ?? null,
+      salaryCurrency: job.salaryCurrency,
+      experience: job.experience ?? null,
+      type: job.type,
+      tags: job.tags,
+      creation: job.creation,
+    };
+  }
+
+  /**
+   * Free preview of the board for the landing page — no auth required.
+   * Returns the newest non-rejected jobs, capped and sanitised.
+   */
+  async getPublicJobs(query: PublicJobsQuery): Promise<PublicJobsResponse> {
+    const { search, location, type } = query;
+    const limit = this.parseLimit(query.limit);
+
+    const where: any = {
+      status: { not: "rejected" },
+      ...(type === "remote" || type === "on_site" ? { type } : {}),
+      ...(location
+        ? { location: { contains: location, mode: "insensitive" } }
+        : {}),
+      ...(search
+        ? {
+            OR: [
+              { title: { contains: search, mode: "insensitive" } },
+              { company: { contains: search, mode: "insensitive" } },
+              { tags: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    // Scrapers re-import the same posting repeatedly, so a straight
+    // `take: limit` can fill the whole preview with one duplicated listing.
+    // Over-fetch, collapse duplicates, then trim to the requested size.
+    const [candidates, total] = await Promise.all([
+      this.prisma.job.findMany({
+        where,
+        orderBy: { creation: "desc" },
+        take: Math.min(limit * JobService.PUBLIC_OVERFETCH, 200),
+      }),
+      this.prisma.job.count({ where }),
+    ]);
+
+    const jobs = this.dedupe(candidates).slice(0, limit);
+
+    return {
+      jobs: jobs.map((job) => this.toPublicJob(job)),
+      total,
+      returned: jobs.length,
+    };
+  }
+
+  /**
+   * Collapses listings that are the same opening posted more than once,
+   * keyed on title + company. Order is preserved, so the newest copy wins.
+   */
+  private dedupe(jobs: any[]): any[] {
+    const seen = new Set<string>();
+    const unique: any[] = [];
+
+    for (const job of jobs) {
+      const key = `${(job.title ?? "").trim().toLowerCase()}|${(
+        job.company ?? ""
+      )
+        .trim()
+        .toLowerCase()}`;
+
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(job);
+    }
+
+    return unique;
+  }
 }

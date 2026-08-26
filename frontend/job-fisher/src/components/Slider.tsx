@@ -29,8 +29,8 @@ export function Slider({
     showBoundaries = true,
     className = "",
     trackColor = "#1F2A24",
-    fillColor = "#00FF88",
-    thumbColor = "#00FF88",
+    fillColor = "#34D399",
+    thumbColor = "#34D399",
     thumbGlow = "rgba(0,255,136,0.6)",
 }: SliderProps) {
     const numeric = Number(value) || min;
@@ -41,7 +41,7 @@ export function Slider({
             {label && (
                 <label className="block text-sm font-medium text-[#8FAE9B]">
                     {label}
-                    {required && <span className="text-[#00FF88] ml-0.5">*</span>}
+                    {required && <span className="text-[#34D399] ml-0.5">*</span>}
                 </label>
             )}
 

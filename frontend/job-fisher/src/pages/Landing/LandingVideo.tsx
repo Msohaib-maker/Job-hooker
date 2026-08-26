@@ -27,7 +27,7 @@ const LandingVideo = () => {
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="inline-block px-4 py-1.5 rounded-full border border-[#262626] bg-[#1A1A1A] text-[#C4F029] text-sm font-bold mb-6 tracking-wide"
+          className="inline-block px-4 py-1.5 rounded-full border border-[#262626] bg-[#1A1A1A] text-[#10B981] text-sm font-bold mb-6 tracking-wide"
         >
           TUTORIAL
         </motion.div>
@@ -67,7 +67,7 @@ const LandingVideo = () => {
               />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-24 h-24 bg-[#C4F029] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(196,240,41,0.3)] group-hover:scale-110 group-hover:bg-[#D4FF39] transition-all duration-500 cursor-pointer">
+                <div className="w-24 h-24 bg-[#10B981] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16, 185, 129,0.3)] group-hover:scale-110 group-hover:bg-[#34D399] transition-all duration-500 cursor-pointer">
                   <Play className="w-10 h-10 text-[#0F0F0F] ml-1 fill-current" />
                 </div>
               </div>
@@ -75,9 +75,9 @@ const LandingVideo = () => {
           )}
         </div>
         {/* Floating Aesthetics */}
-        <div className="absolute top-4 left-4 w-12 h-12 bg-[#C4F029] rounded-full opacity-50 animate-pulse" />
-        <div className="absolute bottom-4 right-4 w-16 h-16 bg-[#C4F029] rounded-full opacity-50 animate-pulse" />
-        <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#C4F029] rounded-full opacity-30 animate-ping" />
+        <div className="absolute top-4 left-4 w-12 h-12 bg-[#10B981] rounded-full opacity-50 animate-pulse" />
+        <div className="absolute bottom-4 right-4 w-16 h-16 bg-[#10B981] rounded-full opacity-50 animate-pulse" />
+        <div className="absolute -top-6 -right-6 w-20 h-20 bg-[#10B981] rounded-full opacity-30 animate-ping" />
       </motion.div>
     </motion.div>
   );

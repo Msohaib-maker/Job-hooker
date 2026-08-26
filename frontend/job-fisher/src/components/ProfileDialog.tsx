@@ -135,7 +135,7 @@ export interface ProfileForm {
 const inputClass = `
   w-full px-4 py-3 rounded-xl bg-[#1A1A1A] border border-[#262626]
   text-[#EDEDED] placeholder:text-[#525252] text-sm
-  focus:outline-none focus:border-[#C4F029]/50 focus:ring-1 focus:ring-[#C4F029]/30
+  focus:outline-none focus:border-[#10B981]/50 focus:ring-1 focus:ring-[#10B981]/30
   transition-all
 `;
 
@@ -153,7 +153,7 @@ const SectionHeader = ({
   title: string;
 }) => (
   <div className="flex items-center gap-2 mb-4">
-    <Icon className="w-4 h-4 text-[#C4F029]" />
+    <Icon className="w-4 h-4 text-[#10B981]" />
     <span className="text-sm font-semibold text-[#EDEDED]">{title}</span>
     <div className="flex-1 h-px bg-[#262626]" />
   </div>
@@ -400,7 +400,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>
-                      Name <span className="text-[#C4F029]">*</span>
+                      Name <span className="text-[#10B981]">*</span>
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" />
@@ -459,7 +459,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
               <section>
                 <SectionHeader icon={FileText} title="Description" />
                 <label className={labelClass}>
-                  About you <span className="text-[#C4F029]">*</span>
+                  About you <span className="text-[#10B981]">*</span>
                 </label>
                 <textarea
                   rows={5}
@@ -528,7 +528,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                   ))}
                   <button
                     onClick={addExperience}
-                    className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#C4F029] transition w-max"
+                    className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#10B981] transition w-max"
                   >
                     <Plus className="w-4 h-4" /> Add Experience
                   </button>
@@ -607,7 +607,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 
                   <button
                     onClick={addEducation}
-                    className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#C4F029] transition w-max mt-1"
+                    className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#10B981] transition w-max mt-1"
                   >
                     <Plus className="w-4 h-4" /> Add Education
                   </button>
@@ -619,12 +619,12 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 <SectionHeader icon={Briefcase} title="Skills & Expertise" />
                 <label className={labelClass}>
                   Add Professional Skills{" "}
-                  <span className="text-[#C4F029]">*</span>
+                  <span className="text-[#10B981]">*</span>
                 </label>
                 <div ref={skillRef} className="relative mb-4">
                   <div
                     className={`min-h-[48px] w-full px-4 py-2 rounded-xl bg-[#1A1A1A] border cursor-text flex flex-wrap gap-1.5 items-center transition-all
-                                        ${skillOpen ? "border-[#C4F029]/50 ring-1 ring-[#C4F029]/30" : errors.skills ? "border-red-500/50" : "border-[#262626]"}`}
+                                        ${skillOpen ? "border-[#10B981]/50 ring-1 ring-[#10B981]/30" : errors.skills ? "border-red-500/50" : "border-[#262626]"}`}
                     onClick={() => setSkillOpen(true)}
                   >
                     <input
@@ -694,9 +694,9 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                                 parseInt(e.target.value)
                               )
                             }
-                            className="w-full h-1 bg-[#262626] rounded-lg appearance-none cursor-pointer accent-[#C4F029]"
+                            className="w-full h-1 bg-[#262626] rounded-lg appearance-none cursor-pointer accent-[#10B981]"
                           />
-                          <span className="text-[11px] font-mono font-bold text-[#C4F029] bg-[#C4F029]/10 px-1.5 py-0.5 rounded">
+                          <span className="text-[11px] font-mono font-bold text-[#10B981] bg-[#10B981]/10 px-1.5 py-0.5 rounded">
                             {item.expertise}/5
                           </span>
                         </div>
@@ -866,13 +866,13 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 onClick={handleNext}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#262626] text-[#EDEDED] hover:bg-[#323232] transition"
               >
-                Next Step <ArrowRight className="w-4 h-4 text-[#C4F029]" />
+                Next Step <ArrowRight className="w-4 h-4 text-[#10B981]" />
               </button>
             ) : (
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#C4F029] text-[#0F0F0F] hover:bg-[#D4FF39] active:scale-[0.98] transition disabled:opacity-60"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#10B981] text-[#0F0F0F] hover:bg-[#34D399] active:scale-[0.98] transition disabled:opacity-60"
               >
                 {isLoading ? (
                   <>
@@ -996,7 +996,7 @@ export function DurationPicker({ value, onChange }: DurationPickerProps) {
           label="Present"
           checked={isPresent}
           onChange={(val) => update({ present: val })}
-          icon={<Clock className="w-3.5 h-3.5 text-[#C4F029]" />}
+          icon={<Clock className="w-3.5 h-3.5 text-[#10B981]" />}
         />
         {/* <label className="flex items-center gap-1.5 text-sm text-gray-500 cursor-pointer">
           <input

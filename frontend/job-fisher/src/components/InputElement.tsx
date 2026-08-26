@@ -48,7 +48,7 @@ export function InputElement({
       {label && (
         <label className="block text-sm font-medium text-[#8FAE9B]">
           {label}
-          {required && <span className="text-[#00FF88] ml-0.5">*</span>}
+          {required && <span className="text-[#34D399] ml-0.5">*</span>}
         </label>
       )}
 
@@ -57,7 +57,7 @@ export function InputElement({
         rounded-xl bg-[#0B0F0D]
         border transition-all duration-200
         ${error ? "border-red-500/60" : "border-[#1F2A24] hover:border-[#2A3D30]"}
-        focus-within:border-[#00FF88]/60
+        focus-within:border-[#34D399]/60
         focus-within:shadow-[0_0_16px_rgba(0,255,136,0.15)]
         ${disabled ? "opacity-50 cursor-not-allowed" : ""}
       `}>

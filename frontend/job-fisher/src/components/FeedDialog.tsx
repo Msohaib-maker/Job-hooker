@@ -162,13 +162,13 @@ const StepIndicator = ({ step }: { step: number }) => (
   <div className="px-6 pt-4">
     <div className="flex items-center gap-2 text-sm">
       <span
-        className={`font-semibold ${step === 1 ? "text-[#C4F029]" : "text-[#737373]"}`}
+        className={`font-semibold ${step === 1 ? "text-[#10B981]" : "text-[#737373]"}`}
       >
         Step 1
       </span>
       <div className="flex-1 h-px bg-[#262626]" />
       <span
-        className={`font-semibold ${step === 2 ? "text-[#C4F029]" : "text-[#737373]"}`}
+        className={`font-semibold ${step === 2 ? "text-[#10B981]" : "text-[#737373]"}`}
       >
         Step 2
       </span>
@@ -217,7 +217,7 @@ const SalaryTypeToggle = ({
 }) => (
   <div className="md:col-span-2">
     <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
-      Salary Type <span className="text-[#C4F029]">*</span>
+      Salary Type <span className="text-[#10B981]">*</span>
     </label>
     <div className="inline-flex p-1 rounded-xl bg-[#0F0F0F] border border-[#262626]">
       {salaryTypes.map((t) => (
@@ -229,7 +229,7 @@ const SalaryTypeToggle = ({
             relative px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200
             ${
               salaryType === t
-                ? "bg-[#151515] text-[#C4F029] border border-[#C4F029]/30"
+                ? "bg-[#151515] text-[#10B981] border border-[#10B981]/30"
                 : "text-[#737373] hover:text-[#A1A1AA] border border-transparent"
             }
           `}
@@ -257,7 +257,7 @@ const SalaryField = ({
 }) => (
   <div>
     <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
-      Salary <span className="text-[#C4F029]">*</span>
+      Salary <span className="text-[#10B981]">*</span>
     </label>
     <div className="flex gap-3">
       {salaryType === "Fixed" ? (
@@ -494,7 +494,7 @@ const DialogFooter = ({
       <button
         type="button"
         onClick={() => setStep(2)}
-        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#C4F029] bg-[#C4F029]/10 border border-[#C4F029]/25 hover:bg-[#C4F029]/20 hover:border-[#C4F029]/50 transition-all duration-200"
+        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/25 hover:bg-[#10B981]/20 hover:border-[#10B981]/50 transition-all duration-200"
       >
         Next →
       </button>
@@ -503,7 +503,7 @@ const DialogFooter = ({
         type="submit"
         disabled={isLoading}
         onClick={handleSubmit}
-        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#0F0F0F] bg-[#C4F029] hover:bg-[#d2f454] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+        className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#0F0F0F] bg-[#10B981] hover:bg-[#34D399] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
       >
         {isLoading ? "Saving..." : feed ? "Update Feed" : "Create Feed"}
       </button>

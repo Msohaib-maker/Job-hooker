@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import SignIn from "./pages/Register/SignIn";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Landing from "./pages/Landing/Landing";
@@ -19,7 +18,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/signin" element={<SignIn />} />
           <Route path="/register" element={<Register />} />
           <Route
             path="/dashboard"

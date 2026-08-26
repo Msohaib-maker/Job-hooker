@@ -13,7 +13,7 @@ const AddFeedButton = ({ onClick }: AddFeedButtonProps) => {
         px-4 py-3
         rounded-xl
         bg-[#111111] text-white font-semibold
-        border-2 border-[#00FF88]
+        border-2 border-[#34D399]
         shadow-[0_0_20px_rgba(0,255,136,0.6)]
         hover:shadow-[0_0_35px_rgba(0,255,136,0.9)]
         active:scale-[0.97]

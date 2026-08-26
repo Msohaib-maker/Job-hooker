@@ -166,7 +166,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                     {selected.map((o) => (
                         <span
                             key={o.value}
-                            className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#00FF88]/10 border border-[#00FF88]/30 text-[#00FF88] text-xs font-medium"
+                            className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#34D399]/10 border border-[#34D399]/30 text-[#34D399] text-xs font-medium"
                         >
                             {o.icon && <span className="w-3.5 h-3.5 flex-shrink-0">{o.icon}</span>}
                             {o.label}
@@ -215,7 +215,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                     w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-all duration-150
                     ${option.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
                     ${selected
-                        ? "bg-[#00FF88]/10 text-[#00FF88]"
+                        ? "bg-[#34D399]/10 text-[#34D399]"
                         : "text-[#8FAE9B] hover:bg-[#0F1A14] hover:text-white"
                     }
                 `}
@@ -231,7 +231,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                         </span>
                     )}
                 </span>
-                {selected && <Check className="w-3.5 h-3.5 flex-shrink-0 text-[#00FF88]" />}
+                {selected && <Check className="w-3.5 h-3.5 flex-shrink-0 text-[#34D399]" />}
                 {props.multi && !selected && (
                     <span className="w-3.5 h-3.5 flex-shrink-0 rounded border border-[#1F2A24]" />
                 )}
@@ -245,7 +245,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
             {label && (
                 <label htmlFor={id} className="block text-sm font-medium text-[#8FAE9B]">
                     {label}
-                    {required && <span className="text-[#00FF88] ml-0.5">*</span>}
+                    {required && <span className="text-[#34D399] ml-0.5">*</span>}
                 </label>
             )}
 
@@ -264,11 +264,11 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                     bg-[#0B0F0D]
                     border transition-all duration-200
                     ${open
-                        ? "border-[#00FF88]/60 shadow-[0_0_16px_rgba(0,255,136,0.15)]"
+                        ? "border-[#34D399]/60 shadow-[0_0_16px_rgba(0,255,136,0.15)]"
                         : "border-[#1F2A24] hover:border-[#2A3D30]"
                     }
                     ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                    focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF88]/40
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-[#34D399]/40
                 `}
             >
                 <span className="flex-1 flex items-center min-w-0">
@@ -278,7 +278,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                     className={`
                         w-4 h-4 flex-shrink-0 ml-2 text-[#4A6157]
                         transition-transform duration-200
-                        ${open ? "rotate-180 text-[#00FF88]" : ""}
+                        ${open ? "rotate-180 text-[#34D399]" : ""}
                     `}
                 />
             </button>

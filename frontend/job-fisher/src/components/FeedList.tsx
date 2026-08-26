@@ -73,7 +73,7 @@ const FeedList = ({
         {/* Logo Area — sticky, never scrolls */}
         <div className="flex-shrink-0 px-6 pt-6 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#C4F029] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center">
               <img src="./hook1.png" />
             </div>
             <span className="text-xl font-extrabold text-[#EDEDED] tracking-wide">
@@ -91,9 +91,9 @@ const FeedList = ({
               setEditingFeed(null);
               setIsDialogOpen(true);
             }}
-            className="w-full flex items-center gap-4 px-4 py-3 text-[#A1A1AA] hover:text-[#EDEDED] transition-colors group rounded-xl hover:bg-[#1A1A1A] border border-[#262626] hover:border-[#C4F029]/40"
+            className="w-full flex items-center gap-4 px-4 py-3 text-[#A1A1AA] hover:text-[#EDEDED] transition-colors group rounded-xl hover:bg-[#1A1A1A] border border-[#262626] hover:border-[#10B981]/40"
           >
-            <Plus className="w-5 h-5 text-[#737373] group-hover:text-[#C4F029] transition-colors" />
+            <Plus className="w-5 h-5 text-[#737373] group-hover:text-[#10B981] transition-colors" />
             <span className="font-medium">Create Feed</span>
           </button>
         </div>
