@@ -18,6 +18,8 @@ import ProfileDialog, { ProfileForm } from "./ProfileDialog";
 import { filesService } from "../services/files";
 import { UpworkJobProposal } from "../hooks/useJobFetcher";
 import { Checkbox } from "./Checkbox";
+import { useTranslation } from "../i18n";
+import type { TranslationKey } from "../i18n";
 
 interface JobCardProps {
   job: Job;
@@ -26,21 +28,24 @@ interface JobCardProps {
   showUpworkProposal: ({ jobId, proposal }: UpworkJobProposal) => void;
 }
 
-const JOB_TYPE_STYLES: Record<JobType, { label: string; className: string }> = {
+const JOB_TYPE_STYLES: Record<
+  JobType,
+  { labelKey: TranslationKey; className: string }
+> = {
   remote: {
-    label: "Remote",
+    labelKey: "jobCard.typeRemote",
     className: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
   },
   on_site: {
-    label: "On-site",
+    labelKey: "jobCard.typeOnSite",
     className: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   },
   hybrid: {
-    label: "Hybrid",
+    labelKey: "jobCard.typeHybrid",
     className: "bg-violet-500/10 text-violet-400 border-violet-500/30",
   },
   contract: {
-    label: "Contract",
+    labelKey: "jobCard.typeContract",
     className: "bg-amber-500/10 text-amber-400 border-amber-500/30",
   },
 };
@@ -104,6 +109,7 @@ function PlatformCheckboxes({
   opts: GenerateOptions;
   toggle: (key: keyof GenerateOptions) => void;
 }) {
+  const { t } = useTranslation();
   const isUpwork = platform === "Upwork" || platform === "Upwork_Inc";
   const isYC = platform === "YC" || platform === "Y_Combinator";
   const isFiverr = platform === "Fiverr";
@@ -111,7 +117,7 @@ function PlatformCheckboxes({
   if (isFiverr) {
     return (
       <Checkbox
-        label="Description"
+        label={t("jobCard.optionDescription")}
         icon={<AlignLeft className="w-3.5 h-3.5" />}
         checked={opts.cv} // reuse cv slot or add dedicated field
         onChange={() => toggle("cv")}
@@ -123,13 +129,13 @@ function PlatformCheckboxes({
     return (
       <>
         <Checkbox
-          label="CV"
+          label={t("jobCard.optionCv")}
           icon={<FileText className="w-3.5 h-3.5" />}
           checked={opts.cv}
           onChange={() => toggle("cv")}
         />
         <Checkbox
-          label="Proposal"
+          label={t("jobCard.optionProposal")}
           icon={<MessageSquare className="w-3.5 h-3.5" />}
           checked={opts.proposal}
           onChange={() => toggle("proposal")}
@@ -142,13 +148,13 @@ function PlatformCheckboxes({
     return (
       <>
         <Checkbox
-          label="Pitch Video"
+          label={t("jobCard.optionPitchVideo")}
           icon={<Video className="w-3.5 h-3.5" />}
           checked={opts.pitchVideo}
           onChange={() => toggle("pitchVideo")}
         />
         <Checkbox
-          label="YC Interview"
+          label={t("jobCard.optionYcInterview")}
           icon={<MessageSquare className="w-3.5 h-3.5" />}
           checked={opts.ycInterview}
           onChange={() => toggle("ycInterview")}
@@ -161,13 +167,13 @@ function PlatformCheckboxes({
   return (
     <>
       <Checkbox
-        label="Cover Letter"
+        label={t("jobCard.optionCoverLetter")}
         icon={<ScrollText className="w-3.5 h-3.5" />}
         checked={opts.coverLetter}
         onChange={() => toggle("coverLetter")}
       />
       <Checkbox
-        label="CV"
+        label={t("jobCard.optionCv")}
         icon={<FileText className="w-3.5 h-3.5" />}
         checked={opts.cv}
         onChange={() => toggle("cv")}
@@ -186,11 +192,12 @@ const JobCard = ({
 }: JobCardProps) => {
   const { opts, toggle, hasAny } = useGenerateOptions();
   const [profileOpen, setProfileOpen] = useState(false);
+  const { t, locale, formatNumber } = useTranslation();
 
   const typeStyle = JOB_TYPE_STYLES[job.type];
   const platformStyle = job.platform ? PLATFORM_STYLES[job.platform] : null;
 
-  const formattedDate = new Date(job.creation).toLocaleDateString("en-US", {
+  const formattedDate = new Date(job.creation).toLocaleDateString(locale, {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -264,7 +271,7 @@ const JobCard = ({
             <span
               className={`flex-shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-md border ${typeStyle.className}`}
             >
-              {typeStyle.label}
+              {t(typeStyle.labelKey)}
             </span>
             {platformStyle && (
               <span
@@ -287,7 +294,7 @@ const JobCard = ({
           {job.salary && (
             <span className="flex items-center gap-1.5 text-xs text-[#737373] px-2.5 py-1 rounded-lg bg-[#1A1A1A] border border-[#262626]">
               <DollarSign className="w-3 h-3 text-[#525252]" />{" "}
-              {new Intl.NumberFormat("en-US").format(job.salary)}
+              {formatNumber(job.salary)}
             </span>
           )}
           {job.experience && (
@@ -345,7 +352,7 @@ const JobCard = ({
                   bg-[#1A1A1A] border border-[#10B981]/40 text-[#10B981]
                   hover:bg-[#10B981]/10 active:scale-[0.97] transition-all duration-150"
               >
-                <Sparkles className="w-3.5 h-3.5" /> Generate
+                <Sparkles className="w-3.5 h-3.5" /> {t("jobCard.generate")}
               </button>
             )}
             {job.url && (
@@ -357,7 +364,8 @@ const JobCard = ({
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold
                   bg-[#10B981] text-[#0F0F0F] hover:bg-[#34D399] active:scale-[0.97] transition-all duration-150"
               >
-                Apply Now <ExternalLink className="w-3.5 h-3.5" />
+                {t("jobCard.applyNow")}{" "}
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
           </div>

@@ -4,12 +4,14 @@ import type { CreateFeedDto } from "../types";
 import { InputElement } from "./InputElement";
 import { DropdownWrapper, Dropdown, DropdownOption } from "./DropDown";
 import { JobRole, TAGS } from "../models/enums";
-import { JOB_TYPES, JobType } from "../models/types";
+import { JOB_TYPE_VALUES, JobType } from "../models/types";
 import { useFeedForm } from "../hooks/useFeedForm";
 import { X } from "lucide-react";
 import cc from "currency-codes";
 import { Slider } from "./Slider";
 import { SalaryType, Platform } from "../types/job.type";
+import { useTranslation } from "../i18n";
+import type { TranslationKey } from "../i18n";
 
 interface FeedDialogProps {
   isOpen: boolean;
@@ -18,7 +20,15 @@ interface FeedDialogProps {
   feed?: (CreateFeedDto & { id?: number }) | null;
 }
 
+const JOB_TYPE_LABEL_KEYS: Record<JobType, TranslationKey> = {
+  remote: "feeds.typeRemote",
+  on_site: "feeds.typeOnSite",
+  hybrid: "feeds.typeHybrid",
+  contract: "feeds.typeContract",
+};
+
 const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
+  const { t } = useTranslation();
   const {
     title,
     setTitle,
@@ -56,23 +66,23 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
     setError("");
 
     if (!title.trim()) {
-      setError("Title is required");
+      setError(t("feeds.errorTitle"));
       return;
     }
 
     if (!exp.trim()) {
-      setError("Experience is required");
+      setError(t("feeds.errorExperience"));
       return;
     }
 
     if (!location.trim()) {
-      setError("Location is required");
+      setError(t("feeds.errorLocation"));
       return;
     }
 
     const salaryNum = parseFloat(salary);
     if (!salary.trim() || isNaN(salaryNum) || salaryNum < 0) {
-      setError("Please enter a valid salary (must be a positive number)");
+      setError(t("feeds.errorSalary"));
       return;
     }
 
@@ -93,7 +103,7 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
       console.log("close");
       onClose();
     } catch (err: unknown) {
-      setError("Failed to save feed");
+      setError(t("feeds.errorSave"));
     } finally {
       setIsLoading(false);
     }
@@ -158,23 +168,27 @@ const FeedDialog = ({ isOpen, onClose, onSave, feed }: FeedDialogProps) => {
 export default FeedDialog;
 
 // ─── Step indicator ───────────────────────────────────────────────
-const StepIndicator = ({ step }: { step: number }) => (
-  <div className="px-6 pt-4">
-    <div className="flex items-center gap-2 text-sm">
-      <span
-        className={`font-semibold ${step === 1 ? "text-[#10B981]" : "text-[#737373]"}`}
-      >
-        Step 1
-      </span>
-      <div className="flex-1 h-px bg-[#262626]" />
-      <span
-        className={`font-semibold ${step === 2 ? "text-[#10B981]" : "text-[#737373]"}`}
-      >
-        Step 2
-      </span>
+const StepIndicator = ({ step }: { step: number }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="px-6 pt-4">
+      <div className="flex items-center gap-2 text-sm">
+        <span
+          className={`font-semibold ${step === 1 ? "text-[#10B981]" : "text-[#737373]"}`}
+        >
+          {t("feeds.step1")}
+        </span>
+        <div className="flex-1 h-px bg-[#262626]" />
+        <span
+          className={`font-semibold ${step === 2 ? "text-[#10B981]" : "text-[#737373]"}`}
+        >
+          {t("feeds.step2")}
+        </span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── Dialog header ────────────────────────────────────────────────
 const DialogHeader = ({
@@ -183,20 +197,25 @@ const DialogHeader = ({
 }: {
   feed: FeedDialogProps["feed"];
   onClose: () => void;
-}) => (
-  <div className="flex items-center justify-between p-6 border-b border-[#262626]">
-    <h2 className="text-2xl font-extrabold text-[#EDEDED] tracking-wide">
-      {feed ? "Edit Feed ⚙️" : "Create Feed ✨"}
-    </h2>
-    <button
-      type="button"
-      onClick={onClose}
-      className="p-2 rounded-lg text-[#737373] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition"
-    >
-      <X className="w-5 h-5" />
-    </button>
-  </div>
-);
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex items-center justify-between p-6 border-b border-[#262626]">
+      <h2 className="text-2xl font-extrabold text-[#EDEDED] tracking-wide">
+        {feed ? t("feeds.editFeedTitle") : t("feeds.createFeedTitle")}
+      </h2>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={t("common.close")}
+        className="p-2 rounded-lg text-[#737373] hover:text-[#EDEDED] hover:bg-[#1A1A1A] transition"
+      >
+        <X className="w-5 h-5" />
+      </button>
+    </div>
+  );
+};
 
 // ─── Error banner ─────────────────────────────────────────────────
 const ErrorBanner = ({ message }: { message: string }) => (
@@ -213,33 +232,39 @@ const SalaryTypeToggle = ({
 }: {
   salaryTypes: SalaryType[];
   salaryType: SalaryType;
-  onToggle: (t: SalaryType) => void;
-}) => (
-  <div className="md:col-span-2">
-    <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
-      Salary Type <span className="text-[#10B981]">*</span>
-    </label>
-    <div className="inline-flex p-1 rounded-xl bg-[#0F0F0F] border border-[#262626]">
-      {salaryTypes.map((t) => (
-        <button
-          key={t}
-          type="button"
-          onClick={() => onToggle(t)}
-          className={`
+  onToggle: (value: SalaryType) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
+        {t("feeds.fieldSalaryType")} <span className="text-[#10B981]">*</span>
+      </label>
+      <div className="inline-flex p-1 rounded-xl bg-[#0F0F0F] border border-[#262626]">
+        {salaryTypes.map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onToggle(option)}
+            className={`
             relative px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200
             ${
-              salaryType === t
+              salaryType === option
                 ? "bg-[#151515] text-[#10B981] border border-[#10B981]/30"
                 : "text-[#737373] hover:text-[#A1A1AA] border border-transparent"
             }
           `}
-        >
-          {t === "Fixed" ? "Fixed Price" : "Hourly Rate"}
-        </button>
-      ))}
+          >
+            {option === "Fixed"
+              ? t("feeds.salaryFixed")
+              : t("feeds.salaryHourly")}
+          </button>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // ─── Salary field ─────────────────────────────────────────────────
 const SalaryField = ({
@@ -254,10 +279,13 @@ const SalaryField = ({
   salaryType: SalaryType;
   currency: string;
   setCurrency: (v: string) => void;
-}) => (
+}) => {
+  const { t } = useTranslation();
+
+  return (
   <div>
     <label className="block text-sm font-medium text-[#A1A1AA] mb-3">
-      Salary <span className="text-[#10B981]">*</span>
+      {t("feeds.fieldSalary")} <span className="text-[#10B981]">*</span>
     </label>
     <div className="flex gap-3">
       {salaryType === "Fixed" ? (
@@ -266,7 +294,7 @@ const SalaryField = ({
           value={salary}
           onChange={setSalary}
           clampMin={5000}
-          placeholder="Min. 5,000"
+          placeholder={t("feeds.salaryMinPlaceholder")}
           prefix="$"
           className="flex-1"
         />
@@ -277,7 +305,7 @@ const SalaryField = ({
           min={10}
           max={350}
           step={5}
-          formatValue={(v) => `$${v}/hr`}
+          formatValue={(v) => t("feeds.hourlyRateFormat", { value: v })}
           className="flex-1"
         />
       )}
@@ -294,7 +322,8 @@ const SalaryField = ({
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ─── Step 1 ───────────────────────────────────────────────────────
 const StepOne = ({
@@ -323,11 +352,14 @@ const StepOne = ({
   location: string;
   setLocation: (v: string) => void;
   COUNTRIES: string[];
-}) => (
+}) => {
+  const { t } = useTranslation();
+
+  return (
   <>
     <DropdownWrapper>
       <Dropdown
-        label="Select Role"
+        label={t("feeds.fieldRole")}
         options={jobRoleOptions}
         value={title}
         onChange={setTitle}
@@ -337,7 +369,7 @@ const StepOne = ({
 
     <InputElement
       id="feed-exp"
-      label="Experience"
+      label={t("feeds.fieldExperience")}
       value={exp}
       onChange={setExp}
       type="number"
@@ -349,8 +381,8 @@ const StepOne = ({
     <DropdownWrapper>
       <Dropdown
         multi
-        label="Platforms"
-        placeholder="Select platforms"
+        label={t("feeds.fieldPlatforms")}
+        placeholder={t("feeds.platformsPlaceholder")}
         options={[
           {
             value: "Upwork",
@@ -395,8 +427,11 @@ const StepOne = ({
 
     <DropdownWrapper>
       <Dropdown
-        label="Type"
-        options={JOB_TYPES}
+        label={t("feeds.fieldType")}
+        options={JOB_TYPE_VALUES.map((value) => ({
+          value,
+          label: t(JOB_TYPE_LABEL_KEYS[value]),
+        }))}
         value={type}
         onChange={setType}
         required
@@ -405,7 +440,7 @@ const StepOne = ({
 
     <DropdownWrapper>
       <Dropdown
-        label="Country"
+        label={t("feeds.fieldCountry")}
         value={location}
         onChange={setLocation}
         options={COUNTRIES.map((c) => ({ label: c, value: c }))}
@@ -413,7 +448,8 @@ const StepOne = ({
       />
     </DropdownWrapper>
   </>
-);
+  );
+};
 
 // ─── Step 2 ───────────────────────────────────────────────────────
 const StepTwo = ({
@@ -436,13 +472,16 @@ const StepTwo = ({
   setSalary: (v: string) => void;
   currency: string;
   setCurrency: (v: string) => void;
-}) => (
+}) => {
+  const { t } = useTranslation();
+
+  return (
   <>
     <div className="md:col-span-2">
       <Dropdown
         multi
-        label="Skills"
-        placeholder="Select relevant skills"
+        label={t("feeds.fieldSkills")}
+        placeholder={t("feeds.skillsPlaceholder")}
         options={Object.values(TAGS).map((tag) => ({ value: tag, label: tag }))}
         value={tags as string[]}
         onChange={toggleTag}
@@ -463,7 +502,8 @@ const StepTwo = ({
       setCurrency={setCurrency}
     />
   </>
-);
+  );
+};
 
 // ─── Footer ───────────────────────────────────────────────────────
 const DialogFooter = ({
@@ -478,7 +518,10 @@ const DialogFooter = ({
   isLoading: boolean;
   feed: FeedDialogProps["feed"];
   handleSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
-}) => (
+}) => {
+  const { t } = useTranslation();
+
+  return (
   <div className="md:col-span-2 flex gap-3 pt-6">
     {step === 2 && (
       <button
@@ -486,7 +529,7 @@ const DialogFooter = ({
         onClick={() => setStep(1)}
         className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#737373] bg-transparent border border-[#262626] hover:border-[#A1A1AA] hover:text-white transition-all duration-200"
       >
-        ← Back
+        {t("feeds.stepBack")}
       </button>
     )}
 
@@ -496,7 +539,7 @@ const DialogFooter = ({
         onClick={() => setStep(2)}
         className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/25 hover:bg-[#10B981]/20 hover:border-[#10B981]/50 transition-all duration-200"
       >
-        Next →
+        {t("feeds.stepNext")}
       </button>
     ) : (
       <button
@@ -505,8 +548,13 @@ const DialogFooter = ({
         onClick={handleSubmit}
         className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#0F0F0F] bg-[#10B981] hover:bg-[#34D399] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
       >
-        {isLoading ? "Saving..." : feed ? "Update Feed" : "Create Feed"}
+        {isLoading
+          ? t("feeds.saving")
+          : feed
+            ? t("feeds.updateFeed")
+            : t("feeds.createFeed")}
       </button>
     )}
   </div>
-);
+  );
+};

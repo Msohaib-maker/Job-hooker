@@ -21,6 +21,8 @@ import {
   Clock,
 } from "lucide-react";
 import { Job } from "../types";
+import { useTranslation } from "../i18n";
+import type { TranslationKey } from "../i18n";
 
 export const SKILL_OPTIONS = [
   // Technical Skills
@@ -147,17 +149,23 @@ import { Checkbox } from "./Checkbox";
 
 const SectionHeader = ({
   icon: Icon,
-  title,
+  titleKey,
 }: {
   icon: LucideIcon;
-  title: string;
-}) => (
-  <div className="flex items-center gap-2 mb-4">
-    <Icon className="w-4 h-4 text-[#10B981]" />
-    <span className="text-sm font-semibold text-[#EDEDED]">{title}</span>
-    <div className="flex-1 h-px bg-[#262626]" />
-  </div>
-);
+  titleKey: TranslationKey;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="flex items-center gap-2 mb-4">
+      <Icon className="w-4 h-4 text-[#10B981]" />
+      <span className="text-sm font-semibold text-[#EDEDED]">
+        {t(titleKey)}
+      </span>
+      <div className="flex-1 h-px bg-[#262626]" />
+    </div>
+  );
+};
 
 interface ProfileDialogProps {
   job: Job;
@@ -167,6 +175,7 @@ interface ProfileDialogProps {
 }
 
 const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
+  const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<ProfileForm>({
     name: "",
@@ -327,21 +336,20 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
   /* STEP VALIDATIONS */
   const validateStep1 = () => {
     const e: Record<string, string> = {};
-    if (!form.name.trim()) e.name = "Name is required";
-    if (!form.description.trim()) e.description = "Description is required";
+    if (!form.name.trim()) e.name = t("profile.errorName");
+    if (!form.description.trim()) e.description = t("profile.errorDescription");
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const validateStep2 = () => {
     const e: Record<string, string> = {};
-    if (form.skills.length === 0)
-      e.skills = "Select at least one skill & level";
+    if (form.skills.length === 0) e.skills = t("profile.errorSkills");
 
     // Basic range check validation for education grades if written
     form.education.forEach((edu, idx) => {
       if (edu.grade && (parseInt(edu.grade) < 0 || parseInt(edu.grade) > 100)) {
-        e[`edu_${idx}`] = "Grade must be between 0 and 100";
+        e[`edu_${idx}`] = t("profile.errorGrade");
       }
     });
 
@@ -373,17 +381,20 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
         <div className="flex items-center justify-between px-8 py-6 border-b border-[#262626]">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-lg font-bold text-[#EDEDED]">Your Profile</h2>
+              <h2 className="text-lg font-bold text-[#EDEDED]">
+                {t("profile.title")}
+              </h2>
               <span className="text-xs bg-[#262626] text-[#A1A1AA] px-2 py-0.5 rounded-full font-medium">
-                Step {step} of 2
+                {t("profile.stepOf", { step })}
               </span>
             </div>
             <p className="text-xs text-[#525252] mt-0.5">
-              Used by AI to generate customized artifacts
+              {t("profile.subtitle")}
             </p>
           </div>
           <button
             onClick={onClose}
+            aria-label={t("common.close")}
             className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#262626] text-[#737373] hover:text-[#EDEDED] hover:border-[#525252] transition"
           >
             <X className="w-4 h-4" />
@@ -396,17 +407,18 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
             <>
               {/* BASIC INFO */}
               <section>
-                <SectionHeader icon={User} title="Basic Info" />
+                <SectionHeader icon={User} titleKey="profile.sectionBasic" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>
-                      Name <span className="text-[#10B981]">*</span>
+                      {t("profile.labelName")}{" "}
+                      <span className="text-[#10B981]">*</span>
                     </label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" />
                       <input
                         className={`${inputClass} pl-10 ${errors.name ? "border-red-500/50" : ""}`}
-                        placeholder="John Doe"
+                        placeholder={t("profile.placeholderName")}
                         value={form.name}
                         onChange={(e) => set("name", e.target.value)}
                       />
@@ -416,37 +428,37 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     )}
                   </div>
                   <div>
-                    <label className={labelClass}>Contact Email</label>
+                    <label className={labelClass}>{t("profile.labelEmail")}</label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" />
                       <input
                         type="email"
                         className={`${inputClass} pl-10`}
-                        placeholder="john@example.com"
+                        placeholder={t("profile.placeholderEmail")}
                         value={form.email}
                         onChange={(e) => set("email", e.target.value)}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>Website</label>
+                    <label className={labelClass}>{t("profile.labelWebsite")}</label>
                     <div className="relative">
                       <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" />
                       <input
                         className={`${inputClass} pl-10`}
-                        placeholder="https://yoursite.com"
+                        placeholder={t("profile.placeholderWebsite")}
                         value={form.website}
                         onChange={(e) => set("website", e.target.value)}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className={labelClass}>Other Link</label>
+                    <label className={labelClass}>{t("profile.labelOtherLink")}</label>
                     <div className="relative">
                       <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#525252]" />
                       <input
                         className={`${inputClass} pl-10`}
-                        placeholder="GitHub, LinkedIn, etc."
+                        placeholder={t("profile.placeholderOtherLink")}
                         value={form.otherLink}
                         onChange={(e) => set("otherLink", e.target.value)}
                       />
@@ -457,14 +469,15 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 
               {/* DESCRIPTION */}
               <section>
-                <SectionHeader icon={FileText} title="Description" />
+                <SectionHeader icon={FileText} titleKey="profile.sectionDescription" />
                 <label className={labelClass}>
-                  About you <span className="text-[#10B981]">*</span>
+                  {t("profile.labelAbout")}{" "}
+                  <span className="text-[#10B981]">*</span>
                 </label>
                 <textarea
                   rows={5}
                   className={`${inputClass} resize-none ${errors.description ? "border-red-500/50" : ""}`}
-                  placeholder="Briefly describe yourself, your architectural specialties, background, and career ambitions..."
+                  placeholder={t("profile.placeholderAbout")}
                   value={form.description}
                   onChange={(e) => set("description", e.target.value)}
                 />
@@ -479,7 +492,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
             <>
               {/* WORK EXPERIENCE */}
               <section>
-                <SectionHeader icon={Briefcase} title="Work Experience" />
+                <SectionHeader icon={Briefcase} titleKey="profile.sectionExperience" />
                 <div className="flex flex-col gap-3">
                   {form.experience.map((exp, i) => (
                     <div
@@ -489,7 +502,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <input
                           className={inputClass}
-                          placeholder="Company"
+                          placeholder={t("profile.placeholderCompany")}
                           value={exp.company}
                           onChange={(e) =>
                             updateExperience(i, "company", e.target.value)
@@ -497,7 +510,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         />
                         <input
                           className={inputClass}
-                          placeholder="Role / Title"
+                          placeholder={t("profile.placeholderRole")}
                           value={exp.role}
                           onChange={(e) =>
                             updateExperience(i, "role", e.target.value)
@@ -512,7 +525,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                       />
                       <textarea
                         className={`${inputClass} resize-y min-h-[68px]`}
-                        placeholder="Description (optional)"
+                        placeholder={t("profile.placeholderExperienceDescription")}
                         value={exp.description ?? ""}
                         onChange={(e) =>
                           updateExperience(i, "description", e.target.value)
@@ -522,7 +535,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         onClick={() => removeExperience(i)}
                         className="self-end flex items-center gap-1 text-xs text-red-400/70 hover:text-red-400 transition"
                       >
-                        <Trash2 className="w-3.5 h-3.5" /> Remove
+                        <Trash2 className="w-3.5 h-3.5" /> {t("common.remove")}
                       </button>
                     </div>
                   ))}
@@ -530,14 +543,14 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     onClick={addExperience}
                     className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#10B981] transition w-max"
                   >
-                    <Plus className="w-4 h-4" /> Add Experience
+                    <Plus className="w-4 h-4" /> {t("profile.addExperience")}
                   </button>
                 </div>
               </section>
 
               {/* EDUCATION */}
               <section>
-                <SectionHeader icon={GraduationCap} title="Education" />
+                <SectionHeader icon={GraduationCap} titleKey="profile.sectionEducation" />
                 <div className="flex flex-col gap-3">
                   {form.education.map((edu, i) => (
                     <div
@@ -549,7 +562,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         <div>
                           <input
                             className={inputClass}
-                            placeholder="Institution"
+                            placeholder={t("profile.placeholderInstitution")}
                             value={edu.institution}
                             onChange={(e) =>
                               updateEducation(i, "institution", e.target.value)
@@ -559,7 +572,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         <div>
                           <input
                             className={inputClass}
-                            placeholder="Degree"
+                            placeholder={t("profile.placeholderDegree")}
                             value={edu.degree}
                             onChange={(e) =>
                               updateEducation(i, "degree", e.target.value)
@@ -569,7 +582,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         <div>
                           <input
                             className={inputClass}
-                            placeholder="Grade (0-100)"
+                            placeholder={t("profile.placeholderGrade")}
                             value={edu.grade}
                             type="text"
                             maxLength={3}
@@ -600,7 +613,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                         onClick={() => removeEducation(i)}
                         className="flex items-center gap-1.5 text-xs text-red-400/60 hover:text-red-400 transition h-max self-end sm:self-auto pb-1"
                       >
-                        <Trash2 className="w-3.5 h-3.5" /> Remove
+                        <Trash2 className="w-3.5 h-3.5" /> {t("common.remove")}
                       </button>
                     </div>
                   ))}
@@ -609,16 +622,16 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     onClick={addEducation}
                     className="flex items-center gap-2 text-sm text-[#737373] hover:text-[#10B981] transition w-max mt-1"
                   >
-                    <Plus className="w-4 h-4" /> Add Education
+                    <Plus className="w-4 h-4" /> {t("profile.addEducation")}
                   </button>
                 </div>
               </section>
 
               {/* SKILLS SET WITH EXPERTISE RATINGS */}
               <section>
-                <SectionHeader icon={Briefcase} title="Skills & Expertise" />
+                <SectionHeader icon={Briefcase} titleKey="profile.sectionSkills" />
                 <label className={labelClass}>
-                  Add Professional Skills{" "}
+                  {t("profile.labelSkills")}{" "}
                   <span className="text-[#10B981]">*</span>
                 </label>
                 <div ref={skillRef} className="relative mb-4">
@@ -629,7 +642,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                   >
                     <input
                       className="flex-1 min-w-[150px] bg-transparent text-sm text-[#EDEDED] placeholder:text-[#525252] outline-none"
-                      placeholder="Type or select skills..."
+                      placeholder={t("profile.placeholderSkills")}
                       value={skillSearch}
                       onChange={(e) => {
                         setSkillSearch(e.target.value);
@@ -708,11 +721,11 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 
               {/* INTERESTS */}
               <section>
-                <SectionHeader icon={Heart} title="Interests" />
+                <SectionHeader icon={Heart} titleKey="profile.sectionInterests" />
                 <div className="flex gap-2 mb-3">
                   <input
                     className={inputClass}
-                    placeholder="e.g. Open Source, Cloud Architecture, Quantum Computing"
+                    placeholder={t("profile.placeholderInterests")}
                     value={interestInput}
                     onChange={(e) => setInterestInput(e.target.value)}
                     onKeyDown={(e) =>
@@ -730,7 +743,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     }
                     className="px-4 rounded-xl bg-[#262626] hover:bg-[#323232] text-sm text-[#EDEDED] border border-[#383838]"
                   >
-                    Add
+                    {t("common.add")}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -753,11 +766,11 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 
               {/* CERTIFICATES */}
               <section>
-                <SectionHeader icon={Award} title="Certificates" />
+                <SectionHeader icon={Award} titleKey="profile.sectionCertificates" />
                 <div className="flex gap-2 mb-3">
                   <input
                     className={inputClass}
-                    placeholder="e.g. AWS Certified Solutions Architect, PMP"
+                    placeholder={t("profile.placeholderCertificates")}
                     value={certInput}
                     onChange={(e) => setCertInput(e.target.value)}
                     onKeyDown={(e) =>
@@ -775,7 +788,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     }
                     className="px-4 rounded-xl bg-[#262626] hover:bg-[#323232] text-sm text-[#EDEDED] border border-[#383838]"
                   >
-                    Add
+                    {t("common.add")}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -798,11 +811,11 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 
               {/* LANGUAGES */}
               <section>
-                <SectionHeader icon={Languages} title="Languages" />
+                <SectionHeader icon={Languages} titleKey="profile.sectionLanguages" />
                 <div className="flex gap-2 mb-3">
                   <input
                     className={inputClass}
-                    placeholder="e.g. English (Fluent), Spanish (Native)"
+                    placeholder={t("profile.placeholderLanguages")}
                     value={langInput}
                     onChange={(e) => setLangInput(e.target.value)}
                     onKeyDown={(e) =>
@@ -816,7 +829,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                     }
                     className="px-4 rounded-xl bg-[#262626] hover:bg-[#323232] text-sm text-[#EDEDED] border border-[#383838]"
                   >
-                    Add
+                    {t("common.add")}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -848,7 +861,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 onClick={() => setStep(1)}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-[#737373] hover:text-[#EDEDED] transition"
               >
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </button>
             )}
           </div>
@@ -858,7 +871,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
               onClick={onClose}
               className="px-5 py-2.5 rounded-xl text-sm text-[#737373] hover:text-[#EDEDED] border border-[#262626] hover:border-[#525252] transition"
             >
-              Cancel
+              {t("common.cancel")}
             </button>
 
             {step === 1 ? (
@@ -866,7 +879,8 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 onClick={handleNext}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-[#262626] text-[#EDEDED] hover:bg-[#323232] transition"
               >
-                Next Step <ArrowRight className="w-4 h-4 text-[#10B981]" />
+                {t("profile.nextStep")}{" "}
+                <ArrowRight className="w-4 h-4 text-[#10B981]" />
               </button>
             ) : (
               <button
@@ -877,11 +891,12 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
                 {isLoading ? (
                   <>
                     <></>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Generating...
+                    <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                    {t("profile.generating")}
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" /> Generate
+                    <Sparkles className="w-4 h-4" /> {t("profile.generate")}
                   </>
                 )}
               </button>
@@ -896,6 +911,7 @@ const ProfileDialog = ({ open, onClose, onSubmit }: ProfileDialogProps) => {
 export default ProfileDialog;
 
 export function DurationPicker({ value, onChange }: DurationPickerProps) {
+  const { t } = useTranslation();
   const now = new Date();
   const currentYear = now.getFullYear();
   const years = Array.from(
@@ -934,7 +950,9 @@ export function DurationPicker({ value, onChange }: DurationPickerProps) {
     <div className="flex gap-3 items-start">
       {/* Start */}
       <div className="flex flex-col gap-1 flex-1">
-        <span className="text-xs text-gray-500 font-medium">Start</span>
+        <span className="text-xs text-gray-500 font-medium">
+          {t("profile.durationStart")}
+        </span>
         <div className="flex gap-1">
           <select
             className={inputClass}
@@ -965,7 +983,9 @@ export function DurationPicker({ value, onChange }: DurationPickerProps) {
 
       {/* End */}
       <div className="flex flex-col gap-1 flex-1">
-        <span className="text-xs text-gray-500 font-medium">End</span>
+        <span className="text-xs text-gray-500 font-medium">
+          {t("profile.durationEnd")}
+        </span>
         <div className="flex gap-1">
           <select
             className={inputClass}
@@ -993,7 +1013,7 @@ export function DurationPicker({ value, onChange }: DurationPickerProps) {
           </select>
         </div>
         <Checkbox
-          label="Present"
+          label={t("profile.durationPresent")}
           checked={isPresent}
           onChange={(val) => update({ present: val })}
           icon={<Clock className="w-3.5 h-3.5 text-[#10B981]" />}

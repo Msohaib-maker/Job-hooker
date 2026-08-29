@@ -1,4 +1,5 @@
 import { LogOut, Bell } from "lucide-react";
+import { useTranslation } from "../i18n";
 
 interface BottomActionsProps {
   setBillingDialog: (value: boolean) => void;
@@ -12,6 +13,8 @@ const BottomActions = ({
   setIsSettingsOpen,
   signOut,
 }: BottomActionsProps) => {
+  const { t } = useTranslation();
+
   const buttonBase = `
       w-full flex items-center gap-4
       px-4 py-3 rounded-xl
@@ -32,7 +35,7 @@ const BottomActions = ({
         className={buttonBase}
       >
         <Bell className="w-5 h-5 text-[#737373]" />
-        <span className="text-sm">Notification Settings</span>
+        <span className="text-sm">{t("actions.notificationSettings")}</span>
       </button>
 
       {signOut && (
@@ -41,7 +44,7 @@ const BottomActions = ({
           className={`${buttonBase} hover:text-red-400`}
         >
           <LogOut className="w-5 h-5 text-[#737373]" />
-          <span className="text-sm">Sign out</span>
+          <span className="text-sm">{t("actions.signOut")}</span>
         </button>
       )}
     </div>

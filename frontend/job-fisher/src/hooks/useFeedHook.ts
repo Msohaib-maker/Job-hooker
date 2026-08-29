@@ -5,7 +5,9 @@ import { api } from "../services/api";
 
 export const useFeedManager = (
   onFeedSelect: (id: number | null) => void,
-  setFeeds: (feeds: Feed[]) => void
+  setFeeds: (feeds: Feed[]) => void,
+  /** Localised copy for the delete confirmation prompt. */
+  deleteConfirmMessage: string
 ) => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -88,7 +90,7 @@ export const useFeedManager = (
 
   const handleDeleteFeed = async (feedId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this feed?")) return;
+    if (!window.confirm(deleteConfirmMessage)) return;
 
     try {
       await feedService.deleteFeed(feedId);

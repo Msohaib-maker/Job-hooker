@@ -1,6 +1,7 @@
 import { Mail, Send, X } from "lucide-react";
 import { ReactElement, useEffect, useState } from "react";
 import { subscribeApi } from "../services/subscribe";
+import { useTranslation } from "../i18n";
 
 export type ConnectionStatus = "connected" | "disconnected";
 
@@ -15,6 +16,7 @@ export const NotificationDialog = ({
   telegramStatus,
   telegramConnection,
 }: NotificationDialogProps): ReactElement => {
+  const { t } = useTranslation();
   const [emailStatus, setEmailStatus] = useState<
     "subscribed" | "not_subscribed"
   >("not_subscribed");
@@ -72,10 +74,11 @@ export const NotificationDialog = ({
           {/* Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-extrabold text-white tracking-wide">
-              Notification Settings
+              {t("notifications.title")}
             </h2>
             <button
               onClick={() => setIsSettingsOpen(false)}
+              aria-label={t("common.close")}
               className="text-[#8FAE9B] hover:text-white transition"
             >
               <X className="w-6 h-6" />
@@ -102,16 +105,18 @@ export const NotificationDialog = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <span className="font-semibold text-white text-lg">
-                    Telegram
+                    {t("notifications.telegram")}
                   </span>
                   {telegramStatus === "connected" && (
                     <span className="px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-400">
-                      Connected
+                      {t("notifications.telegramConnected")}
                     </span>
                   )}
                 </div>
                 {telegramStatus !== "connected" && (
-                  <span className="text-sm text-[#8FAE9B]">Not connected</span>
+                  <span className="text-sm text-[#8FAE9B]">
+                    {t("notifications.telegramNotConnected")}
+                  </span>
                 )}
               </div>
             </div>
@@ -125,7 +130,9 @@ export const NotificationDialog = ({
                 : "bg-orange-500 text-white hover:bg-orange-600"
             } shadow-lg`}
             >
-              {telegramStatus === "connected" ? "Enabled" : "Connect"}
+              {telegramStatus === "connected"
+                ? t("notifications.telegramEnabled")
+                : t("notifications.telegramConnect")}
             </button>
           </div>
 
@@ -150,16 +157,16 @@ export const NotificationDialog = ({
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <span className="font-semibold text-white text-lg">
-                    Email
+                    {t("notifications.email")}
                   </span>
                   {emailStatus === "subscribed" && (
                     <span className="px-2 py-1 text-xs rounded-full bg-green-600/20 text-green-400">
-                      Subscribed
+                      {t("notifications.emailSubscribed")}
                     </span>
                   )}
                   {emailStatus !== "subscribed" && (
                     <span className="text-sm text-[#8FAE9B]">
-                      Not Subscribed
+                      {t("notifications.emailNotSubscribed")}
                     </span>
                   )}
                 </div>
@@ -175,7 +182,9 @@ export const NotificationDialog = ({
           : "bg-orange-500 text-white hover:bg-orange-600"
       } shadow-lg`}
             >
-              {emailStatus === "subscribed" ? "Unsubscribe" : "Subscribe"}
+              {emailStatus === "subscribed"
+                ? t("notifications.unsubscribe")
+                : t("notifications.subscribe")}
             </button>
           </div>
 

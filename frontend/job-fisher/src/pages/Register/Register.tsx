@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlatformTitle } from "../../components/PlatformTitle";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useTranslation } from "../../i18n";
+import type { TranslationKey } from "../../i18n";
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 30;
@@ -28,16 +31,10 @@ const SOURCES = [
   { name: "Glassdoor", logo: "/glassdoor.png" },
 ];
 
-const VALUE_PROPS = [
-  {
-    icon: Zap,
-    text: "Every role scored against your profile before you read it",
-  },
-  {
-    icon: FileText,
-    text: "Cover letters, CVs and proposals drafted per opening",
-  },
-  { icon: Bell, text: "Instant Telegram and email alerts on new matches" },
+const VALUE_PROPS: { icon: typeof Zap; textKey: TranslationKey }[] = [
+  { icon: Zap, textKey: "register.propScores" },
+  { icon: FileText, textKey: "register.propDocuments" },
+  { icon: Bell, textKey: "register.propAlerts" },
 ];
 
 const maskEmail = (email: string) => {
@@ -58,6 +55,7 @@ const Register = () => {
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
   const { verifyEmail, otpVerify } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const code = useMemo(() => digits.join(""), [digits]);
 
@@ -84,9 +82,7 @@ const Register = () => {
       setOtpSent(true);
       setCooldown(RESEND_COOLDOWN);
     } catch {
-      setError(
-        "We could not send that email. Check the address and try again.",
-      );
+      setError(t("register.sendFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -100,7 +96,7 @@ const Register = () => {
       await otpVerify(email, value);
       navigate("/dashboard");
     } catch {
-      setError("That code is invalid or has expired. Request a new one.");
+      setError(t("register.codeInvalid"));
       setDigits(Array(OTP_LENGTH).fill(""));
       inputsRef.current[0]?.focus();
     } finally {
@@ -164,7 +160,7 @@ const Register = () => {
         <Link
           to="/"
           className="relative z-10 flex items-center gap-2.5 w-fit"
-          aria-label="JobHooker home"
+          aria-label={t("nav.homeAria")}
         >
           <img src="/hook1.png" alt="" className="w-8 h-8" />
           <span className="font-extrabold text-2xl tracking-tight text-[#EDEDED]">
@@ -179,13 +175,15 @@ const Register = () => {
             transition={{ duration: 0.5 }}
             className="text-[2rem] xl:text-[2.375rem] font-extrabold leading-[1.12] tracking-tight text-[#EDEDED] [text-wrap:balance]"
           >
-            One inbox for{" "}
-            <span className="text-[#10B981]">every opening</span> worth your
-            time.
+            {t("register.brandTitleBefore")}
+            <span className="text-[#10B981]">
+              {t("register.brandTitleHighlight")}
+            </span>
+            {t("register.brandTitleAfter")}
           </motion.h1>
 
           <p className="mt-9 mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#737373]">
-            Pulling from
+            {t("register.pullingFrom")}
           </p>
           <div className="grid grid-cols-2 gap-2">
             {SOURCES.map((source, i) => (
@@ -209,9 +207,9 @@ const Register = () => {
           </div>
 
           <div className="mt-9 flex flex-col gap-3.5">
-            {VALUE_PROPS.map(({ icon: Icon, text }, i) => (
+            {VALUE_PROPS.map(({ icon: Icon, textKey }, i) => (
               <motion.div
-                key={text}
+                key={textKey}
                 initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.55 + i * 0.1, duration: 0.4 }}
@@ -220,7 +218,7 @@ const Register = () => {
                 <div className="w-7 h-7 rounded-lg bg-[#10B981]/10 border border-[#10B981]/20 flex items-center justify-center flex-shrink-0">
                   <Icon className="w-3.5 h-3.5 text-[#10B981]" />
                 </div>
-                <span className="pt-[3px]">{text}</span>
+                <span className="pt-[3px]">{t(textKey)}</span>
               </motion.div>
             ))}
           </div>
@@ -228,11 +226,10 @@ const Register = () => {
 
         <figure className="relative z-10 border-l-2 border-[#10B981]/40 pl-4">
           <blockquote className="text-[#A1A1AA] text-[13px] leading-relaxed">
-            JobHooker helped me land interviews at three top companies inside a
-            week.
+            {t("register.quote")}
           </blockquote>
           <figcaption className="text-[#525252] text-xs mt-2">
-            — Early beta user
+            {t("register.quoteAuthor")}
           </figcaption>
         </figure>
       </div>
@@ -241,12 +238,14 @@ const Register = () => {
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 relative">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#10B981]/[0.07] rounded-full blur-[110px] pointer-events-none" />
 
+        <LanguageSwitcher className="absolute top-6 right-6 z-20" />
+
         <Link
           to="/"
           className="lg:hidden absolute top-8 left-6 text-[#A1A1AA] hover:text-[#10B981] flex items-center gap-2 transition group z-20 text-sm font-medium"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to site
+          {t("nav.backToSite")}
         </Link>
 
         <motion.div
@@ -276,19 +275,21 @@ const Register = () => {
                 )}
               </div>
               <h2 className="text-2xl font-bold text-[#EDEDED] tracking-tight">
-                {otpSent ? "Check your inbox" : "Sign in or create an account"}
+                {otpSent
+                  ? t("register.otpHeading")
+                  : t("register.emailHeading")}
               </h2>
               <p className="text-sm text-[#A1A1AA] mt-2 leading-relaxed">
                 {otpSent ? (
                   <>
-                    We sent a {OTP_LENGTH}-digit code to{" "}
+                    {t("register.otpSubtitleBefore", { length: OTP_LENGTH })}
                     <span className="text-[#EDEDED] font-medium">
                       {maskEmail(email)}
                     </span>
-                    . It expires in a few minutes.
+                    {t("register.otpSubtitleAfter")}
                   </>
                 ) : (
-                  "One email address is all it takes — no password to remember."
+                  t("register.emailSubtitle")
                 )}
               </p>
             </div>
@@ -324,7 +325,7 @@ const Register = () => {
                     htmlFor="email"
                     className="block text-xs font-semibold uppercase tracking-[0.14em] text-[#A1A1AA] mb-4"
                   >
-                    Email address
+                    {t("register.emailLabel")}
                   </label>
 
                   <div className="relative group">
@@ -340,7 +341,7 @@ const Register = () => {
                       required
                       autoFocus
                       autoComplete="email"
-                      placeholder="you@company.com"
+                      placeholder={t("register.emailPlaceholder")}
                       className="w-full h-12 pl-12 pr-4 rounded-xl bg-[#151515] border border-[#333333] text-[#F5F5F5] text-[15px] font-medium caret-[#10B981] placeholder:text-[#7A7A7A] placeholder:font-normal focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/60 transition-all"
                     />
                   </div>
@@ -354,11 +355,11 @@ const Register = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending code…
+                      {t("register.sendingCode")}
                     </>
                   ) : (
                     <>
-                      Continue with email
+                      {t("register.continueWithEmail")}
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -366,7 +367,7 @@ const Register = () => {
 
                 <div className="flex items-start gap-2 pt-1 text-xs text-[#8A8A8A]">
                   <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-[1px]" />
-                  <span>New or returning — the same code does both.</span>
+                  <span>{t("register.sameCodeNote")}</span>
                 </div>
               </form>
             ) : (
@@ -382,7 +383,7 @@ const Register = () => {
                     htmlFor="otp-0"
                     className="block text-xs font-semibold uppercase tracking-[0.14em] text-[#A1A1AA] mb-4"
                   >
-                    Verification code
+                    {t("register.codeLabel")}
                   </label>
                   <div className="flex gap-2 sm:gap-2.5">
                     {digits.map((digit, index) => (
@@ -401,7 +402,10 @@ const Register = () => {
                         inputMode="numeric"
                         autoComplete={index === 0 ? "one-time-code" : "off"}
                         maxLength={OTP_LENGTH}
-                        aria-label={`Digit ${index + 1} of ${OTP_LENGTH}`}
+                        aria-label={t("register.digitAria", {
+                          index: index + 1,
+                          total: OTP_LENGTH,
+                        })}
                         className="w-full min-w-0 aspect-square rounded-xl bg-[#151515] border border-[#333333] text-[#F5F5F5] text-center text-xl font-bold caret-[#10B981] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/60 transition-all"
                       />
                     ))}
@@ -416,10 +420,10 @@ const Register = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Verifying…
+                      {t("register.verifying")}
                     </>
                   ) : (
-                    "Verify and continue"
+                    t("register.verifyAndContinue")
                   )}
                 </button>
 
@@ -430,7 +434,7 @@ const Register = () => {
                     className="text-[#A1A1AA] hover:text-[#EDEDED] transition font-medium flex items-center gap-1.5"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    Change email
+                    {t("register.changeEmail")}
                   </button>
 
                   <button
@@ -439,7 +443,9 @@ const Register = () => {
                     onClick={() => void sendOtp(true)}
                     className="text-[#10B981] hover:text-[#34D399] transition font-medium disabled:text-[#525252] disabled:cursor-not-allowed"
                   >
-                    {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+                    {cooldown > 0
+                      ? t("register.resendIn", { seconds: cooldown })
+                      : t("register.resendCode")}
                   </button>
                 </div>
               </form>
@@ -447,16 +453,16 @@ const Register = () => {
           </div>
 
           <p className="text-center text-xs text-[#8A8A8A] mt-6 leading-relaxed">
-            By continuing you agree to our{" "}
+            {t("register.termsBefore")}
             <a
               href="/privacy"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#A1A1AA] hover:text-[#10B981] underline underline-offset-2 transition-colors"
             >
-              Privacy Policy
+              {t("register.termsLink")}
             </a>
-            .
+            {t("register.termsAfter")}
           </p>
         </motion.div>
       </div>

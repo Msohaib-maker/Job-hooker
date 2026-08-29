@@ -1,47 +1,49 @@
 import { useNavigate } from "react-router-dom";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "../../i18n";
+import type { TranslationKey } from "../../i18n";
 
 const PLATFORMS = [
   {
     name: "Upwork",
     logo: "/upwork.png",
-    meta: "Freelance contracts",
+    metaKey: "hero.metaUpwork" as TranslationKey,
     accent: "20, 168, 0",
     float: "tileFloatA 6s ease-in-out infinite",
   },
   {
     name: "Fiverr",
     logo: "/fiverr.png",
-    meta: "Project briefs",
+    metaKey: "hero.metaFiverr" as TranslationKey,
     accent: "29, 191, 115",
     float: "tileFloatB 7s ease-in-out infinite 0.4s",
   },
   {
     name: "Y Combinator",
     logo: "/YC.png",
-    meta: "Startup roles",
+    metaKey: "hero.metaYC" as TranslationKey,
     accent: "255, 102, 0",
     float: "tileFloatB 6.5s ease-in-out infinite 0.9s",
   },
   {
     name: "LinkedIn",
     logo: "/linkedIn.png",
-    meta: "Full-time jobs",
+    metaKey: "hero.metaLinkedIn" as TranslationKey,
     accent: "10, 102, 194",
     float: "tileFloatA 7.5s ease-in-out infinite 0.2s",
   },
   {
     name: "Indeed",
     logo: "/indeed.png",
-    meta: "Global listings",
+    metaKey: "hero.metaIndeed" as TranslationKey,
     accent: "64, 100, 172",
     float: "tileFloatA 6.8s ease-in-out infinite 1.1s",
   },
   {
     name: "Glassdoor",
     logo: "/glassdoor.png",
-    meta: "Salary-backed",
+    metaKey: "hero.metaGlassdoor" as TranslationKey,
     accent: "12, 170, 65",
     float: "tileFloatB 8s ease-in-out infinite 0.6s",
   },
@@ -49,6 +51,15 @@ const PLATFORMS = [
 
 const LandingHero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const bullets: TranslationKey[] = [
+    "hero.bulletFeed",
+    "hero.bulletScores",
+    "hero.bulletDocuments",
+    "hero.bulletAlerts",
+    "hero.bulletInterview",
+  ];
 
   return (
     <section className="flex-1 px-6 sm:px-10 lg:px-16 xl:px-20 mt-8 md:mt-12 pb-10 md:pb-14">
@@ -74,25 +85,17 @@ const LandingHero = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h1 className="text-5xl md:text-7xl font-extrabold leading-tight tracking-tight text-[#EDEDED]">
-              Stop searching.
+              {t("hero.titleLine1")}
               <br />
-              <span className="text-[#10B981]">Start shortlisting.</span>
+              <span className="text-[#10B981]">{t("hero.titleLine2")}</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-xl text-[#A1A1AA] leading-relaxed">
-              JobHooker pulls openings from Upwork, Y Combinator, LinkedIn and
-              more into one lane, scores each against your profile, and writes
-              the cover letter before you have even opened the tab.
+              {t("hero.subtitle")}
             </p>
 
             <ul className="mt-10 space-y-4">
-              {[
-                "Every major board scraped into one feed",
-                "Match scores, so you only apply where you fit",
-                "Cover letters, CVs and Upwork proposals written for you",
-                "Instant alerts to Telegram and email",
-                "Interview prep generated per role",
-              ].map((item, index) => (
+              {bullets.map((item, index) => (
                 <motion.li
                   key={item}
                   initial={{ opacity: 0, y: 20 }}
@@ -104,7 +107,7 @@ const LandingHero = () => {
                     <CheckCircle className="w-6 h-6 text-[#10B981]" />
                   </div>
                   <span className="text-lg font-medium tracking-wide text-[#EDEDED] group-hover:text-white transition-colors">
-                    {item}
+                    {t(item)}
                   </span>
                 </motion.li>
               ))}
@@ -120,7 +123,7 @@ const LandingHero = () => {
                 onClick={() => navigate("/register")}
                 className="bg-[#10B981] text-[#0F0F0F] text-xl font-bold py-4 px-8 rounded-xl shadow-[0_0_20px_rgba(16, 185, 129,0.3)] hover:shadow-[0_0_30px_rgba(16, 185, 129,0.5)] hover:bg-[#34D399] transition flex items-center justify-center gap-2 group"
               >
-                Start for free
+                {t("hero.ctaPrimary")}
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </button>
 
@@ -128,13 +131,12 @@ const LandingHero = () => {
                 href="#open-roles"
                 className="text-xl font-bold py-4 px-8 rounded-xl border border-[#262626] bg-[#151515]/70 text-[#EDEDED] hover:border-[#10B981]/50 transition flex items-center justify-center text-center backdrop-blur-sm"
               >
-                Browse jobs free
+                {t("hero.ctaSecondary")}
               </a>
             </motion.div>
 
             <p className="mt-5 text-sm text-[#525252]">
-              No credit card required — browsing open roles needs no account at
-              all.
+              {t("hero.noCard")}
             </p>
           </motion.div>
         </div>
@@ -162,7 +164,7 @@ const LandingHero = () => {
               style={{ boxShadow: "0 0 10px rgba(16, 185, 129,0.7)" }}
             />
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#A1A1AA]">
-              Boards we pull from, live
+              {t("hero.boardsLabel")}
             </span>
           </motion.div>
 
@@ -223,7 +225,7 @@ const LandingHero = () => {
                         {platform.name}
                       </div>
                       <div className="text-xs text-[#737373] truncate">
-                        {platform.meta}
+                        {t(platform.metaKey)}
                       </div>
                     </div>
                   </div>
@@ -238,7 +240,7 @@ const LandingHero = () => {
             transition={{ delay: 1.1, duration: 0.5 }}
             className="relative mt-6 text-xs text-[#525252]"
           >
-            + CareerBuilder, Wellfound and more added every week.
+            {t("hero.moreBoards")}
           </motion.p>
         </div>
       </div>

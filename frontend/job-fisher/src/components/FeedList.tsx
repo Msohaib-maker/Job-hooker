@@ -9,6 +9,8 @@ import { BillingDialog } from "./BillingDialog";
 import FeedItem from "./FeedItem";
 import BottomActions from "./BottomActions";
 import { PlatformTitle } from "./PlatformTitle";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "../i18n";
 
 interface FeedListProps {
   selectedFeedId: number | null;
@@ -25,6 +27,7 @@ const FeedList = ({
   setFeeds,
   signOut,
 }: FeedListProps) => {
+  const { t } = useTranslation();
   const {
     isLoading,
     isDialogOpen,
@@ -45,7 +48,7 @@ const FeedList = ({
 
     isBillingDialog,
     setBillingDialog,
-  } = useFeedManager(onFeedSelect, setFeeds);
+  } = useFeedManager(onFeedSelect, setFeeds, t("feeds.confirmDelete"));
 
   const checkTelegramConnection = async () => {
     return await api.get("telegram/connection");
@@ -79,6 +82,7 @@ const FeedList = ({
             <span className="text-xl font-extrabold text-[#EDEDED] tracking-wide">
               <PlatformTitle />
             </span>
+            <LanguageSwitcher variant="compact" className="ml-auto" />
           </div>
         </div>
         <hr className="border-[#262626] mx-0" />
@@ -94,7 +98,7 @@ const FeedList = ({
             className="w-full flex items-center gap-4 px-4 py-3 text-[#A1A1AA] hover:text-[#EDEDED] transition-colors group rounded-xl hover:bg-[#1A1A1A] border border-[#262626] hover:border-[#10B981]/40"
           >
             <Plus className="w-5 h-5 text-[#737373] group-hover:text-[#10B981] transition-colors" />
-            <span className="font-medium">Create Feed</span>
+            <span className="font-medium">{t("feeds.createFeed")}</span>
           </button>
         </div>
 

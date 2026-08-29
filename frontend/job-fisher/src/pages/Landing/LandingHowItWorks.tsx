@@ -2,9 +2,31 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { PlatformTitle } from "../../components/PlatformTitle";
+import { useTranslation } from "../../i18n";
+import type { TranslationKey } from "../../i18n";
 
 const LandingHowItWorks = () => {
   const navigate = useNavigate();
+  const { t, formatNumber } = useTranslation();
+
+  const feedsPoints: TranslationKey[] = [
+    "how.feedsPointTypes",
+    "how.feedsPointSkills",
+    "how.feedsPointUnlimited",
+    "how.feedsPointLocation",
+  ];
+  const docsPoints: TranslationKey[] = [
+    "how.docsPointCover",
+    "how.docsPointCv",
+    "how.docsPointInterview",
+    "how.docsPointDownload",
+  ];
+  const alertsPoints: TranslationKey[] = [
+    "how.alertsPointTelegram",
+    "how.alertsPointEmail",
+    "how.alertsPointScore",
+    "how.alertsPointLink",
+  ];
 
   return (
     <section className="w-full py-24 px-6 bg-[#0F0F0F] relative z-10 border-t border-[#262626]">
@@ -14,18 +36,19 @@ const LandingHowItWorks = () => {
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-[2px] bg-[#10B981]"></div>
             <span className="text-[#10B981] text-sm font-bold tracking-widest uppercase">
-              How it works
+              {t("how.eyebrow")}
             </span>
           </div>
 
           <h2 className="text-5xl md:text-6xl font-extrabold text-[#EDEDED] leading-tight mb-6">
-            How <PlatformTitle /> will help you ?<br />
+            {t("how.titleBefore")}
+            <PlatformTitle />
+            {t("how.titleAfter")}
+            <br />
           </h2>
 
           <p className="text-[#A1A1AA] text-lg max-w-2xl mb-12">
-            Create feeds with your own filters and AI prompts. JobHooker
-            creates custom cover letters, cvs and interview sheets for every job
-            matching your feeds.
+            {t("how.intro")}
           </p>
         </div>
 
@@ -44,36 +67,25 @@ const LandingHowItWorks = () => {
                   01
                 </span>
                 <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
-                  Feeds
+                  {t("how.feedsBadge")}
                 </span>
               </div>
               <h3 className="text-3xl font-bold text-[#EDEDED] mb-4">
-                Create feeds with your own filters
+                {t("how.feedsTitle")}
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                Each feed will match the title, salary expectations, job
-                location and key skills to filter the jobs for you.
+                {t("how.feedsBody")}
               </p>
               <ul className="space-y-3 mb-10 text-sm text-[#737373]">
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Hourly/Fixed Types
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Key skills
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Unlimited feeds
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Job Location
-                </li>
+                {feedsPoints.map((point) => (
+                  <li key={point} className="flex items-center gap-2">
+                    <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
+                    {t(point)}
+                  </li>
+                ))}
               </ul>
               <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
-                Try it now{" "}
+                {t("how.tryItNow")}{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -84,7 +96,7 @@ const LandingHowItWorks = () => {
                 {/* Sidebar strip */}
                 <div className="w-[140px] flex-shrink-0 bg-[#0D0D0D] border-r border-[#262626] flex flex-col py-3 px-2 gap-1.5">
                   <p className="text-[10px] font-bold text-[#10B981] tracking-widest px-2 mb-1">
-                    FEEDS
+                    {t("how.mockFeedsLabel")}
                   </p>
                   {[
                     { label: "React / TS remotes", dot: "#4A9EFF", count: 12 },
@@ -113,7 +125,7 @@ const LandingHowItWorks = () => {
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] flex-shrink-0 animate-pulse" />
                     <span className="text-[10px] text-[#EDEDED] truncate">
-                      New feed…
+                      {t("how.mockNewFeed")}
                     </span>
                   </div>
                 </div>
@@ -124,7 +136,7 @@ const LandingHowItWorks = () => {
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#222]">
                       <span className="text-[11px] font-medium text-[#EDEDED]">
-                        Create a feed
+                        {t("how.mockCreateFeed")}
                       </span>
                       <div className="w-4 h-4 rounded bg-[#222] flex items-center justify-center">
                         <X className="w-2.5 h-2.5 text-[#888]" />
@@ -144,25 +156,31 @@ const LandingHowItWorks = () => {
                           borderRight: "2px solid #10B981",
                         }}
                       >
-                        AI / LLM integrations
+                        {t("how.mockFeedName")}
                       </div>
 
                       {/* Job type chips */}
                       <div>
                         <p className="text-[9px] text-[#666] font-medium tracking-widest mb-1.5">
-                          JOB TYPE
+                          {t("how.mockJobType")}
                         </p>
                         <div className="flex gap-1.5 flex-wrap">
-                          {["Hourly", "Fixed", "Full-time"].map((t, i) => (
+                          {(
+                            [
+                              "how.mockHourly",
+                              "how.mockFixed",
+                              "how.mockFullTime",
+                            ] as TranslationKey[]
+                          ).map((chip, i) => (
                             <span
-                              key={t}
+                              key={chip}
                               className={`text-[9px] px-2 py-0.5 rounded-full border ${
                                 i < 2
                                   ? "bg-[#10B981]/10 border-[#10B981]/40 text-[#10B981]"
                                   : "bg-[#1A1A1A] border-[#2A2A2A] text-[#555]"
                               }`}
                             >
-                              {t}
+                              {t(chip)}
                             </span>
                           ))}
                         </div>
@@ -171,7 +189,7 @@ const LandingHowItWorks = () => {
                       {/* Skills */}
                       <div>
                         <p className="text-[9px] text-[#666] font-medium tracking-widest mb-1.5">
-                          KEY SKILLS
+                          {t("how.mockKeySkills")}
                         </p>
                         <div className="flex gap-1 flex-wrap">
                           {["React", "TypeScript", "NestJS", "Gemini API"].map(
@@ -185,7 +203,7 @@ const LandingHowItWorks = () => {
                             )
                           )}
                           <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] text-[#555]">
-                            + Add
+                            {t("how.mockAdd")}
                           </span>
                         </div>
                       </div>
@@ -194,7 +212,7 @@ const LandingHowItWorks = () => {
                       <div className="flex gap-2">
                         <div className="flex-1">
                           <p className="text-[9px] text-[#666] font-medium tracking-widest mb-1">
-                            MIN $/HR
+                            {t("how.mockMinRate")}
                           </p>
                           <div className="bg-[#111] border border-[#2A2A2A] rounded-lg px-2.5 py-1.5 text-[10px] text-[#EDEDED]">
                             $40
@@ -202,7 +220,7 @@ const LandingHowItWorks = () => {
                         </div>
                         <div className="flex-1">
                           <p className="text-[9px] text-[#666] font-medium tracking-widest mb-1">
-                            MAX $/HR
+                            {t("how.mockMaxRate")}
                           </p>
                           <div className="bg-[#111] border border-[#2A2A2A] rounded-lg px-2.5 py-1.5 text-[10px] text-[#EDEDED]">
                             $120
@@ -214,10 +232,10 @@ const LandingHowItWorks = () => {
                     {/* Footer */}
                     <div className="flex justify-end gap-2 px-4 py-2.5 border-t border-[#222]">
                       <div className="text-[9px] px-3 py-1 rounded-lg border border-[#2A2A2A] text-[#888]">
-                        Cancel
+                        {t("how.mockCancel")}
                       </div>
                       <div className="text-[9px] px-3 py-1 rounded-lg bg-[#10B981] text-[#111] font-medium">
-                        Create Feed
+                        {t("how.mockCreateButton")}
                       </div>
                     </div>
                   </div>
@@ -316,38 +334,25 @@ const LandingHowItWorks = () => {
                   02
                 </span>
                 <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
-                  AI Documents
+                  {t("how.docsBadge")}
                 </span>
               </div>
               <h3 className="text-3xl font-bold text-[#EDEDED] mb-4">
-                Create Tailored cover letters, CVs, and interview prep — per
-                job.
+                {t("how.docsTitle")}
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                For every job that matches your criteria, JobHooker generates a
-                custom cover letter, a tailored CV, and a Upwork Proposals — so
-                you show up prepared every time.
+                {t("how.docsBody")}
               </p>
               <ul className="grid grid-cols-2 gap-3 mb-10 text-sm text-[#737373]">
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Custom cover letters per job
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Tailored CV per role
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Common & custom interview prep PDFs
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  One-click download, ready to send
-                </li>
+                {docsPoints.map((point) => (
+                  <li key={point} className="flex items-center gap-2">
+                    <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
+                    {t(point)}
+                  </li>
+                ))}
               </ul>
               <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
-                Try it now{" "}
+                {t("how.tryItNow")}{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -366,38 +371,25 @@ const LandingHowItWorks = () => {
                   03
                 </span>
                 <span className="px-3 py-1 rounded-md border border-[#10B981]/30 text-[#10B981] text-sm font-bold bg-[#10B981]/5">
-                  Notifications
+                  {t("how.alertsBadge")}
                 </span>
               </div>
               <h3 className="text-3xl font-bold text-[#EDEDED] mb-4">
-                Instant job alerts to Telegram and email.
+                {t("how.alertsTitle")}
               </h3>
               <p className="text-[#A1A1AA] mb-8 leading-relaxed">
-                The moment a high-scoring job is found, JobHooker pushes it
-                straight to your Telegram channel and inbox — with the score,
-                title, and a direct link. No dashboard refreshing, no missed
-                opportunities.
+                {t("how.alertsBody")}
               </p>
               <ul className="grid grid-cols-2 gap-3 mb-10 text-sm text-[#737373]">
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Telegram channel feed
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Email digest & instant alerts
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Score shown in every alert
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
-                  Direct link to apply fast
-                </li>
+                {alertsPoints.map((point) => (
+                  <li key={point} className="flex items-center gap-2">
+                    <span className="w-1 h-1 bg-[#10B981] rounded-full"></span>{" "}
+                    {t(point)}
+                  </li>
+                ))}
               </ul>
               <button className="text-[#10B981] font-bold flex items-center gap-2 hover:gap-3 transition-all w-max group">
-                Try it now{" "}
+                {t("how.tryItNow")}{" "}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
@@ -421,10 +413,10 @@ const LandingHowItWorks = () => {
                   </div>
                   <div>
                     <p className="text-[#EDEDED] text-xs font-bold leading-none">
-                      JobHooker Alerts
+                      {t("how.mockChannelName")}
                     </p>
                     <p className="text-[#737373] text-[10px] mt-0.5">
-                      4,231 subscribers
+                      {t("how.mockSubscribers", { count: formatNumber(4231) })}
                     </p>
                   </div>
                 </div>
@@ -433,24 +425,24 @@ const LandingHowItWorks = () => {
                 <div className="flex-1 flex flex-col gap-2 p-4 overflow-hidden">
                   {[
                     {
-                      title: "Senior React Developer",
+                      titleKey: "how.mockAlertJob1" as TranslationKey,
                       company: "Stripe",
                       score: 9,
-                      time: "just now",
+                      timeKey: "how.mockAlertTime1" as TranslationKey,
                       hot: true,
                     },
                     {
-                      title: "Frontend Engineer",
+                      titleKey: "how.mockAlertJob2" as TranslationKey,
                       company: "Vercel",
                       score: 8,
-                      time: "2m ago",
+                      timeKey: "how.mockAlertTime2" as TranslationKey,
                       hot: false,
                     },
                     {
-                      title: "Full Stack Developer",
+                      titleKey: "how.mockAlertJob3" as TranslationKey,
                       company: "Linear",
                       score: 7,
-                      time: "5m ago",
+                      timeKey: "how.mockAlertTime3" as TranslationKey,
                       hot: false,
                     },
                   ].map((job, i) => (
@@ -460,7 +452,7 @@ const LandingHowItWorks = () => {
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[#EDEDED] text-xs font-semibold">
-                          {job.title}
+                          {t(job.titleKey)}
                         </span>
                         <span
                           className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${job.hot ? "bg-[#10B981]/20 text-[#10B981]" : "bg-[#262626] text-[#737373]"}`}
@@ -473,11 +465,11 @@ const LandingHowItWorks = () => {
                           {job.company}
                         </span>
                         <span className="text-[#525252] text-[10px]">
-                          {job.time}
+                          {t(job.timeKey)}
                         </span>
                       </div>
                       <div className="text-[#229ED9] text-[10px] font-medium">
-                        View & Apply →
+                        {t("how.mockViewApply")}
                       </div>
                     </div>
                   ))}
@@ -493,12 +485,10 @@ const LandingHowItWorks = () => {
             onClick={() => navigate("/register")}
             className="bg-[#10B981] text-[#0F0F0F] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#34D399] transition shadow-[0_0_20px_rgba(16, 185, 129,0.3)] hover:shadow-[0_0_30px_rgba(16, 185, 129,0.5)] flex items-center gap-2 mx-auto group"
           >
-            Get Started Free
+            {t("how.ctaButton")}
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
-          <p className="text-[#737373] text-sm mt-4">
-            Free trial for a month - No credit card
-          </p>
+          <p className="text-[#737373] text-sm mt-4">{t("how.ctaNote")}</p>
         </div>
       </div>
     </section>

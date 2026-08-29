@@ -6,6 +6,7 @@ import { DropdownOption } from "../components/DropDown";
 import { JobRole, ROLES } from "../models/enums";
 import { JobType } from "../models/types";
 import { SalaryType, Platform } from "../types/job.type";
+import type { TranslationKey } from "../i18n";
 
 interface UseFeedFormProps {
     feed?: (CreateFeedDto & { id?: number }) | null;
@@ -88,13 +89,14 @@ export const useFeedForm = ({ feed }: UseFeedFormProps) => {
         );
     };
 
-    const validate = (): string | null => {
-        if (!title.trim()) return "Title is required";
-        if (!exp.trim()) return "Experience is required";
-        if (!location.trim()) return "Location is required";
+    /** Returns the translation key of the first failing rule, or null. */
+    const validate = (): TranslationKey | null => {
+        if (!title.trim()) return "feeds.errorTitle";
+        if (!exp.trim()) return "feeds.errorExperience";
+        if (!location.trim()) return "feeds.errorLocation";
         const salaryNum = parseFloat(salary);
         if (!salary.trim() || isNaN(salaryNum) || salaryNum < 0)
-            return "Please enter a valid salary (must be a positive number)";
+            return "feeds.errorSalary";
         return null;
     };
 

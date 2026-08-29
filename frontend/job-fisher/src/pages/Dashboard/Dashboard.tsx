@@ -12,9 +12,11 @@ import FeedList from "../../components/FeedList";
 import JobList from "../../components/JobList";
 import { Feed, Job } from "../../types";
 import { useJobFetcher, UpworkJobProposal } from "../../hooks/useJobFetcher";
+import { useTranslation } from "../../i18n";
 
 const Dashboard = () => {
   const { signOut } = useAuth();
+  const { t } = useTranslation();
   const [selectedFeedId, setSelectedFeedId] = useState<number | null>(null);
   const [feeds, setFeeds] = useState<Feed[]>([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -61,16 +63,19 @@ const Dashboard = () => {
             <div>
               <h2 className="text-xl font-bold text-[#EDEDED] flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-[#10B981]" />
-                {feeds.find((f) => f.id === selectedFeedId)?.title ||
-                  "Feed"}{" "}
-                Jobs
+                {t("dashboard.panelTitle", {
+                  feed:
+                    feeds.find((f) => f.id === selectedFeedId)?.title ??
+                    t("dashboard.panelFallbackFeed"),
+                })}
               </h2>
               <p className="text-xs text-[#A1A1AA] mt-1">
-                Showing scraped results
+                {t("dashboard.panelSubtitle")}
               </p>
             </div>
             <button
               onClick={() => setIsPanelOpen(false)}
+              aria-label={t("dashboard.collapsePanel")}
               className="p-2 hover:bg-[#1A1A1A] text-[#A1A1AA] hover:text-[#10B981] rounded-lg transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -98,6 +103,7 @@ const Dashboard = () => {
       {selectedFeedId && !isPanelOpen && (
         <button
           onClick={() => setIsPanelOpen(true)}
+          aria-label={t("dashboard.expandPanel")}
           className="
       flex-shrink-0 self-center
       bg-[#1A1A1A] border border-[#262626] border-l-0
@@ -122,11 +128,9 @@ const Dashboard = () => {
         <div className="max-w-6xl w-full mx-auto relative z-10 flex flex-col h-full gap-8">
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-[#EDEDED] mb-1">
-              Dashboard
+              {t("dashboard.title")}
             </h1>
-            <p className="text-sm text-[#A1A1AA]">
-              Overview of your job hunting activity
-            </p>
+            <p className="text-sm text-[#A1A1AA]">{t("dashboard.subtitle")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -136,7 +140,7 @@ const Dashboard = () => {
                   <Star className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
-                  High-Score Matches
+                  {t("dashboard.statHighScore")}
                 </span>
               </div>
               <span className="text-3xl font-bold text-[#EDEDED]">
@@ -149,7 +153,7 @@ const Dashboard = () => {
                   <TrendingUp className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
-                  New Today
+                  {t("dashboard.statToday")}
                 </span>
               </div>
               <span className="text-3xl font-bold text-[#EDEDED]">
@@ -162,7 +166,7 @@ const Dashboard = () => {
                   <CalendarDays className="w-4 h-4 text-[#10B981]" />
                 </div>
                 <span className="text-[#A1A1AA] text-sm font-medium">
-                  New This Week
+                  {t("dashboard.statWeek")}
                 </span>
               </div>
               <span className="text-3xl font-bold text-[#EDEDED]">
@@ -188,42 +192,43 @@ const Dashboard = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[#A1A1AA] text-sm mb-8">
                     <div>
                       <span className="font-medium text-[#10B981]">
-                        Platform:
+                        {t("dashboard.detailPlatform")}
                       </span>{" "}
-                      {selectedJob.platform || "N/A"}
+                      {selectedJob.platform || t("common.notAvailable")}
                     </div>
                     <div>
                       <span className="font-medium text-[#10B981]">
-                        Company:
+                        {t("dashboard.detailCompany")}
                       </span>{" "}
-                      {selectedJob.company || "Unknown Company"}
+                      {selectedJob.company || t("dashboard.unknownCompany")}
                     </div>
                     <div>
                       <span className="font-medium text-[#10B981]">
-                        Location:
+                        {t("dashboard.detailLocation")}
                       </span>{" "}
-                      {selectedJob.location || "Remote"}
+                      {selectedJob.location || t("dashboard.remoteFallback")}
                     </div>
 
                     <div>
                       <span className="font-medium text-[#10B981]">
-                        Experience:
+                        {t("dashboard.detailExperience")}
                       </span>{" "}
-                      {selectedJob.experience || "Not specified"}
+                      {selectedJob.experience ||
+                        t("dashboard.experienceUnspecified")}
                     </div>
                     <div>
                       <span className="font-medium text-[#10B981]">
-                        Job Type:
+                        {t("dashboard.detailJobType")}
                       </span>{" "}
-                      {selectedJob.type || "N/A"}
+                      {selectedJob.type || t("common.notAvailable")}
                     </div>
                   </div>
 
                   <div className="text-[#A1A1AA] text-base leading-relaxed whitespace-pre-wrap mb-8">
                     <h3 className="text-xl font-semibold text-[#EDEDED] mb-4">
-                      Description
+                      {t("dashboard.detailDescription")}
                     </h3>
-                    {selectedJob.description || "No description available."}
+                    {selectedJob.description || t("dashboard.noDescription")}
                   </div>
                 </div>
               )
@@ -235,22 +240,24 @@ const Dashboard = () => {
                     <Briefcase className="w-8 h-8 text-[#10B981]" />
                   </div>
                   <h2 className="text-3xl font-bold text-[#EDEDED] mb-3">
-                    {feeds.find((f) => f.id === selectedFeedId)?.title} Feed
-                    Selected
+                    {t("dashboard.feedSelectedTitle", {
+                      feed:
+                        feeds.find((f) => f.id === selectedFeedId)?.title ?? "",
+                    })}
                   </h2>
                   <p className="text-[#A1A1AA] text-sm leading-relaxed mb-8">
-                    The scraping feed is fully synchronized. All matches are
-                    processed and categorized in your local database.
+                    {t("dashboard.feedSelectedBody")}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                     <button
                       onClick={() => setIsPanelOpen(true)}
                       className="px-8 py-3.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-[#0F0F0F] font-bold text-sm tracking-wide active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
                     >
-                      <ChevronRight className="w-5 h-5" /> Open Jobs List Panel
+                      <ChevronRight className="w-5 h-5" />{" "}
+                      {t("dashboard.openJobsPanel")}
                     </button>
                     <button className="px-8 py-3.5 rounded-xl bg-[#1A1A1A] border border-[#262626] hover:bg-[#222] text-[#EDEDED] font-semibold text-sm transition-all">
-                      Configure Notifications
+                      {t("dashboard.configureNotifications")}
                     </button>
                   </div>
                 </div>
@@ -259,11 +266,10 @@ const Dashboard = () => {
               <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
                 <Briefcase className="w-16 h-16 text-[#262626] mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">
-                  No Feed Selected
+                  {t("dashboard.noFeedTitle")}
                 </h2>
                 <p className="text-[#A1A1AA] text-sm max-w-sm mx-auto">
-                  Select a feed from the left panel to view jobs, or create a
-                  new feed to get started.
+                  {t("dashboard.noFeedBody")}
                 </p>
               </div>
             )}
@@ -284,6 +290,7 @@ const UpworkProposalDisplayer = ({
   proposalData?: UpworkJobProposal | null;
 }) => {
   const [proposalText, setProposalText] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (proposalData?.proposal && proposalData?.jobId === job.id) {
@@ -296,27 +303,27 @@ const UpworkProposalDisplayer = ({
   return (
     <div className="flex-1 p-8 overflow-y-auto flex flex-col h-full relative">
       <h2 className="text-2xl font-bold text-[#EDEDED] mb-2">
-        Upwork Proposal
+        {t("dashboard.proposalTitle")}
       </h2>
       <p className="text-[#A1A1AA] text-sm mb-6">
-        Generated for:{" "}
+        {t("dashboard.proposalGeneratedFor")}
         <span className="text-[#10B981] font-medium">{job.title}</span>
       </p>
 
       <div className="flex-1 flex flex-col bg-[#1A1A1A] rounded-xl border border-[#262626] p-5 shadow-inner">
         <label className="text-xs tracking-widest uppercase font-bold text-[#555] mb-3">
-          Editable Proposal text
+          {t("dashboard.proposalLabel")}
         </label>
         {proposalData && proposalData.jobId === job.id ? (
           <textarea
             className="flex-1 w-full bg-transparent border-none outline-none text-[#EDEDED] resize-none whitespace-pre-wrap leading-relaxed focus:ring-0 p-0 text-sm"
             value={proposalText}
             onChange={(e) => setProposalText(e.target.value)}
-            placeholder="Edit your AI-generated proposal here..."
+            placeholder={t("dashboard.proposalPlaceholder")}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-[#555] text-sm italic">
-            Waiting for proposal generation...
+            {t("dashboard.proposalWaiting")}
           </div>
         )}
       </div>
@@ -325,7 +332,7 @@ const UpworkProposalDisplayer = ({
           onClick={() => navigator.clipboard.writeText(proposalText)}
           className="px-6 py-2.5 rounded-xl bg-[#262626] hover:bg-[#333] active:bg-[#1a1a1a] text-[#EDEDED] font-semibold text-sm transition-all border border-[#333]"
         >
-          Copy to Clipboard
+          {t("dashboard.proposalCopy")}
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { Rss, Edit2, Trash2 } from "lucide-react";
 import type { Feed } from "../types";
+import { useTranslation } from "../i18n";
 
 interface FeedItemProps {
   feed: Feed;
@@ -16,6 +17,8 @@ const FeedItem = ({
   onEdit,
   onDelete,
 }: FeedItemProps) => {
+  const { t, formatNumber } = useTranslation();
+
   // Prevent parent onClick from firing when clicking action buttons
   const handleAction = (
     e: React.MouseEvent,
@@ -68,11 +71,13 @@ const FeedItem = ({
             </p>
 
             <p className="flex items-center gap-1 line-clamp-1 text-[#A1A1AA]">
-              Experience:{" "}
-              <span className="text-[#EDEDED] font-medium">{feed.exp}yr</span>
+              {t("feeds.experience")}{" "}
+              <span className="text-[#EDEDED] font-medium">
+                {t("feeds.years", { count: feed.exp })}
+              </span>
               <span className="text-[#262626] mx-0.5">•</span>
               <span className="text-[#10B981] font-medium">
-                {feed.salary.toLocaleString()} {feed.salaryCurrency}
+                {formatNumber(feed.salary)} {feed.salaryCurrency}
               </span>
             </p>
           </div>
@@ -85,7 +90,7 @@ const FeedItem = ({
           <button
             onClick={(e) => handleAction(e, (ev) => onEdit(feed, ev))}
             className="p-1.5 rounded-md text-[#A1A1AA] hover:text-[#10B981] hover:bg-[#1A1A1A] transition-all"
-            title="Edit feed"
+            title={t("feeds.editTooltip")}
           >
             <Edit2 className="w-3.5 h-3.5" />
           </button>
@@ -93,7 +98,7 @@ const FeedItem = ({
           <button
             onClick={(e) => handleAction(e, (ev) => onDelete(feed.id, ev))}
             className="p-1.5 rounded-md text-[#A1A1AA] hover:text-red-400 hover:bg-red-500/10 transition-all"
-            title="Delete feed"
+            title={t("feeds.deleteTooltip")}
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>

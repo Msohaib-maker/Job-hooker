@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "../../i18n";
 
 const EMBED_LINK =
   "https://embed.app.guidde.com/playbooks/c2QdZyEqEuZDgDWDGULZrB?mode=videoOnly";
 const LandingVideo = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const { t, language } = useTranslation();
 
   const handlePlayVideo = () => {
     setIsPlaying(true);
@@ -29,15 +31,18 @@ const LandingVideo = () => {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="inline-block px-4 py-1.5 rounded-full border border-[#262626] bg-[#1A1A1A] text-[#10B981] text-sm font-bold mb-6 tracking-wide"
         >
-          TUTORIAL
+          {t("video.badge")}
         </motion.div>
         <h2 className="text-4xl md:text-5xl font-extrabold text-[#EDEDED] mb-6 tracking-tight">
-          See how it works
+          {t("video.title")}
         </h2>
         <p className="text-[#A1A1AA] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-          Watch our quick 3-minute tutorial to understand how AI finds the
-          perfect opportunities for you with zero spam.
+          {t("video.body")}
         </p>
+        {/* The tutorial recording is English-only, so say so when the page is not. */}
+        {language !== "en" && (
+          <p className="mt-3 text-sm text-[#525252]">{t("video.englishOnly")}</p>
+        )}
       </div>
 
       <motion.div
@@ -49,7 +54,7 @@ const LandingVideo = () => {
           {isPlaying ? (
             <iframe
               src={EMBED_LINK}
-              title="Tutorial Video"
+              title={t("video.iframeTitle")}
               className="absolute inset-0 w-full h-full"
               frameBorder="0"
               allow="autoplay; fullscreen; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -62,7 +67,7 @@ const LandingVideo = () => {
             >
               <img
                 src="/thumbnail.png"
-                alt="Video Thumbnail"
+                alt={t("video.thumbnailAlt")}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />

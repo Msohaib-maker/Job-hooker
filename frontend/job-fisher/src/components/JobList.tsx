@@ -3,6 +3,7 @@ import { Job } from "../types";
 import JobCard from "./JobCard";
 import { Search } from "lucide-react";
 import { UpworkJobProposal } from "../hooks/useJobFetcher";
+import { useTranslation } from "../i18n";
 
 interface JobListProps {
   jobs: Job[];
@@ -13,6 +14,7 @@ interface JobListProps {
 
 const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobListProps) => {
   const [query, setQuery] = useState("");
+  const { t, formatNumber } = useTranslation();
 
   const filtered = query.trim()
     ? jobs.filter(job => job.title.toLowerCase().includes(query.toLowerCase()))
@@ -25,7 +27,7 @@ const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobLi
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373]" />
         <input
           type="text"
-          placeholder="Search by job title..."
+          placeholder={t("jobList.searchPlaceholder")}
           value={query}
           onChange={e => setQuery(e.target.value)}
           className="w-full bg-[#1A1A1A] border border-[#262626] rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-[#555] focus:outline-none focus:border-[#10B981] transition"
@@ -33,6 +35,7 @@ const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobLi
         {query && (
           <button
             onClick={() => setQuery("")}
+            aria-label={t("jobList.clearSearch")}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-[#555] hover:text-white transition text-xs"
           >
             ✕
@@ -43,15 +46,20 @@ const JobList = ({ jobs, selectedJob, checkSelected, showUpworkProposal }: JobLi
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-[#10B981]">
-          {filtered.length} {filtered.length === 1 ? "Job" : "Jobs"} Found
+          {t(
+            filtered.length === 1 ? "jobList.foundOne" : "jobList.foundOther",
+            { count: formatNumber(filtered.length) },
+          )}
         </h2>
       </div>
 
       {/* Results */}
       {filtered.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-dark-text text-lg">No jobs found matching your criteria.</p>
-          <p className="text-dark-text-muted text-sm mt-2">Try adjusting your filters or search terms.</p>
+          <p className="text-dark-text text-lg">{t("jobList.emptyTitle")}</p>
+          <p className="text-dark-text-muted text-sm mt-2">
+            {t("jobList.emptyBody")}
+          </p>
         </div>
       ) : (
         <div className="space-y-6">

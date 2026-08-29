@@ -1,0 +1,42 @@
+{
+	"nodes":[
+		{"id":"90cc021472964b5d","type":"group","x":-420,"y":-420,"width":1400,"height":840,"label":"Backend — NestJS (Fly.io)"},
+		{"id":"b3250418038c4541","type":"file","file":"Backend/Backend Modules.md","subpath":"#Feeds","x":-65,"y":-340,"width":210,"height":100,"color":"4"},
+		{"id":"a74f52d6ce5e4f55","type":"file","file":"Backend/Backend Modules.md","subpath":"#Email","x":-65,"y":-200,"width":210,"height":100,"color":"4"},
+		{"id":"8807b262c7984dcc","type":"file","file":"Backend/Backend Modules.md","subpath":"#Job","x":175,"y":-340,"width":210,"height":100,"color":"4"},
+		{"id":"aca8ad5702614bb4","type":"file","file":"Backend/Backend Modules.md","subpath":"#Export","x":175,"y":-200,"width":210,"height":100,"color":"4"},
+		{"id":"dd60c50910704752","type":"file","file":"Backend/Backend Modules.md","subpath":"#Admin","x":415,"y":-340,"width":210,"height":100,"color":"4"},
+		{"id":"f652ef0c32154639","type":"file","file":"Backend/Backend Modules.md","subpath":"#Adzuna","x":415,"y":-200,"width":210,"height":100,"color":"4"},
+		{"id":"90eaefb20d684883","type":"file","file":"Backend/Backend Modules.md","subpath":"#Cookies","x":655,"y":-340,"width":210,"height":100,"color":"4"},
+		{"id":"ab2a3f9c99c94a16","type":"file","file":"Backend/Backend Modules.md","subpath":"#Supabase","x":655,"y":-200,"width":210,"height":100,"color":"4"},
+		{"id":"3ce38a82694540f2","type":"file","file":"Backend/Backend Modules.md","subpath":"#Auth","x":-305,"y":-340,"width":210,"height":100,"color":"4"},
+		{"id":"d77c9414b7ca4b41","type":"file","file":"Backend/Backend Modules.md","subpath":"#Telegram","x":-305,"y":-200,"width":210,"height":100,"color":"4"},
+		{"id":"5b4f7bce9b914e2f","type":"file","file":"Backend/Data Model.md","x":55,"y":250,"width":240,"height":110,"color":"6"},
+		{"id":"f89b61ddde744ff5","type":"text","text":"**Telegram Bot API**\nmatch alerts, account link","x":1280,"y":-360,"width":260,"height":90,"color":"3"},
+		{"id":"4b40ed2032984176","type":"text","text":"**SMTP**\n@nestjs-modules/mailer\nOTP + digest emails","x":1280,"y":-230,"width":260,"height":90,"color":"3"},
+		{"id":"4f8bf1697abe480f","type":"text","text":"**Google GenAI**\ncover letters · CVs\nUpwork proposals","x":1280,"y":-100,"width":260,"height":100,"color":"3"},
+		{"id":"e8050e30992b4faf","type":"text","text":"**Adzuna Public API**\nexternal job source","x":1280,"y":30,"width":260,"height":90,"color":"3"},
+		{"id":"42e54e4aaa0741f2","type":"text","text":"**Supabase**\nstorage / auxiliary data","x":1280,"y":160,"width":260,"height":90,"color":"3"},
+		{"id":"368fb405af2542b5","type":"text","text":"**Job Boards**\nUpwork · Y Combinator · LinkedIn\nFiverr · Indeed · Glassdoor","x":-1400,"y":260,"width":260,"height":100,"color":"1"},
+		{"id":"ea484d5757144a60","type":"file","file":"Frontend/Frontend Overview.md","x":-1020,"y":380,"width":240,"height":160,"color":"5"},
+		{"id":"d31445439f2d4333","type":"text","text":"**External Scraper**\n⚠ not in this repo\nauthenticates using cookies\nfetched from this API","x":-1400,"y":460,"width":260,"height":130,"color":"1"}
+	],
+	"edges":[
+		{"id":"d9dc76a008e1499b","fromNode":"368fb405af2542b5","fromSide":"bottom","toNode":"d31445439f2d4333","toSide":"top","label":"scrapes"},
+		{"id":"88d388aded4149d1","fromNode":"d31445439f2d4333","fromSide":"right","toNode":"90eaefb20d684883","toSide":"left","label":"GET/POST /cookies"},
+		{"id":"0b2d2a208ef84868","fromNode":"d31445439f2d4333","fromSide":"right","toNode":"8807b262c7984dcc","toSide":"top","label":"POST /jobs"},
+		{"id":"10273c5d5f9e4e22","fromNode":"d31445439f2d4333","fromSide":"right","toNode":"dd60c50910704752","toSide":"top","label":"POST /admin/jobs"},
+		{"id":"54700b3360454e3a","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"3ce38a82694540f2","toSide":"left","label":"OTP login"},
+		{"id":"cf40f69fab134d18","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"b3250418038c4541","toSide":"left","label":"CRUD feeds"},
+		{"id":"d05998c86d4642c6","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"8807b262c7984dcc","toSide":"left","label":"GET /jobs/public\nPOST /jobs"},
+		{"id":"4f4fd16a1f6b403a","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"d77c9414b7ca4b41","toSide":"left","label":"connect bot"},
+		{"id":"bf12e99dc030485d","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"a74f52d6ce5e4f55","toSide":"left","label":"subscribe"},
+		{"id":"19a864360dcd415c","fromNode":"ea484d5757144a60","fromSide":"right","toNode":"aca8ad5702614bb4","toSide":"left","label":"generate docs"},
+		{"id":"c915d7ce0adb40ad","fromNode":"90cc021472964b5d","fromSide":"bottom","toNode":"5b4f7bce9b914e2f","toSide":"top","label":"Prisma ORM"},
+		{"id":"a4cf1de540024adc","fromNode":"d77c9414b7ca4b41","fromSide":"right","toNode":"f89b61ddde744ff5","toSide":"left"},
+		{"id":"92b6560413704d5b","fromNode":"a74f52d6ce5e4f55","fromSide":"right","toNode":"4b40ed2032984176","toSide":"left"},
+		{"id":"38d0971ecea5459b","fromNode":"aca8ad5702614bb4","fromSide":"right","toNode":"4f8bf1697abe480f","toSide":"left"},
+		{"id":"46cd0f6968094d53","fromNode":"f652ef0c32154639","fromSide":"right","toNode":"e8050e30992b4faf","toSide":"left"},
+		{"id":"68211b450b314217","fromNode":"ab2a3f9c99c94a16","fromSide":"right","toNode":"42e54e4aaa0741f2","toSide":"left"}
+	]
+}

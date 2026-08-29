@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Check } from "lucide-react";
+import { useTranslation } from "../i18n";
 
 // ─────────────────────────────────────────────
 // Types
@@ -104,10 +105,11 @@ function PanelPortal({ anchorRef, panelRef, children }: PanelPortalProps) {
 // ─────────────────────────────────────────────
 
 export function Dropdown<T extends string>(props: DropdownProps<T>) {
+    const { t } = useTranslation();
     const {
         id,
         label,
-        placeholder = "Select an option",
+        placeholder = t("dropdown.placeholder"),
         options,
         required,
         disabled,
@@ -303,7 +305,7 @@ export function Dropdown<T extends string>(props: DropdownProps<T>) {
                         `}</style>
                         {options.length === 0 ? (
                             <div className="px-4 py-3 text-sm text-[#4A6157] text-center">
-                                No options available
+                                {t("dropdown.noOptions")}
                             </div>
                         ) : (
                             <div className="py-1">{options.map((opt) => renderRow(opt))}</div>

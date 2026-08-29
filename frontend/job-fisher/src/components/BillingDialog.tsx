@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
 import { X } from "lucide-react";
+import { useTranslation } from "../i18n";
+import type { TranslationKey } from "../i18n";
 
 export interface BillingDialogProps {
   isOpen: boolean;
@@ -10,24 +12,32 @@ export const BillingDialog = ({
   isOpen,
   onClose,
 }: BillingDialogProps): ReactElement | null => {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
-  const subscriptions = [
+  const subscriptions: {
+    nameKey: TranslationKey;
+    price: number;
+    periodKey: TranslationKey;
+    featureKeys: TranslationKey[];
+    active: boolean;
+  }[] = [
     {
-      name: "Free",
+      nameKey: "billing.planFree",
       price: 0,
-      period: "per 12h",
-      features: ["10 jobs per feed", "Manual apply only"],
+      periodKey: "billing.periodFree",
+      featureKeys: ["billing.freeFeature1", "billing.freeFeature2"],
       active: false,
     },
     {
-      name: "Pro",
+      nameKey: "billing.planPro",
       price: 15,
-      period: "per month",
-      features: [
-        "40 jobs per feed every 2h",
-        "Proposal generator",
-        "Automatic job apply",
+      periodKey: "billing.periodPro",
+      featureKeys: [
+        "billing.proFeature1",
+        "billing.proFeature2",
+        "billing.proFeature3",
       ],
       active: false,
     },
@@ -52,10 +62,11 @@ export const BillingDialog = ({
           {/* Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-extrabold text-white tracking-wide">
-              Billing & Subscription
+              {t("billing.title")}
             </h2>
             <button
               onClick={onClose}
+              aria-label={t("common.close")}
               className="text-[#8FAE9B] hover:text-white transition"
             >
               <X className="w-5 h-5" />
@@ -66,7 +77,7 @@ export const BillingDialog = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {subscriptions.map((sub) => (
               <div
-                key={sub.name}
+                key={sub.nameKey}
                 className={`rounded-2xl border p-6 flex flex-col justify-between
                 bg-[#0B0F0D]/30
                 border-[#1F2A24]
@@ -75,17 +86,19 @@ export const BillingDialog = ({
                 transition-all duration-300`}
               >
                 <div className="space-y-4">
-                  <h3 className="text-lg font-bold text-white">{sub.name}</h3>
+                  <h3 className="text-lg font-bold text-white">
+                    {t(sub.nameKey)}
+                  </h3>
                   <p className="text-2xl font-extrabold text-orange-500">
                     {sub.price === 0 ? "$0" : `$${sub.price}`}{" "}
                     <span className="text-sm font-medium text-[#8FAE9B]">
-                      {sub.period}
+                      {t(sub.periodKey)}
                     </span>
                   </p>
 
                   <ul className="space-y-2 text-sm text-[#8FAE9B] list-disc list-inside">
-                    {sub.features.map((feat) => (
-                      <li key={feat}>{feat}</li>
+                    {sub.featureKeys.map((feat) => (
+                      <li key={feat}>{t(feat)}</li>
                     ))}
                   </ul>
                 </div>
@@ -95,15 +108,14 @@ export const BillingDialog = ({
                   disabled
                   className="mt-4 px-4 py-2 rounded-lg bg-gray-700 text-gray-400 font-medium cursor-not-allowed transition"
                 >
-                  Active Development 🔧
+                  {t("billing.inDevelopment")}
                 </button>
               </div>
             ))}
           </div>
 
           <p className="mt-4 text-sm text-[#8FAE9B] text-center">
-            Subscription system is under active development. New features coming
-            soon!
+            {t("billing.footnote")}
           </p>
         </div>
       </div>

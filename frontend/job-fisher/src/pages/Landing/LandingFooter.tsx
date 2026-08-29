@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { PlatformTitle } from "../../components/PlatformTitle";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import { useTranslation } from "../../i18n";
 
 const LandingFooter = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="w-full border-t border-[#262626] bg-[#151515] relative z-20">
       <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -14,20 +18,21 @@ const LandingFooter = () => {
 
         <div className="flex items-center gap-6 text-sm text-[#737373]">
           <a href="#open-roles" className="hover:text-[#EDEDED] transition-colors">
-            Browse jobs
+            {t("nav.browseJobs")}
           </a>
           <Link to="/privacy" className="hover:text-[#EDEDED] transition-colors">
-            Privacy
+            {t("nav.privacy")}
           </Link>
           <Link to="/register" className="hover:text-[#EDEDED] transition-colors">
-            Get started
+            {t("nav.getStarted")}
           </Link>
+          <LanguageSwitcher />
         </div>
       </div>
 
       <div className="border-t border-[#262626] py-5 text-center">
         <p className="text-sm text-[#525252]">
-          © {new Date().getFullYear()} Job Hooker. All rights reserved.
+          {t("footer.rights", { year: new Date().getFullYear() })}
         </p>
       </div>
     </footer>
